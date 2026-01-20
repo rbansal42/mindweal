@@ -34,8 +34,7 @@ const dataSourceOptions: DataSourceOptions = {
         VerificationToken,
         Specialization,
     ],
-    migrations: ["migrations/**/*.ts"],
-    subscribers: ["src/subscribers/**/*.ts"],
+    // Note: migrations are loaded only via CLI (data-source.ts), not at runtime
 };
 
 export const AppDataSource = new DataSource(dataSourceOptions);
