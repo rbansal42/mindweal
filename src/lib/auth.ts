@@ -1,5 +1,6 @@
 import { betterAuth } from "better-auth";
 import { createPool } from "mysql2/promise";
+import bcrypt from "bcryptjs";
 import { databaseConfig, authConfig, appConfig } from "@/config";
 import { sendEmail } from "./email";
 
@@ -19,6 +20,14 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true,
         requireEmailVerification: true,
+        password: {
+            hash: async (password) => {
+                return await bcrypt.hash(password, 10);
+            },
+            verify: async ({ hash, password }) => {
+                return await bcrypt.compare(password, hash);
+            },
+        },
         sendResetPassword: async ({ user, url }) => {
             await sendEmail({
                 to: user.email,
