@@ -56,7 +56,8 @@ export const emailConfig = {
 // ===================
 export const authConfig = {
     secret: process.env.BETTER_AUTH_SECRET || '',
-    baseUrl: process.env.BETTER_AUTH_URL || 'http://localhost:3000',
+    // Use NEXT_PUBLIC_APP_URL for client-side auth (browser needs NEXT_PUBLIC_ prefix)
+    baseUrl: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
     google: {
         clientId: process.env.GOOGLE_CLIENT_ID || '',
         clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
