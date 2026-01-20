@@ -1,5 +1,16 @@
 import { DataSource, DataSourceOptions } from "typeorm";
 import { databaseConfig } from "@/config";
+import {
+    User,
+    Therapist,
+    TherapistAvailability,
+    BlockedDate,
+    SessionType,
+    Booking,
+    Session,
+    Account,
+    VerificationToken,
+} from "@/entities";
 
 const dataSourceOptions: DataSourceOptions = {
     type: "mysql",
@@ -10,9 +21,21 @@ const dataSourceOptions: DataSourceOptions = {
     database: databaseConfig.database,
     synchronize: false, // Never use in production
     logging: process.env.NODE_ENV === "development",
-    entities: ["src/entities/**/*.ts"],
+    entities: [
+        User,
+        Therapist,
+        TherapistAvailability,
+        BlockedDate,
+        SessionType,
+        Booking,
+        Session,
+        Account,
+        VerificationToken,
+    ],
     migrations: ["migrations/**/*.ts"],
     subscribers: ["src/subscribers/**/*.ts"],
 };
 
 export const AppDataSource = new DataSource(dataSourceOptions);
+
+export { dataSourceOptions };

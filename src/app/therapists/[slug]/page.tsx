@@ -1,105 +1,58 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { calcomConfig } from "@/config";
+import { AppDataSource } from "@/lib/db";
+import { Therapist } from "@/entities/Therapist";
+import { SessionType } from "@/entities/SessionType";
 
-// Sample therapists data - will be replaced with Strapi fetch
-const therapists = [
-    {
-        slug: "dr-pihu-suri",
-        name: "Dr. Pihu Suri",
-        title: "Founder & Clinical Psychologist",
-        bio: `Dr. Pihu Suri is the founder of MindWeal with over a decade of experience in clinical psychology. Her approach combines evidence-based techniques with compassionate care, helping clients navigate anxiety, depression, trauma, and relationship challenges.
+async function getDataSource() {
+    if (!AppDataSource.isInitialized) {
+        await AppDataSource.initialize();
+    }
+    return AppDataSource;
+}
 
-## Education & Training
+async function getTherapistWithSessions(slug: string) {
+    const ds = await getDataSource();
+    const therapistRepo = ds.getRepository(Therapist);
+    const sessionTypeRepo = ds.getRepository(SessionType);
 
-- Ph.D. in Clinical Psychology, NIMHANS Bangalore
-- M.A. Psychology, Delhi University
-- Certified in Cognitive Behavioral Therapy (CBT)
-- Advanced training in Trauma-Focused Therapy
+    const therapist = await therapistRepo.findOne({
+        where: { slug, isActive: true },
+    });
 
-## Clinical Approach
+    if (!therapist) return null;
 
-Dr. Suri believes in creating a safe, non-judgmental space where clients can explore their thoughts and feelings. Her therapeutic approach is integrative, drawing from CBT, psychodynamic therapy, and mindfulness-based techniques.
+    const sessionTypes = await sessionTypeRepo.find({
+        where: { therapistId: therapist.id, isActive: true },
+    });
 
-She has a special interest in working with young adults navigating career transitions and relationship difficulties.`,
-        specializations: ["Anxiety", "Depression", "Trauma", "Relationship Issues", "Young Adult Therapy"],
-        calcomUsername: "dr-pihu-suri",
-        education: ["Ph.D. Clinical Psychology - NIMHANS", "M.A. Psychology - Delhi University"],
-        languages: ["English", "Hindi"],
-    },
-    {
-        slug: "sarah-johnson",
-        name: "Sarah Johnson",
-        title: "Licensed Counselor",
-        bio: `Sarah Johnson is a licensed counselor specializing in workplace stress and career-related mental health. With her background in organizational psychology, she brings a unique perspective to helping professionals thrive.
-
-## Background
-
-Sarah spent several years in the corporate world before transitioning to mental health counseling. This experience gives her deep insight into the challenges professionals face in high-pressure work environments.
-
-## Specializations
-
-She works primarily with:
-- Professionals experiencing burnout
-- Individuals navigating career transitions
-- Those seeking better work-life balance
-- People dealing with workplace anxiety and imposter syndrome`,
-        specializations: ["Stress Management", "Work-Life Balance", "Self-Esteem", "Career Counseling", "Burnout"],
-        calcomUsername: "sarah-johnson",
-        education: ["M.A. Counseling Psychology - Christ University", "B.A. Psychology - St. Xavier's College"],
-        languages: ["English", "Hindi", "Kannada"],
-    },
-    {
-        slug: "michael-chen",
-        name: "Michael Chen",
-        title: "Psychotherapist",
-        bio: `Michael Chen is a psychotherapist who integrates mindfulness-based approaches with traditional therapy for holistic healing. His gentle, presence-focused approach helps clients develop deeper self-awareness and emotional regulation skills.
-
-## Training & Approach
-
-Michael trained in Mindfulness-Based Stress Reduction (MBSR) and has extensive experience in acceptance and commitment therapy (ACT). He believes that by cultivating present-moment awareness, individuals can break free from unhelpful patterns and live more fulfilling lives.
-
-## Areas of Focus
-
-- Life transitions and adjustments
-- Anxiety and panic disorders
-- Mindfulness and meditation guidance
-- Emotional regulation challenges`,
-        specializations: ["Mindfulness", "Anxiety", "Life Transitions", "Emotional Regulation", "Meditation"],
-        calcomUsername: "michael-chen",
-        education: ["M.Phil Clinical Psychology - RCI Registered", "MBSR Certification - UMass Medical School"],
-        languages: ["English", "Mandarin", "Hindi"],
-    },
-];
+    return { therapist, sessionTypes };
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
-    const therapist = therapists.find((t) => t.slug === slug);
+    const data = await getTherapistWithSessions(slug);
 
-    if (!therapist) {
-        return { title: "Therapist Not Found" };
+    if (!data) {
+        return { title: "Therapist Not Found | Mindweal by Pihu Suri" };
     }
 
     return {
-        title: `${therapist.name} - ${therapist.title}`,
-        description: `Book a session with ${therapist.name}. ${therapist.specializations.slice(0, 3).join(", ")}.`,
+        title: `${data.therapist.name} - ${data.therapist.title} | Mindweal by Pihu Suri`,
+        description: `Book a session with ${data.therapist.name}. ${data.therapist.title}.`,
     };
-}
-
-export async function generateStaticParams() {
-    return therapists.map((therapist) => ({
-        slug: therapist.slug,
-    }));
 }
 
 export default async function TherapistDetailPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
-    const therapist = therapists.find((t) => t.slug === slug);
+    const data = await getTherapistWithSessions(slug);
 
-    if (!therapist) {
+    if (!data) {
         notFound();
     }
+
+    const { therapist, sessionTypes } = data;
 
     return (
         <>
@@ -110,19 +63,29 @@ export default async function TherapistDetailPage({ params }: { params: Promise<
                         ← Back to All Therapists
                     </Link>
                     <div className="flex flex-col md:flex-row gap-8 items-start">
-                        <div className="w-32 h-32 md:w-48 md:h-48 rounded-full bg-white/80 border-4 border-white shadow-lg flex items-center justify-center text-6xl md:text-8xl flex-shrink-0">
-                            👤
-                        </div>
+                        {therapist.photoUrl ? (
+                            <img
+                                src={therapist.photoUrl}
+                                alt={therapist.name}
+                                className="w-32 h-32 md:w-48 md:h-48 rounded-full border-4 border-white shadow-lg object-cover flex-shrink-0"
+                            />
+                        ) : (
+                            <div className="w-32 h-32 md:w-48 md:h-48 rounded-full bg-white/80 border-4 border-white shadow-lg flex items-center justify-center text-6xl md:text-8xl flex-shrink-0">
+                                👤
+                            </div>
+                        )}
                         <div>
                             <h1 className="text-3xl md:text-4xl font-bold">{therapist.name}</h1>
                             <p className="text-[var(--primary-teal)] text-lg font-medium mt-2">{therapist.title}</p>
-                            <div className="flex flex-wrap gap-2 mt-4">
-                                {therapist.specializations.map((spec, index) => (
-                                    <span key={index} className="px-3 py-1 bg-white/80 text-gray-600 text-sm rounded-full">
-                                        {spec}
-                                    </span>
-                                ))}
-                            </div>
+                            {sessionTypes.length > 0 && (
+                                <div className="flex flex-wrap gap-2 mt-4">
+                                    {sessionTypes.map((session) => (
+                                        <span key={session.id} className="px-3 py-1 bg-white/80 text-gray-600 text-sm rounded-full">
+                                            {session.name}
+                                        </span>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -158,35 +121,35 @@ export default async function TherapistDetailPage({ params }: { params: Promise<
                             <div className="card p-6 sticky top-24">
                                 <h3 className="text-lg font-semibold mb-4">Book a Session</h3>
 
-                                <a
-                                    href={`${calcomConfig.teamUrl}/${therapist.calcomUsername}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                                <Link
+                                    href={`/book/${therapist.slug}`}
                                     className="btn btn-primary w-full mb-6"
                                 >
                                     Schedule Appointment
-                                </a>
+                                </Link>
 
-                                <hr className="my-6" />
-
-                                <div className="space-y-4 text-sm">
-                                    <div>
-                                        <p className="text-gray-500 font-medium mb-2">Education</p>
-                                        <ul className="space-y-1 text-gray-600">
-                                            {therapist.education.map((edu, index) => (
-                                                <li key={index} className="flex items-start gap-2">
-                                                    <span className="text-[var(--primary-teal)]">•</span>
-                                                    {edu}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-
-                                    <div>
-                                        <p className="text-gray-500 font-medium mb-2">Languages</p>
-                                        <p className="text-gray-600">{therapist.languages.join(", ")}</p>
-                                    </div>
-                                </div>
+                                {sessionTypes.length > 0 && (
+                                    <>
+                                        <hr className="my-6" />
+                                        <div className="space-y-4 text-sm">
+                                            <p className="text-gray-500 font-medium mb-2">Available Sessions</p>
+                                            <ul className="space-y-3">
+                                                {sessionTypes.map((session) => (
+                                                    <li key={session.id} className="flex justify-between items-center">
+                                                        <span className="text-gray-600">
+                                                            {session.name} ({session.duration} min)
+                                                        </span>
+                                                        {session.price && (
+                                                            <span className="text-[var(--primary-teal)] font-medium">
+                                                                ₹{session.price}
+                                                            </span>
+                                                        )}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    </>
+                                )}
 
                                 <hr className="my-6" />
 

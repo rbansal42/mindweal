@@ -52,11 +52,39 @@ export const emailConfig = {
 } as const;
 
 // ===================
-// Cal.com Config
+// Auth Config
 // ===================
-export const calcomConfig = {
-    teamUrl: process.env.CALCOM_TEAM_URL || 'https://cal.com/mindweal',
-    apiKey: process.env.CALCOM_API_KEY || '',
+export const authConfig = {
+    secret: process.env.BETTER_AUTH_SECRET || '',
+    baseUrl: process.env.BETTER_AUTH_URL || 'http://localhost:3000',
+    google: {
+        clientId: process.env.GOOGLE_CLIENT_ID || '',
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+    },
+    session: {
+        expiresIn: 60 * 60 * 24 * 7, // 7 days
+        updateAge: 60 * 60 * 24, // 1 day
+    },
+} as const;
+
+// ===================
+// Google Calendar API Config (for Meet links)
+// ===================
+export const googleCalendarConfig = {
+    serviceAccountEmail: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || '',
+    privateKey: process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY || '',
+} as const;
+
+// ===================
+// Booking Config
+// ===================
+export const bookingConfig = {
+    defaultTimezone: 'Asia/Kolkata',
+    defaultSessionDuration: 60,
+    defaultBufferTime: 15,
+    defaultAdvanceBookingDays: 30,
+    defaultMinBookingNotice: 24,
+    reminderHoursBefore: [24, 1],
 } as const;
 
 // ===================
@@ -105,9 +133,8 @@ export const navigationConfig = {
 // Social Links
 // ===================
 export const socialLinks = {
-    instagram: 'https://instagram.com/mindweal',
-    linkedin: 'https://linkedin.com/company/mindweal',
-    twitter: 'https://twitter.com/mindweal',
-    email: 'hello@mindweal.in',
-    phone: '+91 XXXXXXXXXX',
+    instagram: 'https://www.instagram.com/mindweal_by_pihusuri',
+    linkedin: 'https://in.linkedin.com/company/mindweal-by-pihu-suri',
+    email: 'mindwealbypihusuri@gmail.com',
+    phone: '+91 9599618238',
 } as const;

@@ -6,14 +6,14 @@
    =================== */
 
 :root {
-  /* Primary Colors */
+  /* Primary Colors - Based on Logo */
   --primary-teal: #00A99D;
-  --primary-purple: #6B4C9A;
-  
-  /* Secondary Colors */
+  --primary-teal-dark: #008B82;
+
+  /* Secondary Colors - Based on Logo */
   --secondary-green: #4A9E6B;
-  --secondary-violet: #8E5BA8;
   --secondary-teal-light: #00C4B7;
+  --accent-green: #10B981;
   
   /* Neutral Colors */
   --neutral-white: #FFFFFF;
@@ -75,10 +75,10 @@
 @theme inline {
   /* Colors */
   --color-primary: var(--primary-teal);
-  --color-primary-dark: #008B82;
-  --color-secondary: var(--primary-purple);
-  --color-secondary-light: var(--secondary-violet);
-  --color-accent: var(--secondary-green);
+  --color-primary-dark: var(--primary-teal-dark);
+  --color-secondary: var(--secondary-green);
+  --color-secondary-light: var(--secondary-teal-light);
+  --color-accent: var(--accent-green);
   
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -147,11 +147,11 @@ p {
 }
 
 .gradient-secondary {
-  background: linear-gradient(135deg, var(--primary-purple) 0%, var(--secondary-violet) 100%);
+  background: linear-gradient(135deg, var(--secondary-green) 0%, var(--accent-green) 100%);
 }
 
 .gradient-mixed {
-  background: linear-gradient(135deg, var(--primary-teal) 0%, var(--primary-purple) 100%);
+  background: linear-gradient(135deg, var(--primary-teal) 0%, var(--secondary-green) 100%);
 }
 
 .text-gradient-primary {
@@ -162,7 +162,7 @@ p {
 }
 
 .text-gradient-mixed {
-  background: linear-gradient(135deg, var(--primary-teal) 0%, var(--primary-purple) 100%);
+  background: linear-gradient(135deg, var(--primary-teal) 0%, var(--secondary-green) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -199,12 +199,12 @@ p {
 }
 
 .btn-secondary {
-  background: var(--primary-purple);
+  background: var(--secondary-green);
   color: white;
 }
 
 .btn-secondary:hover {
-  background: #5A3F85;
+  background: #3d8559;
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }

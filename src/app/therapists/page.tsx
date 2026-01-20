@@ -1,41 +1,31 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { calcomConfig } from "@/config";
+import { AppDataSource } from "@/lib/db";
+import { Therapist } from "@/entities/Therapist";
 
 export const metadata: Metadata = {
     title: "Our Therapists",
     description: "Meet our experienced therapists and book a session that fits your schedule.",
 };
 
-// Sample therapists - will be replaced with Strapi data
-const therapists = [
-    {
-        id: "dr-pihu-suri",
-        name: "Dr. Pihu Suri",
-        title: "Clinical Psychologist",
-        specializations: ["Anxiety", "Depression", "Trauma", "Relationship Issues"],
-        bio: "Dr. Suri is the founder of MindWeal with extensive experience in cognitive behavioral therapy and trauma-informed care.",
-        calcomUsername: "dr-pihu-suri",
-    },
-    {
-        id: "sarah-therapist",
-        name: "Sarah Johnson",
-        title: "Licensed Counselor",
-        specializations: ["Stress Management", "Work-Life Balance", "Self-Esteem"],
-        bio: "Sarah specializes in helping professionals navigate workplace challenges and build resilience.",
-        calcomUsername: "sarah-johnson",
-    },
-    {
-        id: "michael-therapist",
-        name: "Michael Chen",
-        title: "Psychotherapist",
-        specializations: ["Mindfulness", "Anxiety", "Life Transitions"],
-        bio: "Michael integrates mindfulness-based approaches with traditional therapy for holistic healing.",
-        calcomUsername: "michael-chen",
-    },
-];
+async function getDataSource() {
+    if (!AppDataSource.isInitialized) {
+        await AppDataSource.initialize();
+    }
+    return AppDataSource;
+}
 
-export default function TherapistsPage() {
+async function getTherapists() {
+    const ds = await getDataSource();
+    const therapistRepo = ds.getRepository(Therapist);
+    return therapistRepo.find({
+        where: { isActive: true },
+        order: { name: "ASC" },
+    });
+}
+
+export default async function TherapistsPage() {
+    const therapists = await getTherapists();
     return (
         <>
             {/* Hero Section */}
@@ -56,60 +46,54 @@ export default function TherapistsPage() {
             {/* Therapists Grid */}
             <section className="section bg-white">
                 <div className="container-custom">
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {therapists.map((therapist) => (
-                            <div key={therapist.id} className="card group">
-                                <div className="aspect-square bg-gradient-to-br from-[var(--primary-teal)]/20 to-[var(--primary-purple)]/20 flex items-center justify-center">
-                                    <div className="w-32 h-32 rounded-full bg-white/80 flex items-center justify-center text-5xl">
-                                        👤
+                    {therapists.length === 0 ? (
+                        <div className="col-span-full text-center py-12">
+                            <p className="text-gray-500 text-lg">No therapists available at the moment.</p>
+                            <p className="text-gray-400 mt-2">Please check back soon.</p>
+                        </div>
+                    ) : (
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {therapists.map((therapist) => (
+                                <div key={therapist.id} className="card group">
+                                    <div className="aspect-square bg-gradient-to-br from-[var(--primary-teal)]/20 to-[var(--secondary-green)]/20 flex items-center justify-center">
+                                        {therapist.photoUrl ? (
+                                            <img
+                                                src={therapist.photoUrl}
+                                                alt={therapist.name}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        ) : (
+                                            <div className="w-32 h-32 rounded-full bg-white/80 flex items-center justify-center text-5xl">
+                                                👤
+                                            </div>
+                                        )}
                                     </div>
-                                </div>
-                                <div className="card-body p-6">
-                                    <h3 className="text-xl font-semibold">{therapist.name}</h3>
-                                    <p className="text-[var(--primary-teal)] text-sm font-medium mt-1">
-                                        {therapist.title}
-                                    </p>
-                                    <p className="text-gray-600 mt-3 text-sm line-clamp-3">{therapist.bio}</p>
+                                    <div className="card-body p-6">
+                                        <h3 className="text-xl font-semibold">{therapist.name}</h3>
+                                        <p className="text-[var(--primary-teal)] text-sm font-medium mt-1">
+                                            {therapist.title}
+                                        </p>
+                                        <p className="text-gray-600 mt-3 text-sm line-clamp-3">{therapist.bio}</p>
 
-                                    <div className="mt-4">
-                                        <p className="text-xs text-gray-500 mb-2">Specializations:</p>
-                                        <div className="flex flex-wrap gap-2">
-                                            {therapist.specializations.slice(0, 3).map((spec, i) => (
-                                                <span
-                                                    key={i}
-                                                    className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full"
-                                                >
-                                                    {spec}
-                                                </span>
-                                            ))}
-                                            {therapist.specializations.length > 3 && (
-                                                <span className="px-2 py-1 text-gray-400 text-xs">
-                                                    +{therapist.specializations.length - 3} more
-                                                </span>
-                                            )}
+                                        <div className="mt-6 flex gap-3">
+                                            <Link
+                                                href={`/therapists/${therapist.slug}`}
+                                                className="btn btn-outline flex-1 py-2 text-sm"
+                                            >
+                                                View Profile
+                                            </Link>
+                                            <Link
+                                                href={`/book/${therapist.slug}`}
+                                                className="btn btn-primary flex-1 py-2 text-sm"
+                                            >
+                                                Book Session
+                                            </Link>
                                         </div>
                                     </div>
-
-                                    <div className="mt-6 flex gap-3">
-                                        <Link
-                                            href={`/therapists/${therapist.id}`}
-                                            className="btn btn-outline flex-1 py-2 text-sm"
-                                        >
-                                            View Profile
-                                        </Link>
-                                        <a
-                                            href={`${calcomConfig.teamUrl}/${therapist.calcomUsername}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="btn btn-primary flex-1 py-2 text-sm"
-                                        >
-                                            Book Session
-                                        </a>
-                                    </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </section>
 
