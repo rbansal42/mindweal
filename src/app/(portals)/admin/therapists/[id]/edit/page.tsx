@@ -20,12 +20,37 @@ async function getDataSource() {
 
 async function getTherapist(id: string) {
     const ds = await getDataSource();
-    return ds.getRepository(Therapist).findOne({ where: { id, deletedAt: IsNull() } });
+    const therapist = await ds.getRepository(Therapist).findOne({ where: { id, deletedAt: IsNull() } });
+    if (!therapist) return null;
+    // Convert TypeORM entity to plain object for Client Component serialization
+    return {
+        id: therapist.id,
+        userId: therapist.userId,
+        slug: therapist.slug,
+        name: therapist.name,
+        title: therapist.title,
+        bio: therapist.bio,
+        email: therapist.email,
+        phone: therapist.phone,
+        photoUrl: therapist.photoUrl,
+        defaultSessionDuration: therapist.defaultSessionDuration,
+        bufferTime: therapist.bufferTime,
+        advanceBookingDays: therapist.advanceBookingDays,
+        minBookingNotice: therapist.minBookingNotice,
+        isActive: therapist.isActive,
+        specializationIds: therapist.specializationIds,
+    };
 }
 
 async function getSpecializations() {
     const ds = await getDataSource();
-    return ds.getRepository(Specialization).find({ where: { isActive: true }, order: { name: "ASC" } });
+    const specializations = await ds.getRepository(Specialization).find({ where: { isActive: true }, order: { name: "ASC" } });
+    // Convert TypeORM entities to plain objects for Client Component serialization
+    return specializations.map(s => ({
+        id: s.id,
+        name: s.name,
+        isActive: s.isActive,
+    }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {

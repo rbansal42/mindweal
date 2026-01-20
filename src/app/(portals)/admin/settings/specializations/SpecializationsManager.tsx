@@ -8,7 +8,6 @@ interface Specialization {
     id: string;
     name: string;
     isActive: boolean;
-    createdAt: Date;
 }
 
 interface Props {

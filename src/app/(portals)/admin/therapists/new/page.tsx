@@ -21,7 +21,13 @@ async function getDataSource() {
 async function getSpecializations() {
     const ds = await getDataSource();
     const repo = ds.getRepository(Specialization);
-    return repo.find({ where: { isActive: true }, order: { name: "ASC" } });
+    const specializations = await repo.find({ where: { isActive: true }, order: { name: "ASC" } });
+    // Convert TypeORM entities to plain objects for Client Component serialization
+    return specializations.map(s => ({
+        id: s.id,
+        name: s.name,
+        isActive: s.isActive,
+    }));
 }
 
 export default async function NewTherapistPage() {
