@@ -1,34 +1,35 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
+import { AppDataSource } from "@/lib/db";
+import { CommunityProgram } from "@/entities/CommunityProgram";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
     title: "Community",
     description: "Join our supportive community through various programs designed to connect, learn, and grow together.",
 };
 
-// Sample community programs - will be replaced with Strapi data
-const communityPrograms = [
-    {
-        slug: "support-circles",
-        name: "Support Circles",
-        description: "Weekly group sessions where individuals share experiences and support each other in a safe, facilitated environment.",
-        schedule: "Every Saturday, 10 AM",
-    },
-    {
-        slug: "mindful-mornings",
-        name: "Mindful Mornings",
-        description: "Start your day with guided meditation and mindfulness exercises in a group setting.",
-        schedule: "Mon, Wed, Fri - 7 AM",
-    },
-    {
-        slug: "youth-connect",
-        name: "Youth Connect",
-        description: "A safe space for young adults (18-25) to discuss challenges, build connections, and develop coping skills.",
-        schedule: "Every alternate Sunday",
-    },
-];
+async function getDataSource() {
+    if (!AppDataSource.isInitialized) {
+        await AppDataSource.initialize();
+    }
+    return AppDataSource;
+}
 
-export default function CommunityPage() {
+async function getCommunityPrograms(): Promise<CommunityProgram[]> {
+    const ds = await getDataSource();
+    const communityProgramRepo = ds.getRepository(CommunityProgram);
+    return communityProgramRepo.find({
+        where: { status: "published", isActive: true },
+        order: { createdAt: "DESC" },
+    });
+}
+
+export default async function CommunityPage() {
+    const communityPrograms = await getCommunityPrograms();
+
     return (
         <>
             {/* Hero Section */}
@@ -49,29 +50,55 @@ export default function CommunityPage() {
             {/* Programs */}
             <section className="section bg-white">
                 <div className="container-custom">
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {communityPrograms.map((program) => (
-                            <Link
-                                key={program.slug}
-                                href={`/community/${program.slug}`}
-                                className="card group hover:border-[var(--secondary-violet)] border-2 border-transparent transition-all"
-                            >
-                                <div className="aspect-video bg-gradient-to-br from-[var(--secondary-violet)]/20 to-[var(--primary-teal)]/20 flex items-center justify-center">
-                                    <span className="text-5xl">🤝</span>
-                                </div>
-                                <div className="card-body p-6">
-                                    <h3 className="text-xl font-semibold">{program.name}</h3>
-                                    <p className="text-gray-600 mt-2 text-sm">{program.description}</p>
-                                    <div className="mt-4 flex items-center gap-2 text-sm text-[var(--secondary-violet)]">
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        {program.schedule}
+                    {communityPrograms.length > 0 ? (
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {communityPrograms.map((program) => (
+                                <Link
+                                    key={program.slug}
+                                    href={`/community/${program.slug}`}
+                                    className="card group hover:border-[var(--secondary-violet)] border-2 border-transparent transition-all"
+                                >
+                                    <div className="aspect-video bg-gradient-to-br from-[var(--secondary-violet)]/20 to-[var(--primary-teal)]/20 flex items-center justify-center overflow-hidden">
+                                        {program.coverImage ? (
+                                            <Image
+                                                src={program.coverImage}
+                                                alt={program.name}
+                                                width={400}
+                                                height={225}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        ) : (
+                                            <span className="text-5xl">🤝</span>
+                                        )}
                                     </div>
-                                </div>
-                            </Link>
-                        ))}
-                    </div>
+                                    <div className="card-body p-6">
+                                        <h3 className="text-xl font-semibold">{program.name}</h3>
+                                        <div
+                                            className="text-gray-600 mt-2 text-sm line-clamp-3 prose prose-teal max-w-none prose-sm"
+                                            dangerouslySetInnerHTML={{
+                                                __html: program.description.substring(0, 200) + (program.description.length > 200 ? "..." : ""),
+                                            }}
+                                        />
+                                        <div className="mt-4 flex items-center gap-2 text-sm text-[var(--secondary-violet)]">
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            {program.schedule}
+                                        </div>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="text-center py-12">
+                            <p className="text-xl text-gray-500">
+                                No community programs are currently available.
+                            </p>
+                            <p className="mt-2 text-gray-400">
+                                Check back soon for upcoming programs!
+                            </p>
+                        </div>
+                    )}
                 </div>
             </section>
 

@@ -1,143 +1,61 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
+import { AppDataSource } from "@/lib/db";
+import { CommunityProgram } from "@/entities/CommunityProgram";
 
-// Sample community programs data - will be replaced with Strapi fetch
-const communityPrograms = [
-    {
-        slug: "support-circles",
-        name: "Support Circles",
-        description: `Weekly group sessions where individuals share experiences and support each other in a safe, facilitated environment.
+export const dynamic = "force-dynamic";
 
-## About Support Circles
+async function getDataSource() {
+    if (!AppDataSource.isInitialized) {
+        await AppDataSource.initialize();
+    }
+    return AppDataSource;
+}
 
-Support Circles are small, intimate group sessions designed to create a safe space for individuals to share their experiences, challenges, and victories. Led by trained facilitators, these sessions foster connection, reduce isolation, and build a sense of community.
+async function getCommunityProgram(slug: string): Promise<CommunityProgram | null> {
+    const ds = await getDataSource();
+    const communityProgramRepo = ds.getRepository(CommunityProgram);
+    return communityProgramRepo.findOne({
+        where: { slug, status: "published", isActive: true },
+    });
+}
 
-## What Happens in a Session
-
-Each session typically includes:
-- Check-in round
-- Open sharing time
-- Facilitated discussion on a theme
-- Mindfulness or grounding exercise
-- Closing reflection
-
-## Who Can Join
-
-Support Circles are open to anyone who:
-- Is seeking connection with others on similar journeys
-- Wants a supportive, non-judgmental environment
-- Is committed to maintaining group confidentiality
-- Is currently stable and not in acute crisis
-
-## Guidelines
-
-- Confidentiality is paramount
-- No advice-giving unless requested
-- Active listening and respect for all
-- Regular attendance encouraged`,
-        schedule: "Every Saturday, 10:00 AM - 11:30 AM",
-        facilitator: "Dr. Pihu Suri",
-        groupSize: "6-10 participants",
-        location: "Online (Zoom)",
-    },
-    {
-        slug: "mindful-mornings",
-        name: "Mindful Mornings",
-        description: `Start your day with guided meditation and mindfulness exercises in a group setting.
-
-## About Mindful Mornings
-
-Mindful Mornings is a community program designed to help you establish a consistent morning mindfulness practice. By starting your day with intention and awareness, you set a positive tone for everything that follows.
-
-## What to Expect
-
-Each session includes:
-- Short centering exercise
-- 15-20 minute guided meditation
-- Brief reflection or journaling prompt
-- Optional sharing
-
-## Benefits
-
-Regular participants report:
-- Improved focus throughout the day
-- Reduced morning anxiety
-- Better emotional regulation
-- Increased sense of calm and groundedness
-
-## Practical Details
-
-- No prior meditation experience needed
-- Join from home, no travel required
-- Sessions are drop-in; attend when you can`,
-        schedule: "Mon, Wed, Fri - 7:00 AM - 7:30 AM",
-        facilitator: "Michael Chen",
-        groupSize: "Open (drop-in)",
-        location: "Online (Zoom)",
-    },
-    {
-        slug: "youth-connect",
-        name: "Youth Connect",
-        description: `A safe space for young adults (18-25) to discuss challenges, build connections, and develop coping skills.
-
-## About Youth Connect
-
-Youth Connect is specifically designed for young adults navigating the unique challenges of this life stage—career decisions, relationship dynamics, identity formation, and more. This is a peer-support group facilitated by a trained professional.
-
-## Discussion Topics
-
-Sessions often explore themes like:
-- Academic and career pressures
-- Social media and mental health
-- Relationship and boundary setting
-- Identity and self-discovery
-- Managing anxiety and stress
-
-## Community Guidelines
-
-- Respect diverse perspectives
-- Maintain confidentiality
-- Active participation encouraged
-- Phones on silent during sessions
-
-## Who It's For
-
-This program is for young adults aged 18-25 who want to:
-- Connect with peers facing similar challenges
-- Develop healthy coping strategies
-- Build a supportive network
-- Explore personal growth in a safe environment`,
-        schedule: "Every alternate Sunday, 4:00 PM - 5:30 PM",
-        facilitator: "Sarah Johnson",
-        groupSize: "8-12 participants",
-        location: "Hybrid (Online + In-person)",
-    },
-];
+async function getAllCommunityProgramSlugs(): Promise<{ slug: string }[]> {
+    const ds = await getDataSource();
+    const communityProgramRepo = ds.getRepository(CommunityProgram);
+    const programs = await communityProgramRepo.find({
+        where: { status: "published", isActive: true },
+        select: ["slug"],
+    });
+    return programs.map((p) => ({ slug: p.slug }));
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
-    const program = communityPrograms.find((p) => p.slug === slug);
+    const program = await getCommunityProgram(slug);
 
     if (!program) {
         return { title: "Program Not Found" };
     }
 
+    // Strip HTML tags for description
+    const plainDescription = program.description.replace(/<[^>]*>/g, "").substring(0, 160);
+
     return {
         title: program.name,
-        description: program.description.substring(0, 160),
+        description: plainDescription,
     };
 }
 
 export async function generateStaticParams() {
-    return communityPrograms.map((program) => ({
-        slug: program.slug,
-    }));
+    return getAllCommunityProgramSlugs();
 }
 
 export default async function CommunityProgramDetailPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
-    const program = communityPrograms.find((p) => p.slug === slug);
+    const program = await getCommunityProgram(slug);
 
     if (!program) {
         notFound();
@@ -171,23 +89,21 @@ export default async function CommunityProgramDetailPage({ params }: { params: P
                     <div className="grid lg:grid-cols-3 gap-12">
                         {/* Main Content */}
                         <div className="lg:col-span-2">
-                            <div className="prose prose-gray max-w-none">
-                                {program.description.split('\n\n').map((paragraph, index) => {
-                                    if (paragraph.startsWith('## ')) {
-                                        return <h2 key={index} className="text-2xl font-bold mt-8 mb-4">{paragraph.replace('## ', '')}</h2>;
-                                    }
-                                    if (paragraph.startsWith('- ')) {
-                                        return (
-                                            <ul key={index} className="list-disc list-inside space-y-2 text-gray-600">
-                                                {paragraph.split('\n').map((item, i) => (
-                                                    <li key={i}>{item.replace('- ', '')}</li>
-                                                ))}
-                                            </ul>
-                                        );
-                                    }
-                                    return <p key={index} className="text-gray-600 leading-relaxed">{paragraph}</p>;
-                                })}
-                            </div>
+                            {program.coverImage && (
+                                <div className="mb-8 rounded-lg overflow-hidden">
+                                    <Image
+                                        src={program.coverImage}
+                                        alt={program.name}
+                                        width={800}
+                                        height={450}
+                                        className="w-full h-auto object-cover"
+                                    />
+                                </div>
+                            )}
+                            <div
+                                className="prose prose-teal max-w-none"
+                                dangerouslySetInnerHTML={{ __html: program.description }}
+                            />
                         </div>
 
                         {/* Sidebar */}
@@ -199,21 +115,6 @@ export default async function CommunityProgramDetailPage({ params }: { params: P
                                     <div>
                                         <p className="text-gray-500">Schedule</p>
                                         <p className="font-medium">{program.schedule}</p>
-                                    </div>
-
-                                    <div>
-                                        <p className="text-gray-500">Facilitator</p>
-                                        <p className="font-medium">{program.facilitator}</p>
-                                    </div>
-
-                                    <div>
-                                        <p className="text-gray-500">Group Size</p>
-                                        <p className="font-medium">{program.groupSize}</p>
-                                    </div>
-
-                                    <div>
-                                        <p className="text-gray-500">Location</p>
-                                        <p className="font-medium">{program.location}</p>
                                     </div>
                                 </div>
 
