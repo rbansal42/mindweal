@@ -55,9 +55,9 @@ export default function AdminSidebar({ user, role }: AdminSidebarProps) {
             {/* Mobile menu button */}
             <button
                 onClick={() => setMobileMenuOpen(true)}
-                className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-white shadow-md"
+                className="lg:hidden fixed top-3 left-3 z-50 p-2 rounded-lg bg-white shadow-md"
             >
-                <Menu className="w-6 h-6 text-gray-600" />
+                <Menu className="w-5 h-5 text-gray-600" />
             </button>
 
             {/* Mobile overlay */}
@@ -72,17 +72,17 @@ export default function AdminSidebar({ user, role }: AdminSidebarProps) {
             <aside
                 className={`
                     fixed lg:static inset-y-0 left-0 z-50
-                    w-64 bg-gray-900 text-white
+                    w-56 bg-gray-900 text-white
                     transform transition-transform duration-200 ease-in-out
                     ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
                 `}
             >
                 <div className="flex flex-col h-full">
                     {/* Header */}
-                    <div className="p-6 border-b border-gray-800">
+                    <div className="p-4 border-b border-gray-800">
                         <div className="flex items-center justify-between">
                             <Link href="/" className="flex items-center gap-2">
-                                <span className="text-xl font-bold text-primary">
+                                <span className="text-lg font-bold text-primary">
                                     Mindweal
                                 </span>
                             </Link>
@@ -90,23 +90,23 @@ export default function AdminSidebar({ user, role }: AdminSidebarProps) {
                                 onClick={() => setMobileMenuOpen(false)}
                                 className="lg:hidden p-1 rounded-lg hover:bg-gray-800"
                             >
-                                <X className="w-5 h-5 text-gray-400" />
+                                <X className="w-4 h-4 text-gray-400" />
                             </button>
                         </div>
                         <p className="text-xs text-gray-500 mt-1">Admin Dashboard</p>
                     </div>
 
                     {/* User info */}
-                    <div className="p-4 border-b border-gray-800">
+                    <div className="p-3 border-b border-gray-800">
                         <div className="flex items-center gap-3">
                             {user.image ? (
                                 <img
                                     src={user.image}
                                     alt={user.name}
-                                    className="w-10 h-10 rounded-full object-cover"
+                                    className="w-8 h-8 rounded-full object-cover"
                                 />
                             ) : (
-                                <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                                <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
                                     <span className="text-primary font-medium">
                                         {user.name.charAt(0).toUpperCase()}
                                     </span>
@@ -124,7 +124,7 @@ export default function AdminSidebar({ user, role }: AdminSidebarProps) {
                     </div>
 
                     {/* Navigation */}
-                    <nav className="flex-1 p-4">
+                    <nav className="flex-1 p-3">
                         <ul className="space-y-1">
                             {filteredNavItems.map((item) => {
                                 const isActive =
@@ -138,7 +138,7 @@ export default function AdminSidebar({ user, role }: AdminSidebarProps) {
                                             href={item.href}
                                             onClick={() => setMobileMenuOpen(false)}
                                             className={`
-                                                flex items-center gap-3 px-4 py-3 rounded-lg
+                                                flex items-center gap-3 px-3 py-2 rounded-lg
                                                 transition-colors
                                                 ${
                                                     isActive
@@ -147,7 +147,7 @@ export default function AdminSidebar({ user, role }: AdminSidebarProps) {
                                                 }
                                             `}
                                         >
-                                            <item.icon className="w-5 h-5" />
+                                            <item.icon className="w-4 h-4" />
                                             <span className="font-medium">
                                                 {item.label}
                                             </span>
@@ -159,12 +159,12 @@ export default function AdminSidebar({ user, role }: AdminSidebarProps) {
                     </nav>
 
                     {/* Sign out */}
-                    <div className="p-4 border-t border-gray-800">
+                    <div className="p-3 border-t border-gray-800">
                         <button
                             onClick={handleSignOut}
-                            className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-800 hover:text-white w-full transition-colors"
+                            className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:bg-gray-800 hover:text-white w-full transition-colors"
                         >
-                            <LogOut className="w-5 h-5" />
+                            <LogOut className="w-4 h-4" />
                             <span className="font-medium">Sign Out</span>
                         </button>
                     </div>

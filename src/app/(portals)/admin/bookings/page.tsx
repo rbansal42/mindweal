@@ -63,10 +63,10 @@ export default async function AdminBookingsPage() {
     };
 
     return (
-        <div className="max-w-6xl mx-auto">
-            <div className="mb-8 flex items-center justify-between">
+        <div className="max-w-5xl mx-auto">
+            <div className="mb-6 flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">
+                    <h1 className="text-xl font-bold text-gray-900">
                         All Bookings
                     </h1>
                     <p className="text-gray-600 mt-1">
@@ -80,50 +80,50 @@ export default async function AdminBookingsPage() {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-                <div className="bg-white rounded-xl p-4 shadow-sm">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+                <div className="bg-white rounded-xl p-3 shadow-sm">
                     <p className="text-gray-500 text-sm">Total</p>
-                    <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
+                    <p className="text-xl font-bold text-gray-900">{stats.total}</p>
                 </div>
-                <div className="bg-green-50 rounded-xl p-4">
+                <div className="bg-green-50 rounded-xl p-3">
                     <p className="text-green-600 text-sm">Confirmed</p>
-                    <p className="text-2xl font-bold text-green-700">{stats.confirmed}</p>
+                    <p className="text-xl font-bold text-green-700">{stats.confirmed}</p>
                 </div>
-                <div className="bg-blue-50 rounded-xl p-4">
+                <div className="bg-blue-50 rounded-xl p-3">
                     <p className="text-blue-600 text-sm">Completed</p>
-                    <p className="text-2xl font-bold text-blue-700">{stats.completed}</p>
+                    <p className="text-xl font-bold text-blue-700">{stats.completed}</p>
                 </div>
-                <div className="bg-red-50 rounded-xl p-4">
+                <div className="bg-red-50 rounded-xl p-3">
                     <p className="text-red-600 text-sm">Cancelled</p>
-                    <p className="text-2xl font-bold text-red-700">{stats.cancelled}</p>
+                    <p className="text-xl font-bold text-red-700">{stats.cancelled}</p>
                 </div>
             </div>
 
             {/* Bookings Table */}
-            <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full">
                         <thead className="bg-gray-50 border-b border-gray-100">
                             <tr>
-                                <th className="text-left text-sm font-medium text-gray-500 px-6 py-4">
+                                <th className="text-left text-sm font-medium text-gray-500 px-4 py-3">
                                     Reference
                                 </th>
-                                <th className="text-left text-sm font-medium text-gray-500 px-6 py-4">
+                                <th className="text-left text-sm font-medium text-gray-500 px-4 py-3">
                                     Client
                                 </th>
-                                <th className="text-left text-sm font-medium text-gray-500 px-6 py-4">
+                                <th className="text-left text-sm font-medium text-gray-500 px-4 py-3">
                                     Therapist
                                 </th>
-                                <th className="text-left text-sm font-medium text-gray-500 px-6 py-4">
+                                <th className="text-left text-sm font-medium text-gray-500 px-4 py-3">
                                     Date & Time
                                 </th>
-                                <th className="text-left text-sm font-medium text-gray-500 px-6 py-4">
+                                <th className="text-left text-sm font-medium text-gray-500 px-4 py-3">
                                     Type
                                 </th>
-                                <th className="text-left text-sm font-medium text-gray-500 px-6 py-4">
+                                <th className="text-left text-sm font-medium text-gray-500 px-4 py-3">
                                     Status
                                 </th>
-                                <th className="text-right text-sm font-medium text-gray-500 px-6 py-4">
+                                <th className="text-right text-sm font-medium text-gray-500 px-4 py-3">
                                     Actions
                                 </th>
                             </tr>
@@ -131,8 +131,8 @@ export default async function AdminBookingsPage() {
                         <tbody className="divide-y divide-gray-100">
                             {bookings.length === 0 ? (
                                 <tr>
-                                    <td colSpan={7} className="px-6 py-12 text-center">
-                                        <Calendar className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                                    <td colSpan={7} className="px-4 py-8 text-center">
+                                        <Calendar className="w-10 h-10 text-gray-300 mx-auto mb-3" />
                                         <p className="text-gray-500">No bookings found</p>
                                     </td>
                                 </tr>
@@ -144,12 +144,12 @@ export default async function AdminBookingsPage() {
                                             key={booking.id}
                                             className="hover:bg-gray-50 transition-colors"
                                         >
-                                            <td className="px-6 py-4">
+                                            <td className="px-4 py-3">
                                                 <span className="font-mono text-sm text-primary font-medium">
                                                     {booking.bookingReference}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4">
+                                            <td className="px-4 py-3">
                                                 <div>
                                                     <p className="font-medium text-gray-900">
                                                         {booking.clientName}
@@ -159,12 +159,12 @@ export default async function AdminBookingsPage() {
                                                     </p>
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4">
+                                            <td className="px-4 py-3">
                                                 <p className="text-gray-900">
                                                     {booking.therapist?.name || "—"}
                                                 </p>
                                             </td>
-                                            <td className="px-6 py-4">
+                                            <td className="px-4 py-3">
                                                 <p className="text-gray-900">
                                                     {format(
                                                         new Date(booking.startDatetime),
@@ -183,24 +183,24 @@ export default async function AdminBookingsPage() {
                                                     )}
                                                 </p>
                                             </td>
-                                            <td className="px-6 py-4">
+                                            <td className="px-4 py-3">
                                                 <div className="flex items-center gap-2">
-                                                    <Icon className="w-4 h-4 text-gray-400" />
+                                                    <Icon className="w-3.5 h-3.5 text-gray-400" />
                                                     <span className="text-sm text-gray-600 capitalize">
                                                         {booking.meetingType.replace("_", "-")}
                                                     </span>
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4">
+                                            <td className="px-4 py-3">
                                                 <span
-                                                    className={`px-3 py-1 rounded-full text-xs font-medium capitalize ${
+                                                    className={`px-2 py-0.5 rounded-full text-xs font-medium capitalize ${
                                                         statusColors[booking.status]
                                                     }`}
                                                 >
                                                     {booking.status}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 text-right">
+                                            <td className="px-4 py-3 text-right">
                                                 <Link
                                                     href={`/booking/${booking.bookingReference}`}
                                                     className="text-primary hover:text-primary-dark text-sm font-medium"

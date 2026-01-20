@@ -123,9 +123,9 @@ export default async function AdminDashboard() {
     const stats = await getDashboardStats();
 
     return (
-        <div className="max-w-6xl mx-auto">
-            <div className="mb-8">
-                <h1 className="text-2xl font-bold text-gray-900">
+        <div className="max-w-5xl mx-auto">
+            <div className="mb-6">
+                <h1 className="text-xl font-bold text-gray-900">
                     Admin Dashboard
                 </h1>
                 <p className="text-gray-600 mt-1">
@@ -134,51 +134,51 @@ export default async function AdminDashboard() {
             </div>
 
             {/* Quick Stats */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                <div className="bg-white rounded-xl p-6 shadow-sm">
-                    <div className="flex items-center gap-3 mb-2">
-                        <div className="p-2 rounded-lg bg-primary/10">
-                            <Calendar className="w-5 h-5 text-primary" />
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+                <div className="bg-white rounded-xl p-4 shadow-sm">
+                    <div className="flex items-center gap-2 mb-2">
+                        <div className="p-1.5 rounded-lg bg-primary/10">
+                            <Calendar className="w-4 h-4 text-primary" />
                         </div>
                         <p className="text-sm text-gray-500">Today</p>
                     </div>
-                    <p className="text-3xl font-bold text-gray-900">
+                    <p className="text-2xl font-bold text-gray-900">
                         {stats.todayCount}
                     </p>
                     <p className="text-sm text-gray-500">sessions</p>
                 </div>
-                <div className="bg-white rounded-xl p-6 shadow-sm">
-                    <div className="flex items-center gap-3 mb-2">
-                        <div className="p-2 rounded-lg bg-blue-100">
-                            <Clock className="w-5 h-5 text-blue-600" />
+                <div className="bg-white rounded-xl p-4 shadow-sm">
+                    <div className="flex items-center gap-2 mb-2">
+                        <div className="p-1.5 rounded-lg bg-blue-100">
+                            <Clock className="w-4 h-4 text-blue-600" />
                         </div>
                         <p className="text-sm text-gray-500">This Week</p>
                     </div>
-                    <p className="text-3xl font-bold text-gray-900">
+                    <p className="text-2xl font-bold text-gray-900">
                         {stats.weekCount}
                     </p>
                     <p className="text-sm text-gray-500">bookings</p>
                 </div>
-                <div className="bg-white rounded-xl p-6 shadow-sm">
-                    <div className="flex items-center gap-3 mb-2">
-                        <div className="p-2 rounded-lg bg-green-100">
-                            <Users className="w-5 h-5 text-green-600" />
+                <div className="bg-white rounded-xl p-4 shadow-sm">
+                    <div className="flex items-center gap-2 mb-2">
+                        <div className="p-1.5 rounded-lg bg-green-100">
+                            <Users className="w-4 h-4 text-green-600" />
                         </div>
                         <p className="text-sm text-gray-500">Therapists</p>
                     </div>
-                    <p className="text-3xl font-bold text-gray-900">
+                    <p className="text-2xl font-bold text-gray-900">
                         {stats.therapistCount}
                     </p>
                     <p className="text-sm text-gray-500">active</p>
                 </div>
-                <div className="bg-white rounded-xl p-6 shadow-sm">
-                    <div className="flex items-center gap-3 mb-2">
-                        <div className="p-2 rounded-lg bg-purple-100">
-                            <TrendingUp className="w-5 h-5 text-purple-600" />
+                <div className="bg-white rounded-xl p-4 shadow-sm">
+                    <div className="flex items-center gap-2 mb-2">
+                        <div className="p-1.5 rounded-lg bg-purple-100">
+                            <TrendingUp className="w-4 h-4 text-purple-600" />
                         </div>
                         <p className="text-sm text-gray-500">This Month</p>
                     </div>
-                    <p className="text-3xl font-bold text-gray-900">
+                    <p className="text-2xl font-bold text-gray-900">
                         {stats.monthTotal}
                     </p>
                     <p className="text-sm text-gray-500">
@@ -188,34 +188,34 @@ export default async function AdminDashboard() {
             </div>
 
             {/* Monthly Stats */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
-                <div className="bg-green-50 rounded-xl p-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-6">
+                <div className="bg-green-50 rounded-xl p-4">
                     <div className="flex items-center gap-3">
-                        <CheckCircle className="w-8 h-8 text-green-500" />
+                        <CheckCircle className="w-6 h-6 text-green-500" />
                         <div>
-                            <p className="text-2xl font-bold text-green-700">
+                            <p className="text-xl font-bold text-green-700">
                                 {stats.completedThisMonth}
                             </p>
                             <p className="text-sm text-green-600">Completed this month</p>
                         </div>
                     </div>
                 </div>
-                <div className="bg-red-50 rounded-xl p-6">
+                <div className="bg-red-50 rounded-xl p-4">
                     <div className="flex items-center gap-3">
-                        <XCircle className="w-8 h-8 text-red-500" />
+                        <XCircle className="w-6 h-6 text-red-500" />
                         <div>
-                            <p className="text-2xl font-bold text-red-700">
+                            <p className="text-xl font-bold text-red-700">
                                 {stats.cancelledThisMonth}
                             </p>
                             <p className="text-sm text-red-600">Cancelled this month</p>
                         </div>
                     </div>
                 </div>
-                <div className="bg-blue-50 rounded-xl p-6">
+                <div className="bg-blue-50 rounded-xl p-4">
                     <div className="flex items-center gap-3">
-                        <Users className="w-8 h-8 text-blue-500" />
+                        <Users className="w-6 h-6 text-blue-500" />
                         <div>
-                            <p className="text-2xl font-bold text-blue-700">
+                            <p className="text-xl font-bold text-blue-700">
                                 {stats.clientCount}
                             </p>
                             <p className="text-sm text-blue-600">Registered clients</p>
@@ -225,9 +225,9 @@ export default async function AdminDashboard() {
             </div>
 
             {/* Recent Bookings */}
-            <div className="bg-white rounded-2xl shadow-sm">
-                <div className="p-6 border-b border-gray-100 flex items-center justify-between">
-                    <h2 className="text-lg font-semibold text-gray-900">
+            <div className="bg-white rounded-xl shadow-sm">
+                <div className="p-4 border-b border-gray-100 flex items-center justify-between">
+                    <h2 className="text-base font-semibold text-gray-900">
                         Recent Bookings
                     </h2>
                     <Link
@@ -240,8 +240,8 @@ export default async function AdminDashboard() {
                 </div>
                 <div className="divide-y divide-gray-100">
                     {stats.recentBookings.length === 0 ? (
-                        <div className="p-8 text-center">
-                            <Calendar className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                        <div className="p-6 text-center">
+                            <Calendar className="w-10 h-10 text-gray-300 mx-auto mb-3" />
                             <p className="text-gray-500">No bookings yet</p>
                         </div>
                     ) : (
@@ -252,7 +252,7 @@ export default async function AdminDashboard() {
                                 <Link
                                     key={booking.id}
                                     href={`/booking/${booking.bookingReference}`}
-                                    className="flex items-center gap-4 p-4 hover:bg-gray-50 transition-colors"
+                                    className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors"
                                 >
                                     <StatusIcon
                                         className={`w-5 h-5 ${
@@ -287,13 +287,13 @@ export default async function AdminDashboard() {
             </div>
 
             {/* Quick Actions */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-6">
                 <Link
                     href="/admin/bookings/new"
-                    className="bg-primary text-white rounded-xl p-6 hover:bg-primary-dark transition-colors"
+                    className="bg-primary text-white rounded-xl p-4 hover:bg-primary-dark transition-colors"
                 >
-                    <div className="flex items-center gap-4">
-                        <Calendar className="w-8 h-8" />
+                    <div className="flex items-center gap-3">
+                        <Calendar className="w-6 h-6" />
                         <div>
                             <h3 className="font-semibold">Create Booking</h3>
                             <p className="text-sm text-white/80">
@@ -304,11 +304,11 @@ export default async function AdminDashboard() {
                 </Link>
                 <Link
                     href="/admin/calendar"
-                    className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow"
+                    className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow"
                 >
-                    <div className="flex items-center gap-4">
-                        <div className="p-2 rounded-lg bg-blue-100">
-                            <Calendar className="w-6 h-6 text-blue-600" />
+                    <div className="flex items-center gap-3">
+                        <div className="p-1.5 rounded-lg bg-blue-100">
+                            <Calendar className="w-5 h-5 text-blue-600" />
                         </div>
                         <div>
                             <h3 className="font-semibold text-gray-900">
@@ -322,11 +322,11 @@ export default async function AdminDashboard() {
                 </Link>
                 <Link
                     href="/admin/therapists"
-                    className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow"
+                    className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow"
                 >
-                    <div className="flex items-center gap-4">
-                        <div className="p-2 rounded-lg bg-green-100">
-                            <Users className="w-6 h-6 text-green-600" />
+                    <div className="flex items-center gap-3">
+                        <div className="p-1.5 rounded-lg bg-green-100">
+                            <Users className="w-5 h-5 text-green-600" />
                         </div>
                         <div>
                             <h3 className="font-semibold text-gray-900">

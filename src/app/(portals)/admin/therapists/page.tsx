@@ -72,11 +72,11 @@ export default async function TherapistsPage() {
     const therapists = await getTherapists();
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4">
             {/* Header with actions */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold">Therapists</h1>
+                    <h1 className="text-xl font-bold">Therapists</h1>
                     <p className="text-gray-600 mt-1">
                         Manage therapist profiles and view their statistics
                     </p>
@@ -98,10 +98,10 @@ export default async function TherapistsPage() {
             </div>
 
             {/* Therapist Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {therapists.length === 0 ? (
-                    <div className="col-span-2 card p-12 text-center">
-                        <Users className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                    <div className="col-span-2 card p-8 text-center">
+                        <Users className="w-10 h-10 text-gray-300 mx-auto mb-3" />
                         <p className="text-gray-500">No therapists found</p>
                         <Link href="/admin/therapists/new" className="text-[var(--primary-teal)] hover:underline mt-2 inline-block">
                             Add your first therapist
@@ -114,22 +114,22 @@ export default async function TherapistsPage() {
                             href={`/admin/therapists/${therapist.id}`}
                             className="card overflow-hidden hover:shadow-lg transition-shadow"
                         >
-                            <div className="p-6">
-                                <div className="flex items-start gap-4">
+                            <div className="p-4">
+                                <div className="flex items-start gap-3">
                                     {therapist.photoUrl ? (
                                         <img
                                             src={therapist.photoUrl}
                                             alt={therapist.name}
-                                            className="w-16 h-16 rounded-full object-cover"
+                                            className="w-12 h-12 rounded-full object-cover"
                                         />
                                     ) : (
-                                        <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center">
-                                            <User className="w-6 h-6 text-gray-400" />
+                                        <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
+                                            <User className="w-5 h-5 text-gray-400" />
                                         </div>
                                     )}
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2">
-                                            <h3 className="text-lg font-semibold truncate">
+                                            <h3 className="text-base font-semibold truncate">
                                                 {therapist.name}
                                             </h3>
                                             <span className={`px-2 py-0.5 text-xs rounded-full shrink-0 ${
@@ -167,17 +167,17 @@ export default async function TherapistsPage() {
                                 )}
 
                                 {/* Stats */}
-                                <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t">
+                                <div className="grid grid-cols-3 gap-3 mt-3 pt-3 border-t">
                                     <div className="text-center">
-                                        <p className="text-xl font-bold">{therapist.sessionTypeCount}</p>
+                                        <p className="text-lg font-bold">{therapist.sessionTypeCount}</p>
                                         <p className="text-xs text-gray-500">Sessions</p>
                                     </div>
                                     <div className="text-center">
-                                        <p className="text-xl font-bold">{therapist.upcomingBookings}</p>
+                                        <p className="text-lg font-bold">{therapist.upcomingBookings}</p>
                                         <p className="text-xs text-gray-500">Upcoming</p>
                                     </div>
                                     <div className="text-center">
-                                        <p className="text-xl font-bold">{therapist.totalBookings}</p>
+                                        <p className="text-lg font-bold">{therapist.totalBookings}</p>
                                         <p className="text-xs text-gray-500">Total</p>
                                     </div>
                                 </div>
