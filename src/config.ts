@@ -27,14 +27,6 @@ export const databaseConfig = {
 } as const;
 
 // ===================
-// Strapi CMS Config
-// ===================
-export const strapiConfig = {
-    url: process.env.STRAPI_URL || 'http://localhost:1337',
-    apiToken: process.env.STRAPI_API_TOKEN || '',
-} as const;
-
-// ===================
 // Email Config (Zoho SMTP)
 // ===================
 export const emailConfig = {
