@@ -159,3 +159,51 @@ export const updateTherapistSchema = createTherapistSchema.omit({
 
 export type CreateTherapistInput = z.infer<typeof createTherapistSchema>;
 export type UpdateTherapistInput = z.infer<typeof updateTherapistSchema>;
+
+// Program schemas
+export const createProgramSchema = z.object({
+    title: z.string().min(2, "Title must be at least 2 characters").max(255),
+    description: z.string().min(10, "Description must be at least 10 characters"),
+    duration: z.string().min(1, "Duration is required").max(100),
+    coverImage: z.string().url("Invalid cover image URL").nullable().optional(),
+    benefits: z.array(z.string()).nullable().optional(),
+    status: z.enum(["draft", "published"]).default("draft"),
+    isActive: z.boolean().default(true),
+});
+
+export const updateProgramSchema = createProgramSchema.partial();
+
+export type CreateProgramInput = z.infer<typeof createProgramSchema>;
+export type UpdateProgramInput = z.infer<typeof updateProgramSchema>;
+
+// Job Posting schemas
+export const createJobPostingSchema = z.object({
+    title: z.string().min(2, "Title must be at least 2 characters").max(255),
+    department: z.string().min(2, "Department must be at least 2 characters").max(100),
+    description: z.string().min(10, "Description must be at least 10 characters"),
+    requirements: z.string().nullable().optional(),
+    location: z.string().min(2, "Location must be at least 2 characters").max(100),
+    type: z.enum(["full-time", "part-time", "contract"]),
+    status: z.enum(["draft", "published"]).default("draft"),
+    isActive: z.boolean().default(true),
+});
+
+export const updateJobPostingSchema = createJobPostingSchema.partial();
+
+export type CreateJobPostingInput = z.infer<typeof createJobPostingSchema>;
+export type UpdateJobPostingInput = z.infer<typeof updateJobPostingSchema>;
+
+// Community Program schemas
+export const createCommunityProgramSchema = z.object({
+    name: z.string().min(2, "Name must be at least 2 characters").max(255),
+    description: z.string().min(10, "Description must be at least 10 characters"),
+    schedule: z.string().min(2, "Schedule must be at least 2 characters").max(255),
+    coverImage: z.string().url("Invalid image URL").nullable().optional(),
+    status: z.enum(["draft", "published"]).default("draft"),
+    isActive: z.boolean().default(true),
+});
+
+export const updateCommunityProgramSchema = createCommunityProgramSchema.partial();
+
+export type CreateCommunityProgramInput = z.infer<typeof createCommunityProgramSchema>;
+export type UpdateCommunityProgramInput = z.infer<typeof updateCommunityProgramSchema>;
