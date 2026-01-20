@@ -1,37 +1,44 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { AppDataSource } from "@/lib/db";
+import { JobPosting } from "@/entities/JobPosting";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
     title: "Join Us",
     description: "Explore career opportunities at MindWeal. Join our team of dedicated mental health professionals.",
 };
 
-// Sample job postings - will be replaced with Strapi data
-const jobPostings = [
-    {
-        slug: "clinical-psychologist",
-        title: "Clinical Psychologist",
-        department: "Clinical",
-        type: "Full-time",
-        location: "Hybrid",
-    },
-    {
-        slug: "counselor",
-        title: "Licensed Counselor",
-        department: "Clinical",
-        type: "Part-time",
-        location: "On-site",
-    },
-    {
-        slug: "program-coordinator",
-        title: "Program Coordinator",
-        department: "Operations",
-        type: "Full-time",
-        location: "On-site",
-    },
-];
+async function getDataSource() {
+    if (!AppDataSource.isInitialized) {
+        await AppDataSource.initialize();
+    }
+    return AppDataSource;
+}
 
-export default function JoinUsPage() {
+async function getJobPostings(): Promise<JobPosting[]> {
+    const ds = await getDataSource();
+    const jobPostingRepo = ds.getRepository(JobPosting);
+    return jobPostingRepo.find({
+        where: { status: "published", isActive: true },
+        order: { createdAt: "DESC" },
+    });
+}
+
+function formatJobType(type: "full-time" | "part-time" | "contract"): string {
+    switch (type) {
+        case "full-time":
+            return "Full-time";
+        case "part-time":
+            return "Part-time";
+        case "contract":
+            return "Contract";
+    }
+}
+
+export default async function JoinUsPage() {
+    const jobPostings = await getJobPostings();
     return (
         <>
             {/* Hero Section */}
@@ -83,11 +90,14 @@ export default function JoinUsPage() {
                                     className="card flex items-center justify-between p-6 hover:border-[var(--primary-teal)] border-2 border-transparent transition-all"
                                 >
                                     <div>
-                                        <h3 className="text-lg font-semibold">{job.title}</h3>
+                                        <div className="flex items-center gap-3">
+                                            <h3 className="text-lg font-semibold">{job.title}</h3>
+                                            <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-[var(--primary-teal)]/10 text-[var(--primary-teal)]">
+                                                {formatJobType(job.type)}
+                                            </span>
+                                        </div>
                                         <div className="flex gap-4 mt-2 text-sm text-gray-500">
                                             <span>{job.department}</span>
-                                            <span>•</span>
-                                            <span>{job.type}</span>
                                             <span>•</span>
                                             <span>{job.location}</span>
                                         </div>
@@ -100,7 +110,7 @@ export default function JoinUsPage() {
                         </div>
                     ) : (
                         <p className="text-center text-gray-500">
-                            No open positions at the moment. Check back soon!
+                            No positions available at the moment. Check back soon!
                         </p>
                     )}
 
