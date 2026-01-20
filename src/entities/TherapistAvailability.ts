@@ -11,7 +11,7 @@ export class TherapistAvailability {
     @PrimaryGeneratedColumn("uuid")
     id!: string;
 
-    @Column()
+    @Column({ type: "varchar", length: 36 })
     therapistId!: string;
 
     @Column({ type: "tinyint" })
@@ -23,7 +23,7 @@ export class TherapistAvailability {
     @Column({ type: "time" })
     endTime!: string;
 
-    @Column({ default: true })
+    @Column({ type: "boolean", default: true })
     isActive!: boolean;
 
     @CreateDateColumn()

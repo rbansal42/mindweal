@@ -10,7 +10,7 @@ export class BlockedDate {
     @PrimaryGeneratedColumn("uuid")
     id!: string;
 
-    @Column()
+    @Column({ type: "varchar", length: 36 })
     therapistId!: string;
 
     @Column({ type: "datetime" })
@@ -19,10 +19,10 @@ export class BlockedDate {
     @Column({ type: "datetime" })
     endDatetime!: Date;
 
-    @Column({ nullable: true })
+    @Column({ type: "varchar", length: 255, nullable: true })
     reason!: string | null;
 
-    @Column({ default: false })
+    @Column({ type: "boolean", default: false })
     isAllDay!: boolean;
 
     @CreateDateColumn()

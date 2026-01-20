@@ -12,10 +12,10 @@ export class VerificationToken {
     @PrimaryGeneratedColumn("uuid")
     id!: string;
 
-    @Column()
+    @Column({ type: "varchar", length: 255 })
     identifier!: string;
 
-    @Column({ unique: true })
+    @Column({ type: "varchar", length: 255, unique: true })
     token!: string;
 
     @Column({ type: "enum", enum: ["email_verification", "password_reset"] })

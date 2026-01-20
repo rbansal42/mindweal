@@ -4,7 +4,6 @@ import {
     Column,
     CreateDateColumn,
     UpdateDateColumn,
-    OneToMany,
 } from "typeorm";
 
 export type UserRole = "client" | "therapist" | "admin" | "reception";
@@ -14,31 +13,28 @@ export class User {
     @PrimaryGeneratedColumn("uuid")
     id!: string;
 
-    @Column({ unique: true })
+    @Column({ type: "varchar", length: 255, unique: true })
     email!: string;
 
     @Column({ type: "datetime", nullable: true })
     emailVerified!: Date | null;
 
-    @Column({ nullable: true })
-    passwordHash!: string | null;
-
-    @Column()
+    @Column({ type: "varchar", length: 255 })
     name!: string;
 
-    @Column({ nullable: true })
+    @Column({ type: "varchar", length: 50, nullable: true })
     phone!: string | null;
 
-    @Column({ nullable: true })
+    @Column({ type: "text", nullable: true })
     image!: string | null;
 
     @Column({ type: "enum", enum: ["client", "therapist", "admin", "reception"], default: "client" })
     role!: UserRole;
 
-    @Column({ default: "Asia/Kolkata" })
+    @Column({ type: "varchar", length: 50, default: "Asia/Kolkata" })
     timezone!: string;
 
-    @Column({ nullable: true })
+    @Column({ type: "varchar", length: 36, nullable: true })
     therapistId!: string | null;
 
     @CreateDateColumn()

@@ -10,10 +10,10 @@ export class Specialization {
     @PrimaryGeneratedColumn("uuid")
     id!: string;
 
-    @Column({ unique: true })
+    @Column({ type: "varchar", length: 255, unique: true })
     name!: string;
 
-    @Column({ default: true })
+    @Column({ type: "boolean", default: true })
     isActive!: boolean;
 
     @CreateDateColumn()

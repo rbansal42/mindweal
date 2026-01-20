@@ -11,46 +11,46 @@ export class Therapist {
     @PrimaryGeneratedColumn("uuid")
     id!: string;
 
-    @Column({ nullable: true })
+    @Column({ type: "varchar", length: 36, nullable: true })
     userId!: string | null;
 
-    @Column({ nullable: true })
+    @Column({ type: "int", nullable: true })
     strapiId!: number | null;
 
-    @Column({ unique: true })
+    @Column({ type: "varchar", length: 255, unique: true })
     slug!: string;
 
-    @Column()
+    @Column({ type: "varchar", length: 255 })
     name!: string;
 
-    @Column()
+    @Column({ type: "varchar", length: 255 })
     title!: string;
 
     @Column({ type: "text" })
     bio!: string;
 
-    @Column()
+    @Column({ type: "varchar", length: 255 })
     email!: string;
 
-    @Column({ nullable: true })
+    @Column({ type: "varchar", length: 50, nullable: true })
     phone!: string | null;
 
-    @Column({ nullable: true })
+    @Column({ type: "text", nullable: true })
     photoUrl!: string | null;
 
-    @Column({ default: 60 })
+    @Column({ type: "int", default: 60 })
     defaultSessionDuration!: number;
 
-    @Column({ default: 15 })
+    @Column({ type: "int", default: 15 })
     bufferTime!: number;
 
-    @Column({ default: 30 })
+    @Column({ type: "int", default: 30 })
     advanceBookingDays!: number;
 
-    @Column({ default: 24 })
+    @Column({ type: "int", default: 24 })
     minBookingNotice!: number;
 
-    @Column({ default: true })
+    @Column({ type: "boolean", default: true })
     isActive!: boolean;
 
     @Column({ type: "simple-array", nullable: true })

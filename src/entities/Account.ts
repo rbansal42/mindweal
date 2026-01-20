@@ -11,13 +11,13 @@ export class Account {
     @PrimaryGeneratedColumn("uuid")
     id!: string;
 
-    @Column()
+    @Column({ type: "varchar", length: 36 })
     userId!: string;
 
-    @Column()
+    @Column({ type: "varchar", length: 255 })
     accountId!: string;
 
-    @Column()
+    @Column({ type: "varchar", length: 50 })
     providerId!: string;
 
     @Column({ type: "text", nullable: true })
@@ -32,7 +32,7 @@ export class Account {
     @Column({ type: "datetime", nullable: true })
     refreshTokenExpiresAt!: Date | null;
 
-    @Column({ nullable: true })
+    @Column({ type: "varchar", length: 255, nullable: true })
     scope!: string | null;
 
     @Column({ type: "text", nullable: true })

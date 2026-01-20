@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { AppDataSource } from "@/lib/db";
 import { Therapist } from "@/entities/Therapist";
 import { User } from "@/entities/User";
+import { Account } from "@/entities/Account";
 import { SessionType } from "@/entities/SessionType";
 import { TherapistAvailability } from "@/entities/TherapistAvailability";
 import { Specialization } from "@/entities/Specialization";
@@ -94,6 +95,7 @@ export async function POST(request: NextRequest) {
         const ds = await getDataSource();
         const therapistRepo = ds.getRepository(Therapist);
         const userRepo = ds.getRepository(User);
+        const accountRepo = ds.getRepository(Account);
         const sessionTypeRepo = ds.getRepository(SessionType);
         const availabilityRepo = ds.getRepository(TherapistAvailability);
 
@@ -119,9 +121,17 @@ export async function POST(request: NextRequest) {
             name: validated.data.name,
             emailVerified: new Date(),
             role: "therapist",
-            passwordHash: hashedPassword,
         });
         await userRepo.save(user);
+
+        // Create credential account for Better Auth
+        const credentialAccount = accountRepo.create({
+            userId: user.id,
+            accountId: user.id,
+            providerId: "credential",
+            password: hashedPassword,
+        });
+        await accountRepo.save(credentialAccount);
 
         // Create therapist
         const therapist = therapistRepo.create({

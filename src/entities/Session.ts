@@ -11,19 +11,19 @@ export class Session {
     @PrimaryGeneratedColumn("uuid")
     id!: string;
 
-    @Column()
+    @Column({ type: "varchar", length: 36 })
     userId!: string;
 
     @Column({ type: "datetime" })
     expiresAt!: Date;
 
-    @Column({ unique: true })
+    @Column({ type: "varchar", length: 255, unique: true })
     token!: string;
 
-    @Column({ nullable: true })
+    @Column({ type: "varchar", length: 50, nullable: true })
     ipAddress!: string | null;
 
-    @Column({ nullable: true })
+    @Column({ type: "text", nullable: true })
     userAgent!: string | null;
 
     @CreateDateColumn()

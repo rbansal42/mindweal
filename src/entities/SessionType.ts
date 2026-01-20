@@ -13,13 +13,13 @@ export class SessionType {
     @PrimaryGeneratedColumn("uuid")
     id!: string;
 
-    @Column()
+    @Column({ type: "varchar", length: 36 })
     therapistId!: string;
 
-    @Column()
+    @Column({ type: "varchar", length: 255 })
     name!: string;
 
-    @Column()
+    @Column({ type: "int" })
     duration!: number;
 
     @Column({ type: "enum", enum: ["in_person", "video", "phone"] })
@@ -31,10 +31,10 @@ export class SessionType {
     @Column({ type: "text", nullable: true })
     description!: string | null;
 
-    @Column({ default: true })
+    @Column({ type: "boolean", default: true })
     isActive!: boolean;
 
-    @Column({ default: "#00A99D" })
+    @Column({ type: "varchar", length: 20, default: "#00A99D" })
     color!: string;
 
     @CreateDateColumn()

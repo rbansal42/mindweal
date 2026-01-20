@@ -14,25 +14,25 @@ export class Booking {
     @PrimaryGeneratedColumn("uuid")
     id!: string;
 
-    @Column({ unique: true })
+    @Column({ type: "varchar", length: 50, unique: true })
     bookingReference!: string;
 
-    @Column()
+    @Column({ type: "varchar", length: 36 })
     therapistId!: string;
 
-    @Column({ nullable: true })
+    @Column({ type: "varchar", length: 36, nullable: true })
     clientId!: string | null;
 
-    @Column({ nullable: true })
+    @Column({ type: "varchar", length: 36, nullable: true })
     sessionTypeId!: string | null;
 
-    @Column()
+    @Column({ type: "varchar", length: 255 })
     clientName!: string;
 
-    @Column()
+    @Column({ type: "varchar", length: 255 })
     clientEmail!: string;
 
-    @Column({ nullable: true })
+    @Column({ type: "varchar", length: 50, nullable: true })
     clientPhone!: string | null;
 
     @Column({ type: "datetime" })
@@ -41,7 +41,7 @@ export class Booking {
     @Column({ type: "datetime" })
     endDatetime!: Date;
 
-    @Column({ default: "Asia/Kolkata" })
+    @Column({ type: "varchar", length: 50, default: "Asia/Kolkata" })
     timezone!: string;
 
     @Column({ type: "enum", enum: ["pending", "confirmed", "cancelled", "completed", "no_show"], default: "confirmed" })
@@ -50,7 +50,7 @@ export class Booking {
     @Column({ type: "text", nullable: true })
     cancellationReason!: string | null;
 
-    @Column({ nullable: true })
+    @Column({ type: "varchar", length: 36, nullable: true })
     cancelledBy!: string | null;
 
     @Column({ type: "datetime", nullable: true })
@@ -59,10 +59,10 @@ export class Booking {
     @Column({ type: "enum", enum: ["in_person", "video", "phone"] })
     meetingType!: BookingMeetingType;
 
-    @Column({ nullable: true })
+    @Column({ type: "text", nullable: true })
     meetingLink!: string | null;
 
-    @Column({ nullable: true })
+    @Column({ type: "varchar", length: 255, nullable: true })
     meetingLocation!: string | null;
 
     @Column({ type: "text", nullable: true })
@@ -74,7 +74,7 @@ export class Booking {
     @Column({ type: "datetime", nullable: true })
     reminderSentAt!: Date | null;
 
-    @Column({ nullable: true })
+    @Column({ type: "varchar", length: 36, nullable: true })
     createdBy!: string | null;
 
     @CreateDateColumn()
