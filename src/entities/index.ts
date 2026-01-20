@@ -8,3 +8,7 @@ export { Session } from "./Session";
 export { Account } from "./Account";
 export { VerificationToken, type VerificationType } from "./VerificationToken";
 export { Specialization } from "./Specialization";
+export { Program } from "./Program";
+export { Workshop } from "./Workshop";
+export { CommunityProgram } from "./CommunityProgram";
+export { JobPosting } from "./JobPosting";
