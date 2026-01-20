@@ -50,7 +50,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 export async function generateStaticParams() {
-    return getAllCommunityProgramSlugs();
+    try {
+        return await getAllCommunityProgramSlugs();
+    } catch {
+        // Database not available during build - return empty array
+        return [];
+    }
 }
 
 export default async function CommunityProgramDetailPage({ params }: { params: Promise<{ slug: string }> }) {

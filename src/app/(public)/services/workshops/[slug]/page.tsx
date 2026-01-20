@@ -64,17 +64,22 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 export async function generateStaticParams() {
-    const ds = await getDataSource();
-    const workshopRepo = ds.getRepository(Workshop);
+    try {
+        const ds = await getDataSource();
+        const workshopRepo = ds.getRepository(Workshop);
 
-    const workshops = await workshopRepo.find({
-        where: { status: "published", isActive: true },
-        select: ["slug"],
-    });
+        const workshops = await workshopRepo.find({
+            where: { status: "published", isActive: true },
+            select: ["slug"],
+        });
 
-    return workshops.map((workshop) => ({
-        slug: workshop.slug,
-    }));
+        return workshops.map((workshop) => ({
+            slug: workshop.slug,
+        }));
+    } catch {
+        // Database not available during build - return empty array
+        return [];
+    }
 }
 
 export default async function WorkshopDetailPage({ params }: { params: Promise<{ slug: string }> }) {
