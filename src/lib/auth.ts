@@ -55,6 +55,7 @@ export const auth = betterAuth({
     },
 
     session: {
+        modelName: "sessions",
         expiresIn: authConfig.session.expiresIn,
         updateAge: authConfig.session.updateAge,
         cookieCache: {
@@ -64,6 +65,7 @@ export const auth = betterAuth({
     },
 
     user: {
+        modelName: "users",
         additionalFields: {
             role: {
                 type: "string",
@@ -82,10 +84,15 @@ export const auth = betterAuth({
     },
 
     account: {
+        modelName: "accounts",
         accountLinking: {
             enabled: true,
             trustedProviders: ["google"],
         },
+    },
+
+    verification: {
+        modelName: "verification_tokens",
     },
 });
 
