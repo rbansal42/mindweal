@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { In } from "typeorm";
 import { AppDataSource } from "@/lib/db";
 import { Therapist } from "@/entities/Therapist";
 import { SessionType } from "@/entities/SessionType";
+import { Specialization } from "@/entities/Specialization";
 
 async function getDataSource() {
     if (!AppDataSource.isInitialized) {
@@ -16,6 +18,7 @@ async function getTherapistWithSessions(slug: string) {
     const ds = await getDataSource();
     const therapistRepo = ds.getRepository(Therapist);
     const sessionTypeRepo = ds.getRepository(SessionType);
+    const specRepo = ds.getRepository(Specialization);
 
     const therapist = await therapistRepo.findOne({
         where: { slug, isActive: true },
@@ -27,7 +30,15 @@ async function getTherapistWithSessions(slug: string) {
         where: { therapistId: therapist.id, isActive: true },
     });
 
-    return { therapist, sessionTypes };
+    // Fetch specializations for this therapist
+    let specializations: Specialization[] = [];
+    if (therapist.specializationIds?.length) {
+        specializations = await specRepo.find({
+            where: { id: In(therapist.specializationIds), isActive: true },
+        });
+    }
+
+    return { therapist, sessionTypes, specializations };
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -52,7 +63,7 @@ export default async function TherapistDetailPage({ params }: { params: Promise<
         notFound();
     }
 
-    const { therapist, sessionTypes } = data;
+    const { therapist, sessionTypes, specializations } = data;
 
     return (
         <>
@@ -77,11 +88,11 @@ export default async function TherapistDetailPage({ params }: { params: Promise<
                         <div>
                             <h1 className="text-3xl md:text-4xl font-bold">{therapist.name}</h1>
                             <p className="text-[var(--primary-teal)] text-lg font-medium mt-2">{therapist.title}</p>
-                            {sessionTypes.length > 0 && (
+                            {specializations.length > 0 && (
                                 <div className="flex flex-wrap gap-2 mt-4">
-                                    {sessionTypes.map((session) => (
-                                        <span key={session.id} className="px-3 py-1 bg-white/80 text-gray-600 text-sm rounded-full">
-                                            {session.name}
+                                    {specializations.map((spec) => (
+                                        <span key={spec.id} className="px-3 py-1 bg-white/80 text-[var(--primary-teal)] text-sm rounded-full font-medium">
+                                            {spec.name}
                                         </span>
                                     ))}
                                 </div>

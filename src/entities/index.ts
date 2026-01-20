@@ -7,3 +7,4 @@ export { Booking, type BookingStatus, type BookingMeetingType } from "./Booking"
 export { Session } from "./Session";
 export { Account } from "./Account";
 export { VerificationToken, type VerificationType } from "./VerificationToken";
+export { Specialization } from "./Specialization";

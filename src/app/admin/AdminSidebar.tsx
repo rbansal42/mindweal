@@ -12,6 +12,7 @@ import {
     Menu,
     X,
     Plus,
+    Settings,
 } from "lucide-react";
 import { useState } from "react";
 import { signOut } from "@/lib/auth-client";
@@ -33,6 +34,7 @@ const navItems = [
     { href: "/admin/bookings/new", icon: Plus, label: "New Booking", roles: ["admin", "reception"] },
     { href: "/admin/therapists", icon: Users, label: "Therapists", roles: ["admin"] },
     { href: "/admin/users", icon: UserCircle, label: "Users", roles: ["admin"] },
+    { href: "/admin/settings/specializations", icon: Settings, label: "Settings", roles: ["admin"] },
 ];
 
 export default function AdminSidebar({ user, role }: AdminSidebarProps) {

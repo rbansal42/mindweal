@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { In } from "typeorm";
 import { AppDataSource } from "@/lib/db";
 import { Therapist } from "@/entities/Therapist";
+import { Specialization } from "@/entities/Specialization";
 
 export const metadata: Metadata = {
     title: "Our Therapists",
@@ -15,13 +17,32 @@ async function getDataSource() {
     return AppDataSource;
 }
 
-async function getTherapists() {
+type TherapistWithSpecializations = Therapist & { specializations: Specialization[] };
+
+async function getTherapists(): Promise<TherapistWithSpecializations[]> {
     const ds = await getDataSource();
     const therapistRepo = ds.getRepository(Therapist);
-    return therapistRepo.find({
+    const specRepo = ds.getRepository(Specialization);
+
+    const therapists = await therapistRepo.find({
         where: { isActive: true },
         order: { name: "ASC" },
     });
+
+    // Fetch specializations for all therapists
+    const therapistsWithSpecs: TherapistWithSpecializations[] = await Promise.all(
+        therapists.map(async (therapist) => {
+            let specializations: Specialization[] = [];
+            if (therapist.specializationIds?.length) {
+                specializations = await specRepo.find({
+                    where: { id: In(therapist.specializationIds), isActive: true },
+                });
+            }
+            return { ...therapist, specializations };
+        })
+    );
+
+    return therapistsWithSpecs;
 }
 
 export default async function TherapistsPage() {
@@ -74,6 +95,21 @@ export default async function TherapistsPage() {
                                             {therapist.title}
                                         </p>
                                         <p className="text-gray-600 mt-3 text-sm line-clamp-3">{therapist.bio}</p>
+
+                                        {therapist.specializations?.length > 0 && (
+                                            <div className="mt-3 flex flex-wrap gap-1">
+                                                {therapist.specializations.slice(0, 3).map(spec => (
+                                                    <span key={spec.id} className="px-2 py-0.5 bg-[var(--primary-teal)]/10 text-[var(--primary-teal)] text-xs rounded-full">
+                                                        {spec.name}
+                                                    </span>
+                                                ))}
+                                                {therapist.specializations.length > 3 && (
+                                                    <span className="px-2 py-0.5 bg-gray-100 text-gray-500 text-xs rounded-full">
+                                                        +{therapist.specializations.length - 3} more
+                                                    </span>
+                                                )}
+                                            </div>
+                                        )}
 
                                         <div className="mt-6 flex gap-3">
                                             <Link

@@ -53,6 +53,12 @@ export class Therapist {
     @Column({ default: true })
     isActive!: boolean;
 
+    @Column({ type: "simple-array", nullable: true })
+    specializationIds!: string[] | null;
+
+    @Column({ type: "datetime", nullable: true })
+    deletedAt!: Date | null;
+
     @CreateDateColumn()
     createdAt!: Date;
 

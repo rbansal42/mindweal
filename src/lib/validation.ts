@@ -113,3 +113,49 @@ export const adminBookingSchema = z.object({
 });
 
 export type AdminBookingInput = z.infer<typeof adminBookingSchema>;
+
+// Specialization schemas
+export const createSpecializationSchema = z.object({
+    name: z.string().min(2, "Name must be at least 2 characters").max(50),
+});
+
+export const updateSpecializationSchema = createSpecializationSchema.partial();
+
+export type CreateSpecializationInput = z.infer<typeof createSpecializationSchema>;
+
+// Therapist schemas
+export const createTherapistSchema = z.object({
+    name: z.string().min(2, "Name must be at least 2 characters"),
+    title: z.string().min(2, "Title must be at least 2 characters"),
+    email: z.string().email("Invalid email address"),
+    phone: z.string().min(10, "Phone number must be at least 10 digits"),
+    bio: z.string().min(50, "Bio must be at least 50 characters"),
+    photoUrl: z.string().url("Invalid photo URL"),
+    specializationIds: z.array(z.string().uuid()).min(1, "Select at least one specialization"),
+    temporaryPassword: z.string().min(8, "Password must be at least 8 characters"),
+    sessionTypes: z.array(z.object({
+        name: z.string().min(2),
+        duration: z.number().min(15).max(180),
+        meetingType: z.enum(["in_person", "video", "phone"]),
+        price: z.number().optional(),
+        color: z.string().default("#00A99D"),
+    })).min(1, "Add at least one session type"),
+    availability: z.array(z.object({
+        dayOfWeek: z.number().min(0).max(6),
+        startTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/),
+        endTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/),
+    })).optional(),
+    defaultSessionDuration: z.number().default(60),
+    bufferTime: z.number().default(15),
+    advanceBookingDays: z.number().default(30),
+    minBookingNotice: z.number().default(24),
+});
+
+export const updateTherapistSchema = createTherapistSchema.omit({
+    temporaryPassword: true,
+    sessionTypes: true,
+    availability: true
+}).partial();
+
+export type CreateTherapistInput = z.infer<typeof createTherapistSchema>;
+export type UpdateTherapistInput = z.infer<typeof updateTherapistSchema>;

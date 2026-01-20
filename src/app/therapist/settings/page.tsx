@@ -3,6 +3,8 @@ import { getServerSession } from "@/lib/auth-middleware";
 import { AppDataSource } from "@/lib/db";
 import { Therapist } from "@/entities/Therapist";
 import { SessionType } from "@/entities/SessionType";
+import { Specialization } from "@/entities/Specialization";
+import { In } from "typeorm";
 import TherapistSettingsForm from "./TherapistSettingsForm";
 
 export const metadata: Metadata = {
@@ -21,6 +23,7 @@ async function getTherapistSettings(userEmail: string) {
     const ds = await getDataSource();
     const therapistRepo = ds.getRepository(Therapist);
     const sessionTypeRepo = ds.getRepository(SessionType);
+    const specializationRepo = ds.getRepository(Specialization);
 
     const therapist = await therapistRepo.findOne({
         where: { email: userEmail },
@@ -33,7 +36,15 @@ async function getTherapistSettings(userEmail: string) {
         order: { name: "ASC" },
     });
 
-    return { therapist, sessionTypes };
+    // Fetch specializations if therapist has any
+    let specializations: Specialization[] = [];
+    if (therapist.specializationIds && therapist.specializationIds.length > 0) {
+        specializations = await specializationRepo.find({
+            where: { id: In(therapist.specializationIds), isActive: true },
+        });
+    }
+
+    return { therapist, sessionTypes, specializations };
 }
 
 export default async function SettingsPage() {
@@ -68,6 +79,11 @@ export default async function SettingsPage() {
                 therapist={{
                     id: data.therapist.id,
                     name: data.therapist.name,
+                    title: data.therapist.title,
+                    email: data.therapist.email,
+                    phone: data.therapist.phone,
+                    bio: data.therapist.bio,
+                    photoUrl: data.therapist.photoUrl,
                     slug: data.therapist.slug,
                     defaultSessionDuration: data.therapist.defaultSessionDuration,
                     bufferTime: data.therapist.bufferTime,
@@ -83,6 +99,10 @@ export default async function SettingsPage() {
                     description: st.description,
                     isActive: st.isActive,
                     color: st.color,
+                }))}
+                specializations={data.specializations.map((spec) => ({
+                    id: spec.id,
+                    name: spec.name,
                 }))}
             />
         </div>

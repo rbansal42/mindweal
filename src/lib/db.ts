@@ -10,6 +10,7 @@ import {
     Session,
     Account,
     VerificationToken,
+    Specialization,
 } from "@/entities";
 
 const dataSourceOptions: DataSourceOptions = {
@@ -31,6 +32,7 @@ const dataSourceOptions: DataSourceOptions = {
         Session,
         Account,
         VerificationToken,
+        Specialization,
     ],
     migrations: ["migrations/**/*.ts"],
     subscribers: ["src/subscribers/**/*.ts"],
