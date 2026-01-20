@@ -91,22 +91,53 @@ async function setupDatabase() {
         // Seed admin user
         console.log("👤 Seeding admin user...");
         const userRepo = dataSource.getRepository(User);
+        const accountRepo = dataSource.getRepository(Account);
 
         const existingAdmin = await userRepo.findOne({ where: { email: ADMIN_EMAIL } });
         if (existingAdmin) {
             console.log(`   ⚠️  Admin user already exists: ${ADMIN_EMAIL}`);
+            // Check if credential account exists
+            const existingAccount = await accountRepo.findOne({
+                where: { userId: existingAdmin.id, providerId: "credential" }
+            });
+            if (!existingAccount) {
+                // Create credential account for existing user
+                const hashedPassword = await bcrypt.hash(ADMIN_PASSWORD, 10);
+                const credentialAccount = accountRepo.create({
+                    id: uuidv4(),
+                    userId: existingAdmin.id,
+                    accountId: existingAdmin.id,
+                    providerId: "credential",
+                    password: hashedPassword,
+                });
+                await accountRepo.save(credentialAccount);
+                console.log(`   ✅ Credential account created for existing admin`);
+            }
         } else {
+            const adminUserId = uuidv4();
             const hashedPassword = await bcrypt.hash(ADMIN_PASSWORD, 10);
+
+            // Create admin user
             const adminUser = userRepo.create({
-                id: uuidv4(),
+                id: adminUserId,
                 email: ADMIN_EMAIL,
                 name: ADMIN_NAME,
-                passwordHash: hashedPassword,
                 role: "admin",
                 emailVerified: new Date(),
                 timezone: "Asia/Kolkata",
             });
             await userRepo.save(adminUser);
+
+            // Create credential account for Better Auth
+            const credentialAccount = accountRepo.create({
+                id: uuidv4(),
+                userId: adminUserId,
+                accountId: adminUserId,
+                providerId: "credential",
+                password: hashedPassword,
+            });
+            await accountRepo.save(credentialAccount);
+
             console.log(`   ✅ Admin user created: ${ADMIN_EMAIL}`);
             console.log(`   📧 Email: ${ADMIN_EMAIL}`);
             console.log(`   🔑 Password: ${ADMIN_PASSWORD}`);

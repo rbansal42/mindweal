@@ -3,6 +3,7 @@ import {
     PrimaryGeneratedColumn,
     Column,
     CreateDateColumn,
+    UpdateDateColumn,
 } from "typeorm";
 
 @Entity("accounts")
@@ -14,10 +15,10 @@ export class Account {
     userId!: string;
 
     @Column()
-    provider!: string;
+    accountId!: string;
 
     @Column()
-    providerAccountId!: string;
+    providerId!: string;
 
     @Column({ type: "text", nullable: true })
     accessToken!: string | null;
@@ -26,17 +27,23 @@ export class Account {
     refreshToken!: string | null;
 
     @Column({ type: "datetime", nullable: true })
-    expiresAt!: Date | null;
+    accessTokenExpiresAt!: Date | null;
 
-    @Column({ nullable: true })
-    tokenType!: string | null;
+    @Column({ type: "datetime", nullable: true })
+    refreshTokenExpiresAt!: Date | null;
 
     @Column({ nullable: true })
     scope!: string | null;
 
-    @Column({ nullable: true })
+    @Column({ type: "text", nullable: true })
     idToken!: string | null;
+
+    @Column({ type: "text", nullable: true })
+    password!: string | null;
 
     @CreateDateColumn()
     createdAt!: Date;
+
+    @UpdateDateColumn()
+    updatedAt!: Date;
 }
