@@ -1,18 +1,23 @@
-import { google } from "googleapis";
+import { calendar_v3, calendar } from "@googleapis/calendar";
+import { JWT } from "google-auth-library";
 import { googleCalendarConfig } from "@/config";
 
 const SCOPES = ["https://www.googleapis.com/auth/calendar"];
 
-function getGoogleAuth() {
+function getGoogleAuth(): JWT | null {
     if (!googleCalendarConfig.serviceAccountEmail || !googleCalendarConfig.privateKey) {
         return null;
     }
 
-    return new google.auth.JWT({
+    return new JWT({
         email: googleCalendarConfig.serviceAccountEmail,
         key: googleCalendarConfig.privateKey.replace(/\\n/g, "\n"),
         scopes: SCOPES,
     });
+}
+
+function getCalendarClient(auth: JWT): calendar_v3.Calendar {
+    return calendar({ version: "v3", auth });
 }
 
 interface MeetLinkOptions {
@@ -35,9 +40,9 @@ export async function createGoogleMeetLink(
     }
 
     try {
-        const calendar = google.calendar({ version: "v3", auth });
+        const calendarClient = getCalendarClient(auth);
 
-        const event = await calendar.events.insert({
+        const event = await calendarClient.events.insert({
             calendarId: "primary",
             requestBody: {
                 summary: options.summary,
@@ -81,8 +86,8 @@ export async function deleteGoogleCalendarEvent(
     }
 
     try {
-        const calendar = google.calendar({ version: "v3", auth });
-        await calendar.events.delete({
+        const calendarClient = getCalendarClient(auth);
+        await calendarClient.events.delete({
             calendarId: "primary",
             eventId,
             sendUpdates: "all",
