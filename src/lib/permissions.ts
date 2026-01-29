@@ -2,7 +2,7 @@
  * Permission utility for role-based access control
  */
 
-export type UserRole = "client" | "therapist" | "admin" | "reception";
+import type { UserRole } from "@/entities/User";
 
 /**
  * Check if current user can manage a target user's role
@@ -11,9 +11,14 @@ export type UserRole = "client" | "therapist" | "admin" | "reception";
  * @returns true if action is allowed
  */
 export function canManageUserRole(
-    currentUserRole: string,
-    targetUserRole: string
+    currentUserRole: UserRole | null | undefined,
+    targetUserRole: UserRole | null | undefined
 ): boolean {
+    // Handle null/undefined
+    if (!currentUserRole || !targetUserRole) {
+        return false;
+    }
+
     // Admin can manage everyone
     if (currentUserRole === "admin") {
         return true;
@@ -32,7 +37,12 @@ export function canManageUserRole(
  * @param currentUserRole - Role of the user performing the action
  * @returns Array of role options
  */
-export function getAvailableRoles(currentUserRole: string): UserRole[] {
+export function getAvailableRoles(currentUserRole: UserRole | null | undefined): UserRole[] {
+    // Handle null/undefined
+    if (!currentUserRole) {
+        return [];
+    }
+
     if (currentUserRole === "admin") {
         return ["client", "therapist", "reception", "admin"];
     }
@@ -49,6 +59,11 @@ export function getAvailableRoles(currentUserRole: string): UserRole[] {
  * @param userRole - Role to check
  * @returns true if user can access user management
  */
-export function canAccessUserManagement(userRole: string): boolean {
+export function canAccessUserManagement(userRole: UserRole | null | undefined): boolean {
+    // Handle null/undefined
+    if (!userRole) {
+        return false;
+    }
+
     return ["admin", "reception"].includes(userRole);
 }
