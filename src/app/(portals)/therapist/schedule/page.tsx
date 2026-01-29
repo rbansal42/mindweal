@@ -46,11 +46,11 @@ export default async function SchedulePage() {
 
     if (!data) {
         return (
-            <div className="max-w-4xl mx-auto text-center py-12">
-                <h1 className="text-2xl font-bold text-gray-900 mb-4">
+            <div className="max-w-4xl mx-auto text-center py-8">
+                <h1 className="portal-title">
                     Therapist Profile Not Found
                 </h1>
-                <p className="text-gray-600">
+                <p className="text-gray-600 text-sm mt-2">
                     Your account is not linked to a therapist profile.
                 </p>
             </div>
@@ -71,15 +71,15 @@ export default async function SchedulePage() {
     }));
 
     return (
-        <div className="max-w-6xl mx-auto">
-            <div className="mb-8">
-                <h1 className="text-2xl font-bold text-gray-900">Schedule</h1>
-                <p className="text-gray-600 mt-1">
+        <div className="max-w-6xl mx-auto space-y-4">
+            <div className="mb-4">
+                <h1 className="portal-title">Schedule</h1>
+                <p className="text-gray-600 text-sm mt-1">
                     View your appointments in calendar view
                 </p>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-sm p-6">
+            <div className="portal-card">
                 <ScheduleCalendar events={events} />
             </div>
         </div>

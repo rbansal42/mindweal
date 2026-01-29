@@ -4,7 +4,6 @@ import Link from "next/link";
 import { format } from "date-fns";
 import {
     Calendar,
-    Clock,
     Video,
     MapPin,
     Phone,
@@ -104,24 +103,24 @@ export default async function BookingDetailPage({ params }: PageProps) {
         <div className="max-w-3xl mx-auto">
             <Link
                 href="/therapist/bookings"
-                className="inline-flex items-center gap-2 text-gray-600 hover:text-secondary-green mb-6 transition-colors"
+                className="inline-flex items-center gap-2 text-gray-600 hover:text-secondary-green mb-4 transition-colors text-sm"
             >
                 <ArrowLeft className="w-4 h-4" />
                 Back to Bookings
             </Link>
 
-            <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+            <div className="portal-card !p-0 overflow-hidden">
                 {/* Header */}
-                <div className="p-6 border-b border-gray-100">
+                <div className="p-4 border-b border-gray-100">
                     <div className="flex items-start justify-between">
                         <div>
-                            <p className="text-sm text-gray-500">Booking Reference</p>
-                            <p className="font-mono font-semibold text-secondary-green text-lg">
+                            <p className="text-xs text-gray-500">Booking Reference</p>
+                            <p className="font-mono font-semibold text-secondary-green text-base">
                                 {booking.bookingReference}
                             </p>
                         </div>
                         <span
-                            className={`px-4 py-2 rounded-full text-sm font-medium capitalize border ${
+                            className={`px-3 py-1 rounded-full text-xs font-medium capitalize border ${
                                 statusColors[booking.status]
                             }`}
                         >
@@ -131,24 +130,24 @@ export default async function BookingDetailPage({ params }: PageProps) {
                 </div>
 
                 {/* Client Info */}
-                <div className="p-6 border-b border-gray-100">
-                    <h3 className="text-sm font-medium text-gray-500 mb-4">
+                <div className="p-4 border-b border-gray-100">
+                    <h3 className="text-xs font-medium text-gray-500 mb-3">
                         Client Information
                     </h3>
-                    <div className="flex items-center gap-4">
-                        <div className="w-16 h-16 rounded-full bg-secondary-green/10 flex items-center justify-center">
-                            <User className="w-8 h-8 text-secondary-green" />
+                    <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-full bg-secondary-green/10 flex items-center justify-center">
+                            <User className="w-6 h-6 text-secondary-green" />
                         </div>
                         <div>
-                            <h2 className="text-xl font-semibold text-gray-900">
+                            <h2 className="text-base font-semibold text-gray-900">
                                 {booking.clientName}
                             </h2>
-                            <div className="flex items-center gap-4 mt-1 text-sm text-gray-600">
+                            <div className="flex items-center gap-3 mt-0.5 text-xs text-gray-600">
                                 <a
                                     href={`mailto:${booking.clientEmail}`}
                                     className="flex items-center gap-1 hover:text-secondary-green"
                                 >
-                                    <Mail className="w-4 h-4" />
+                                    <Mail className="w-3 h-3" />
                                     {booking.clientEmail}
                                 </a>
                                 {booking.clientPhone && (
@@ -156,7 +155,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
                                         href={`tel:${booking.clientPhone}`}
                                         className="flex items-center gap-1 hover:text-secondary-green"
                                     >
-                                        <Phone className="w-4 h-4" />
+                                        <Phone className="w-3 h-3" />
                                         {booking.clientPhone}
                                     </a>
                                 )}
@@ -166,21 +165,21 @@ export default async function BookingDetailPage({ params }: PageProps) {
                 </div>
 
                 {/* Session Details */}
-                <div className="p-6 space-y-4">
-                    <h3 className="text-sm font-medium text-gray-500 mb-4">
+                <div className="p-4 space-y-3">
+                    <h3 className="text-xs font-medium text-gray-500 mb-3">
                         Session Details
                     </h3>
 
-                    <div className="flex items-start gap-4">
-                        <div className="p-3 rounded-lg bg-secondary-green/10">
-                            <Calendar className="w-5 h-5 text-secondary-green" />
+                    <div className="flex items-start gap-3">
+                        <div className="p-2 rounded-lg bg-secondary-green/10">
+                            <Calendar className="w-4 h-4 text-secondary-green" />
                         </div>
                         <div>
-                            <p className="text-sm text-gray-500">Date & Time</p>
-                            <p className="font-medium text-gray-900">
+                            <p className="text-xs text-gray-500">Date & Time</p>
+                            <p className="font-medium text-gray-900 text-sm">
                                 {format(new Date(booking.startDatetime), "EEEE, MMMM d, yyyy")}
                             </p>
-                            <p className="text-gray-600">
+                            <p className="text-gray-600 text-sm">
                                 {format(new Date(booking.startDatetime), "h:mm a")} -{" "}
                                 {format(new Date(booking.endDatetime), "h:mm a")}
                             </p>
@@ -188,16 +187,16 @@ export default async function BookingDetailPage({ params }: PageProps) {
                     </div>
 
                     {sessionType && (
-                        <div className="flex items-start gap-4">
-                            <div className="p-3 rounded-lg bg-secondary-green/10">
-                                <Icon className="w-5 h-5 text-secondary-green" />
+                        <div className="flex items-start gap-3">
+                            <div className="p-2 rounded-lg bg-secondary-green/10">
+                                <Icon className="w-4 h-4 text-secondary-green" />
                             </div>
                             <div>
-                                <p className="text-sm text-gray-500">Session Type</p>
-                                <p className="font-medium text-gray-900">
+                                <p className="text-xs text-gray-500">Session Type</p>
+                                <p className="font-medium text-gray-900 text-sm">
                                     {sessionType.name}
                                 </p>
-                                <p className="text-gray-600">
+                                <p className="text-gray-600 text-sm">
                                     {meetingTypeLabels[booking.meetingType]} •{" "}
                                     {sessionType.duration} mins
                                 </p>
@@ -206,33 +205,33 @@ export default async function BookingDetailPage({ params }: PageProps) {
                     )}
 
                     {booking.meetingType === "video" && booking.meetingLink && (
-                        <div className="flex items-start gap-4">
-                            <div className="p-3 rounded-lg bg-secondary-green/10">
-                                <Video className="w-5 h-5 text-secondary-green" />
+                        <div className="flex items-start gap-3">
+                            <div className="p-2 rounded-lg bg-secondary-green/10">
+                                <Video className="w-4 h-4 text-secondary-green" />
                             </div>
                             <div>
-                                <p className="text-sm text-gray-500">Video Call Link</p>
+                                <p className="text-xs text-gray-500">Video Call Link</p>
                                 <a
                                     href={booking.meetingLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex items-center gap-1 text-secondary-green hover:underline"
+                                    className="flex items-center gap-1 text-secondary-green hover:underline text-sm"
                                 >
                                     Join Google Meet
-                                    <ExternalLink className="w-4 h-4" />
+                                    <ExternalLink className="w-3 h-3" />
                                 </a>
                             </div>
                         </div>
                     )}
 
                     {booking.meetingType === "in_person" && booking.meetingLocation && (
-                        <div className="flex items-start gap-4">
-                            <div className="p-3 rounded-lg bg-secondary-green/10">
-                                <MapPin className="w-5 h-5 text-secondary-green" />
+                        <div className="flex items-start gap-3">
+                            <div className="p-2 rounded-lg bg-secondary-green/10">
+                                <MapPin className="w-4 h-4 text-secondary-green" />
                             </div>
                             <div>
-                                <p className="text-sm text-gray-500">Location</p>
-                                <p className="font-medium text-gray-900">
+                                <p className="text-xs text-gray-500">Location</p>
+                                <p className="font-medium text-gray-900 text-sm">
                                     {booking.meetingLocation}
                                 </p>
                             </div>
@@ -240,29 +239,29 @@ export default async function BookingDetailPage({ params }: PageProps) {
                     )}
 
                     {booking.clientNotes && (
-                        <div className="flex items-start gap-4">
-                            <div className="p-3 rounded-lg bg-secondary-green/10">
-                                <FileText className="w-5 h-5 text-secondary-green" />
+                        <div className="flex items-start gap-3">
+                            <div className="p-2 rounded-lg bg-secondary-green/10">
+                                <FileText className="w-4 h-4 text-secondary-green" />
                             </div>
                             <div>
-                                <p className="text-sm text-gray-500">Client Notes</p>
-                                <p className="text-gray-900">{booking.clientNotes}</p>
+                                <p className="text-xs text-gray-500">Client Notes</p>
+                                <p className="text-gray-900 text-sm">{booking.clientNotes}</p>
                             </div>
                         </div>
                     )}
 
                     {booking.status === "cancelled" && (
-                        <div className="bg-red-50 rounded-xl p-4 mt-4">
-                            <p className="text-sm font-medium text-red-800">
+                        <div className="bg-red-50 rounded-lg p-3 mt-3">
+                            <p className="text-xs font-medium text-red-800">
                                 Cancellation Details
                             </p>
                             {booking.cancellationReason && (
-                                <p className="text-sm text-red-700 mt-1">
+                                <p className="text-xs text-red-700 mt-1">
                                     Reason: {booking.cancellationReason}
                                 </p>
                             )}
                             {booking.cancelledAt && (
-                                <p className="text-sm text-red-600 mt-1">
+                                <p className="text-xs text-red-600 mt-1">
                                     Cancelled on:{" "}
                                     {format(new Date(booking.cancelledAt), "MMM d, yyyy h:mm a")}
                                 </p>
@@ -272,7 +271,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
                 </div>
 
                 {/* Actions */}
-                <div className="p-6 border-t border-gray-100 bg-gray-50">
+                <div className="p-4 border-t border-gray-100 bg-gray-50">
                     <BookingActions
                         bookingId={booking.id}
                         status={booking.status}

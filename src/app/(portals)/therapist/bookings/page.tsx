@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { format } from "date-fns";
-import { Calendar, Video, MapPin, Phone, ArrowRight, Search, Filter } from "lucide-react";
+import { Calendar, Video, MapPin, Phone, ArrowRight } from "lucide-react";
 import { getServerSession } from "@/lib/auth-middleware";
 import { AppDataSource } from "@/lib/db";
 import { Booking } from "@/entities/Booking";
@@ -62,11 +62,11 @@ export default async function BookingsPage() {
 
     if (!data) {
         return (
-            <div className="max-w-4xl mx-auto text-center py-12">
-                <h1 className="text-2xl font-bold text-gray-900 mb-4">
+            <div className="max-w-4xl mx-auto text-center py-8">
+                <h1 className="portal-title">
                     Therapist Profile Not Found
                 </h1>
-                <p className="text-gray-600">
+                <p className="text-gray-600 text-sm mt-2">
                     Your account is not linked to a therapist profile.
                 </p>
             </div>
@@ -82,46 +82,46 @@ export default async function BookingsPage() {
     const noShow = bookings.filter((b) => b.status === "no_show");
 
     return (
-        <div className="max-w-4xl mx-auto">
-            <div className="mb-8">
-                <h1 className="text-2xl font-bold text-gray-900">All Bookings</h1>
-                <p className="text-gray-600 mt-1">
+        <div className="max-w-4xl mx-auto space-y-4">
+            <div className="mb-4">
+                <h1 className="portal-title">All Bookings</h1>
+                <p className="text-gray-600 text-sm mt-1">
                     View and manage all your appointments
                 </p>
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-                <div className="bg-green-50 rounded-xl p-4">
-                    <p className="text-green-600 text-sm font-medium">Confirmed</p>
-                    <p className="text-2xl font-bold text-green-700">{confirmed.length}</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="bg-green-50 rounded-lg p-3">
+                    <p className="text-green-600 text-xs font-medium">Confirmed</p>
+                    <p className="text-xl font-bold text-green-700">{confirmed.length}</p>
                 </div>
-                <div className="bg-blue-50 rounded-xl p-4">
-                    <p className="text-blue-600 text-sm font-medium">Completed</p>
-                    <p className="text-2xl font-bold text-blue-700">{completed.length}</p>
+                <div className="bg-blue-50 rounded-lg p-3">
+                    <p className="text-blue-600 text-xs font-medium">Completed</p>
+                    <p className="text-xl font-bold text-blue-700">{completed.length}</p>
                 </div>
-                <div className="bg-red-50 rounded-xl p-4">
-                    <p className="text-red-600 text-sm font-medium">Cancelled</p>
-                    <p className="text-2xl font-bold text-red-700">{cancelled.length}</p>
+                <div className="bg-red-50 rounded-lg p-3">
+                    <p className="text-red-600 text-xs font-medium">Cancelled</p>
+                    <p className="text-xl font-bold text-red-700">{cancelled.length}</p>
                 </div>
-                <div className="bg-gray-50 rounded-xl p-4">
-                    <p className="text-gray-600 text-sm font-medium">No Show</p>
-                    <p className="text-2xl font-bold text-gray-700">{noShow.length}</p>
+                <div className="bg-gray-50 rounded-lg p-3">
+                    <p className="text-gray-600 text-xs font-medium">No Show</p>
+                    <p className="text-xl font-bold text-gray-700">{noShow.length}</p>
                 </div>
             </div>
 
             {/* Bookings List */}
-            <div className="bg-white rounded-2xl shadow-sm">
-                <div className="p-6 border-b border-gray-100">
-                    <h2 className="text-lg font-semibold text-gray-900">
+            <div className="portal-card !p-0">
+                <div className="p-4 border-b border-gray-100">
+                    <h2 className="text-base font-semibold text-gray-900">
                         All Bookings ({bookings.length})
                     </h2>
                 </div>
                 <div className="divide-y divide-gray-100">
                     {bookings.length === 0 ? (
-                        <div className="p-8 text-center">
-                            <Calendar className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                            <p className="text-gray-500">No bookings yet</p>
+                        <div className="p-6 text-center">
+                            <Calendar className="w-10 h-10 text-gray-300 mx-auto mb-3" />
+                            <p className="text-gray-500 text-sm">No bookings yet</p>
                         </div>
                     ) : (
                         bookings.map((booking) => {
@@ -130,14 +130,14 @@ export default async function BookingsPage() {
                                 <Link
                                     key={booking.id}
                                     href={`/therapist/bookings/${booking.id}`}
-                                    className="flex items-center gap-4 p-4 hover:bg-gray-50 transition-colors"
+                                    className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors"
                                 >
-                                    <div className="p-3 rounded-lg bg-gray-100">
-                                        <Icon className="w-5 h-5 text-gray-600" />
+                                    <div className="p-2 rounded-lg bg-gray-100">
+                                        <Icon className="w-4 h-4 text-gray-600" />
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2">
-                                            <p className="font-medium text-gray-900">
+                                            <p className="font-medium text-gray-900 text-sm">
                                                 {booking.clientName}
                                             </p>
                                             <span
@@ -148,7 +148,7 @@ export default async function BookingsPage() {
                                                 {booking.status}
                                             </span>
                                         </div>
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-xs text-gray-500">
                                             {format(
                                                 new Date(booking.startDatetime),
                                                 "EEE, MMM d, yyyy • h:mm a"
@@ -158,7 +158,7 @@ export default async function BookingsPage() {
                                             {booking.bookingReference}
                                         </p>
                                     </div>
-                                    <ArrowRight className="w-5 h-5 text-gray-400" />
+                                    <ArrowRight className="w-4 h-4 text-gray-400" />
                                 </Link>
                             );
                         })

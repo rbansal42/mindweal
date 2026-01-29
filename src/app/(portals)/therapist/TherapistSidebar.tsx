@@ -52,9 +52,9 @@ export default function TherapistSidebar({ user, therapist }: TherapistSidebarPr
             {/* Mobile menu button */}
             <button
                 onClick={() => setMobileMenuOpen(true)}
-                className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-white shadow-md"
+                className="lg:hidden fixed top-2 left-2 z-50 p-1.5 rounded-md bg-white shadow-sm border border-gray-200"
             >
-                <Menu className="w-6 h-6 text-gray-600" />
+                <Menu className="w-4 h-4 text-gray-600" />
             </button>
 
             {/* Mobile overlay */}
@@ -69,51 +69,51 @@ export default function TherapistSidebar({ user, therapist }: TherapistSidebarPr
             <aside
                 className={`
                     fixed lg:static inset-y-0 left-0 z-50
-                    w-64 bg-white border-r border-gray-200
+                    w-48 bg-gray-900 text-white
                     transform transition-transform duration-200 ease-in-out
                     ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
                 `}
             >
                 <div className="flex flex-col h-full">
                     {/* Header */}
-                    <div className="p-6 border-b border-gray-100">
+                    <div className="px-3 py-2.5 border-b border-gray-800">
                         <div className="flex items-center justify-between">
                             <Link href="/" className="flex items-center gap-2">
-                                <span className="text-xl font-bold text-primary">
+                                <span className="text-sm font-bold text-primary">
                                     Mindweal
                                 </span>
                             </Link>
                             <button
                                 onClick={() => setMobileMenuOpen(false)}
-                                className="lg:hidden p-1 rounded-lg hover:bg-gray-100"
+                                className="lg:hidden p-1 rounded hover:bg-gray-800"
                             >
-                                <X className="w-5 h-5 text-gray-500" />
+                                <X className="w-3.5 h-3.5 text-gray-400" />
                             </button>
                         </div>
-                        <p className="text-xs text-gray-500 mt-1">Therapist Portal</p>
+                        <p className="text-[10px] text-gray-500 mt-0.5">Therapist Portal</p>
                     </div>
 
                     {/* User info */}
-                    <div className="p-4 border-b border-gray-100">
-                        <div className="flex items-center gap-3">
+                    <div className="px-3 py-2 border-b border-gray-800">
+                        <div className="flex items-center gap-2">
                             {user.image ? (
                                 <img
                                     src={user.image}
                                     alt={user.name}
-                                    className="w-10 h-10 rounded-full object-cover"
+                                    className="w-6 h-6 rounded-full object-cover"
                                 />
                             ) : (
-                                <div className="w-10 h-10 rounded-full bg-secondary-green/10 flex items-center justify-center">
-                                    <span className="text-secondary-green font-medium">
+                                <div className="w-6 h-6 rounded-full bg-secondary-green/20 flex items-center justify-center">
+                                    <span className="text-secondary-green text-xs font-medium">
                                         {user.name.charAt(0).toUpperCase()}
                                     </span>
                                 </div>
                             )}
                             <div className="flex-1 min-w-0">
-                                <p className="font-medium text-gray-900 truncate">
+                                <p className="text-xs font-medium text-white truncate">
                                     {therapist?.name || user.name}
                                 </p>
-                                <p className="text-sm text-gray-500 truncate">
+                                <p className="text-[10px] text-gray-400">
                                     Therapist
                                 </p>
                             </div>
@@ -122,24 +122,24 @@ export default function TherapistSidebar({ user, therapist }: TherapistSidebarPr
 
                     {/* Booking Link */}
                     {therapist && (
-                        <div className="p-4 border-b border-gray-100">
+                        <div className="px-3 py-2 border-b border-gray-800">
                             <a
                                 href={`/book/${therapist.slug}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center justify-between px-4 py-2 rounded-lg bg-primary/5 text-primary hover:bg-primary/10 transition-colors"
+                                className="flex items-center justify-between px-2 py-1.5 rounded bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
                             >
-                                <span className="text-sm font-medium">
+                                <span className="text-xs font-medium">
                                     View Booking Page
                                 </span>
-                                <ExternalLink className="w-4 h-4" />
+                                <ExternalLink className="w-3 h-3" />
                             </a>
                         </div>
                     )}
 
                     {/* Navigation */}
-                    <nav className="flex-1 p-4">
-                        <ul className="space-y-1">
+                    <nav className="flex-1 p-2 overflow-y-auto">
+                        <ul className="space-y-0.5">
                             {navItems.map((item) => {
                                 const isActive =
                                     pathname === item.href ||
@@ -152,19 +152,12 @@ export default function TherapistSidebar({ user, therapist }: TherapistSidebarPr
                                             href={item.href}
                                             onClick={() => setMobileMenuOpen(false)}
                                             className={`
-                                                flex items-center gap-3 px-4 py-3 rounded-lg
-                                                transition-colors
-                                                ${
-                                                    isActive
-                                                        ? "bg-secondary-green/10 text-secondary-green"
-                                                        : "text-gray-600 hover:bg-gray-100"
-                                                }
+                                                portal-nav-item
+                                                ${isActive ? "active" : ""}
                                             `}
                                         >
-                                            <item.icon className="w-5 h-5" />
-                                            <span className="font-medium">
-                                                {item.label}
-                                            </span>
+                                            <item.icon className="portal-nav-icon" />
+                                            <span>{item.label}</span>
                                         </Link>
                                     </li>
                                 );
@@ -173,13 +166,13 @@ export default function TherapistSidebar({ user, therapist }: TherapistSidebarPr
                     </nav>
 
                     {/* Sign out */}
-                    <div className="p-4 border-t border-gray-100">
+                    <div className="p-2 border-t border-gray-800">
                         <button
                             onClick={handleSignOut}
-                            className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-100 w-full transition-colors"
+                            className="portal-nav-item w-full"
                         >
-                            <LogOut className="w-5 h-5" />
-                            <span className="font-medium">Sign Out</span>
+                            <LogOut className="portal-nav-icon" />
+                            <span>Sign Out</span>
                         </button>
                     </div>
                 </div>

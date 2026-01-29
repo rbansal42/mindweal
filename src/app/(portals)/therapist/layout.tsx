@@ -41,7 +41,7 @@ export default async function TherapistLayout({
     const therapist = await getTherapistProfile(session.user.email);
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gray-100">
             <div className="flex">
                 <TherapistSidebar
                     user={session.user}
@@ -55,7 +55,7 @@ export default async function TherapistLayout({
                             : null
                     }
                 />
-                <main className="flex-1 p-6 lg:p-8">{children}</main>
+                <main className="flex-1 p-3 lg:p-4">{children}</main>
             </div>
         </div>
     );

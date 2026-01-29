@@ -57,11 +57,11 @@ export default async function SettingsPage() {
 
     if (!data) {
         return (
-            <div className="max-w-4xl mx-auto text-center py-12">
-                <h1 className="text-2xl font-bold text-gray-900 mb-4">
+            <div className="max-w-4xl mx-auto text-center py-8">
+                <h1 className="portal-title">
                     Therapist Profile Not Found
                 </h1>
-                <p className="text-gray-600">
+                <p className="text-gray-600 text-sm mt-2">
                     Your account is not linked to a therapist profile.
                 </p>
             </div>
@@ -69,10 +69,10 @@ export default async function SettingsPage() {
     }
 
     return (
-        <div className="max-w-4xl mx-auto">
-            <div className="mb-8">
-                <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
-                <p className="text-gray-600 mt-1">
+        <div className="max-w-4xl mx-auto space-y-4">
+            <div className="mb-4">
+                <h1 className="portal-title">Settings</h1>
+                <p className="text-gray-600 text-sm mt-1">
                     Manage your booking preferences and session types
                 </p>
             </div>
