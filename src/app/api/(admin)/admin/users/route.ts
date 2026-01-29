@@ -2,7 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth-middleware";
 import { auth } from "@/lib/auth";
 import { canManageUserRole } from "@/lib/permissions";
+import { AppDataSource } from "@/lib/db";
+import { User } from "@/entities/User";
 import crypto from "crypto";
+
+async function getDataSource() {
+    if (!AppDataSource.isInitialized) {
+        await AppDataSource.initialize();
+    }
+    return AppDataSource;
+}
 
 export async function POST(request: NextRequest) {
     try {
@@ -54,11 +63,7 @@ export async function POST(request: NextRequest) {
                     email,
                     name,
                     password: tempPassword,
-                    role,
-                    data: {
-                        phone: phone || null,
-                        timezone: timezone || "Asia/Kolkata",
-                    }
+                    role
                 },
                 headers: request.headers
             });
@@ -68,6 +73,22 @@ export async function POST(request: NextRequest) {
                 { error: createError.message || "Failed to create user" },
                 { status: 400 }
             );
+        }
+
+        // 6b. Update phone and timezone in database
+        try {
+            const ds = await getDataSource();
+            const userRepo = ds.getRepository(User);
+            const user = await userRepo.findOne({ where: { id: createdUser.user.id } });
+
+            if (user) {
+                user.phone = phone || null;
+                user.timezone = timezone || "Asia/Kolkata";
+                await userRepo.save(user);
+            }
+        } catch (updateError) {
+            console.error("Update phone/timezone error:", updateError);
+            // Don't fail the request if this update fails
         }
 
         // 7. Send password reset email using sendResetPassword
