@@ -159,24 +159,24 @@ export default function CreateTherapistForm({ specializations }: Props) {
     return (
         <div className="max-w-3xl">
             {/* Progress */}
-            <div className="flex items-center gap-2 mb-8">
+            <div className="flex items-center gap-1.5 mb-4">
                 {STEPS.map((s, i) => (
                     <div key={s} className="flex items-center">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                        <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium ${
                             i + 1 < step ? "bg-green-500 text-white" :
                             i + 1 === step ? "bg-[var(--primary-teal)] text-white" :
                             "bg-gray-200 text-gray-500"
                         }`}>
-                            {i + 1 < step ? <Check className="w-4 h-4" /> : i + 1}
+                            {i + 1 < step ? <Check className="w-3 h-3" /> : i + 1}
                         </div>
-                        <span className={`ml-2 text-sm ${i + 1 === step ? "font-medium" : "text-gray-500"}`}>{s}</span>
-                        {i < STEPS.length - 1 && <ChevronRight className="w-4 h-4 mx-2 text-gray-300" />}
+                        <span className={`ml-1.5 text-xs ${i + 1 === step ? "font-medium" : "text-gray-500"}`}>{s}</span>
+                        {i < STEPS.length - 1 && <ChevronRight className="w-3.5 h-3.5 mx-1.5 text-gray-300" />}
                     </div>
                 ))}
             </div>
 
             {error && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
                     {error}
                 </div>
             )}
@@ -184,55 +184,55 @@ export default function CreateTherapistForm({ specializations }: Props) {
             <form onSubmit={form.handleSubmit(handleSubmit)}>
                 {/* Step 1: Profile */}
                 {step === 1 && (
-                    <div className="card p-6 space-y-6">
-                        <h2 className="text-lg font-semibold">Profile Information</h2>
+                    <div className="portal-card p-4 space-y-4">
+                        <h2 className="text-sm font-semibold">Profile Information</h2>
 
-                        <div className="grid md:grid-cols-2 gap-4">
+                        <div className="grid md:grid-cols-2 gap-3">
                             <div>
-                                <label className="block text-sm font-medium mb-1">Name *</label>
-                                <input {...form.register("name")} className="w-full px-3 py-2 border rounded-lg" />
-                                {form.formState.errors.name && <p className="text-red-500 text-xs mt-1">{form.formState.errors.name.message}</p>}
+                                <label className="portal-label">Name *</label>
+                                <input {...form.register("name")} className="portal-input" />
+                                {form.formState.errors.name && <p className="text-red-500 text-xs mt-0.5">{form.formState.errors.name.message}</p>}
                             </div>
                             <div>
-                                <label className="block text-sm font-medium mb-1">Title *</label>
-                                <input {...form.register("title")} placeholder="e.g., Licensed Clinical Psychologist" className="w-full px-3 py-2 border rounded-lg" />
-                                {form.formState.errors.title && <p className="text-red-500 text-xs mt-1">{form.formState.errors.title.message}</p>}
+                                <label className="portal-label">Title *</label>
+                                <input {...form.register("title")} placeholder="e.g., Licensed Clinical Psychologist" className="portal-input" />
+                                {form.formState.errors.title && <p className="text-red-500 text-xs mt-0.5">{form.formState.errors.title.message}</p>}
                             </div>
                         </div>
 
-                        <div className="grid md:grid-cols-2 gap-4">
+                        <div className="grid md:grid-cols-2 gap-3">
                             <div>
-                                <label className="block text-sm font-medium mb-1">Email *</label>
-                                <input type="email" {...form.register("email")} className="w-full px-3 py-2 border rounded-lg" />
-                                {form.formState.errors.email && <p className="text-red-500 text-xs mt-1">{form.formState.errors.email.message}</p>}
+                                <label className="portal-label">Email *</label>
+                                <input type="email" {...form.register("email")} className="portal-input" />
+                                {form.formState.errors.email && <p className="text-red-500 text-xs mt-0.5">{form.formState.errors.email.message}</p>}
                             </div>
                             <div>
-                                <label className="block text-sm font-medium mb-1">Phone *</label>
-                                <input {...form.register("phone")} className="w-full px-3 py-2 border rounded-lg" />
-                                {form.formState.errors.phone && <p className="text-red-500 text-xs mt-1">{form.formState.errors.phone.message}</p>}
+                                <label className="portal-label">Phone *</label>
+                                <input {...form.register("phone")} className="portal-input" />
+                                {form.formState.errors.phone && <p className="text-red-500 text-xs mt-0.5">{form.formState.errors.phone.message}</p>}
                             </div>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Bio *</label>
-                            <textarea {...form.register("bio")} rows={5} className="w-full px-3 py-2 border rounded-lg" placeholder="Describe the therapist's background, approach, and expertise..." />
-                            {form.formState.errors.bio && <p className="text-red-500 text-xs mt-1">{form.formState.errors.bio.message}</p>}
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium mb-1">Photo</label>
-                            <div className="flex items-center gap-4">
+                            <label className="portal-label">Bio *</label>
+                            <textarea {...form.register("bio")} rows={4} className="portal-input" placeholder="Describe the therapist's background, approach, and expertise..." />
+                            {form.formState.errors.bio && <p className="text-red-500 text-xs mt-0.5">{form.formState.errors.bio.message}</p>}
+                        </div>
+
+                        <div>
+                            <label className="portal-label">Photo</label>
+                            <div className="flex items-center gap-3">
                                 {photoPreview ? (
-                                    <img src={photoPreview} alt="Preview" className="w-20 h-20 rounded-full object-cover" />
+                                    <img src={photoPreview} alt="Preview" className="w-16 h-16 rounded-full object-cover" />
                                 ) : (
-                                    <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center">
-                                        <Upload className="w-6 h-6 text-gray-400" />
+                                    <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center">
+                                        <Upload className="w-5 h-5 text-gray-400" />
                                     </div>
                                 )}
                                 <div>
                                     <input type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" id="photo-upload" />
-                                    <label htmlFor="photo-upload" className="btn btn-outline cursor-pointer">
-                                        {isUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Choose Photo"}
+                                    <label htmlFor="photo-upload" className="portal-btn portal-btn-outline cursor-pointer">
+                                        {isUploading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : "Choose Photo"}
                                     </label>
                                     <p className="text-xs text-gray-500 mt-1">Max 4MB, will be optimized to WebP</p>
                                 </div>
@@ -240,8 +240,8 @@ export default function CreateTherapistForm({ specializations }: Props) {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium mb-2">Specializations *</label>
-                            <div className="flex flex-wrap gap-2">
+                            <label className="portal-label">Specializations *</label>
+                            <div className="flex flex-wrap gap-1.5 mt-1">
                                 {specializations.map((spec) => {
                                     const selected = form.watch("specializationIds").includes(spec.id);
                                     return (
@@ -256,7 +256,7 @@ export default function CreateTherapistForm({ specializations }: Props) {
                                                     form.setValue("specializationIds", [...current, spec.id]);
                                                 }
                                             }}
-                                            className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                                            className={`px-2 py-1 rounded text-xs border transition-colors ${
                                                 selected
                                                     ? "bg-[var(--primary-teal)] text-white border-[var(--primary-teal)]"
                                                     : "border-gray-300 hover:border-[var(--primary-teal)]"
@@ -267,55 +267,55 @@ export default function CreateTherapistForm({ specializations }: Props) {
                                     );
                                 })}
                             </div>
-                            {form.formState.errors.specializationIds && <p className="text-red-500 text-xs mt-1">{form.formState.errors.specializationIds.message}</p>}
+                            {form.formState.errors.specializationIds && <p className="text-red-500 text-xs mt-0.5">{form.formState.errors.specializationIds.message}</p>}
                         </div>
                     </div>
                 )}
 
                 {/* Step 2: Session Types */}
                 {step === 2 && (
-                    <div className="card p-6 space-y-6">
+                    <div className="portal-card p-4 space-y-4">
                         <div className="flex items-center justify-between">
-                            <h2 className="text-lg font-semibold">Session Types</h2>
+                            <h2 className="text-sm font-semibold">Session Types</h2>
                             <button
                                 type="button"
                                 onClick={() => addSession({ name: "", duration: 60, meetingType: "video", price: undefined, color: "#00A99D" })}
-                                className="text-[var(--primary-teal)] text-sm flex items-center gap-1"
+                                className="text-[var(--primary-teal)] text-xs flex items-center gap-1"
                             >
-                                <Plus className="w-4 h-4" /> Add Session Type
+                                <Plus className="w-3.5 h-3.5" /> Add Session Type
                             </button>
                         </div>
 
                         {sessionFields.map((field, index) => (
-                            <div key={field.id} className="p-4 bg-gray-50 rounded-lg space-y-4">
+                            <div key={field.id} className="p-3 bg-gray-50 rounded-lg space-y-3">
                                 <div className="flex items-center justify-between">
-                                    <span className="text-sm font-medium">Session Type {index + 1}</span>
+                                    <span className="text-xs font-medium">Session Type {index + 1}</span>
                                     {sessionFields.length > 1 && (
                                         <button type="button" onClick={() => removeSession(index)} className="text-red-500">
-                                            <Trash2 className="w-4 h-4" />
+                                            <Trash2 className="w-3.5 h-3.5" />
                                         </button>
                                     )}
                                 </div>
-                                <div className="grid md:grid-cols-2 gap-4">
+                                <div className="grid md:grid-cols-2 gap-3">
                                     <div>
-                                        <label className="block text-sm mb-1">Name</label>
-                                        <input {...form.register(`sessionTypes.${index}.name`)} placeholder="e.g., Initial Consultation" className="w-full px-3 py-2 border rounded-lg" />
+                                        <label className="portal-label">Name</label>
+                                        <input {...form.register(`sessionTypes.${index}.name`)} placeholder="e.g., Initial Consultation" className="portal-input" />
                                     </div>
                                     <div>
-                                        <label className="block text-sm mb-1">Duration (min)</label>
-                                        <input type="number" {...form.register(`sessionTypes.${index}.duration`, { valueAsNumber: true })} className="w-full px-3 py-2 border rounded-lg" />
+                                        <label className="portal-label">Duration (min)</label>
+                                        <input type="number" {...form.register(`sessionTypes.${index}.duration`, { valueAsNumber: true })} className="portal-input" />
                                     </div>
                                 </div>
-                                <div className="grid md:grid-cols-2 gap-4">
+                                <div className="grid md:grid-cols-2 gap-3">
                                     <div>
-                                        <label className="block text-sm mb-1">Meeting Type</label>
-                                        <select {...form.register(`sessionTypes.${index}.meetingType`)} className="w-full px-3 py-2 border rounded-lg">
+                                        <label className="portal-label">Meeting Type</label>
+                                        <select {...form.register(`sessionTypes.${index}.meetingType`)} className="portal-input">
                                             {MEETING_TYPES.map(mt => <option key={mt.value} value={mt.value}>{mt.label}</option>)}
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-sm mb-1">Price (optional)</label>
-                                        <input type="number" {...form.register(`sessionTypes.${index}.price`, { valueAsNumber: true })} placeholder="e.g., 2500" className="w-full px-3 py-2 border rounded-lg" />
+                                        <label className="portal-label">Price (optional)</label>
+                                        <input type="number" {...form.register(`sessionTypes.${index}.price`, { valueAsNumber: true })} placeholder="e.g., 2500" className="portal-input" />
                                     </div>
                                 </div>
                             </div>
@@ -326,35 +326,35 @@ export default function CreateTherapistForm({ specializations }: Props) {
 
                 {/* Step 3: Availability */}
                 {step === 3 && (
-                    <div className="card p-6 space-y-6">
+                    <div className="portal-card p-4 space-y-4">
                         <div className="flex items-center justify-between">
                             <div>
-                                <h2 className="text-lg font-semibold">Weekly Availability</h2>
-                                <p className="text-sm text-gray-500">Optional - therapist can set this later</p>
+                                <h2 className="text-sm font-semibold">Weekly Availability</h2>
+                                <p className="text-xs text-gray-500">Optional - therapist can set this later</p>
                             </div>
                             <button
                                 type="button"
                                 onClick={() => addAvail({ dayOfWeek: 1, startTime: "09:00", endTime: "17:00" })}
-                                className="text-[var(--primary-teal)] text-sm flex items-center gap-1"
+                                className="text-[var(--primary-teal)] text-xs flex items-center gap-1"
                             >
-                                <Plus className="w-4 h-4" /> Add Slot
+                                <Plus className="w-3.5 h-3.5" /> Add Slot
                             </button>
                         </div>
 
                         {availFields.length === 0 && (
-                            <p className="text-gray-500 text-center py-8">No availability set. Click &quot;Add Slot&quot; to add.</p>
+                            <p className="text-gray-500 text-center py-6 text-sm">No availability set. Click &quot;Add Slot&quot; to add.</p>
                         )}
 
                         {availFields.map((field, index) => (
-                            <div key={field.id} className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                                <select {...form.register(`availability.${index}.dayOfWeek`, { valueAsNumber: true })} className="px-3 py-2 border rounded-lg">
+                            <div key={field.id} className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
+                                <select {...form.register(`availability.${index}.dayOfWeek`, { valueAsNumber: true })} className="portal-input">
                                     {DAYS.map((d, i) => <option key={d} value={i}>{d}</option>)}
                                 </select>
-                                <input type="time" {...form.register(`availability.${index}.startTime`)} className="px-3 py-2 border rounded-lg" />
-                                <span>to</span>
-                                <input type="time" {...form.register(`availability.${index}.endTime`)} className="px-3 py-2 border rounded-lg" />
+                                <input type="time" {...form.register(`availability.${index}.startTime`)} className="portal-input" />
+                                <span className="text-xs text-gray-500">to</span>
+                                <input type="time" {...form.register(`availability.${index}.endTime`)} className="portal-input" />
                                 <button type="button" onClick={() => removeAvail(index)} className="text-red-500">
-                                    <Trash2 className="w-4 h-4" />
+                                    <Trash2 className="w-3.5 h-3.5" />
                                 </button>
                             </div>
                         ))}
@@ -363,20 +363,20 @@ export default function CreateTherapistForm({ specializations }: Props) {
 
                 {/* Step 4: Review & Account */}
                 {step === 4 && (
-                    <div className="space-y-6">
-                        <div className="card p-6 space-y-4">
-                            <h2 className="text-lg font-semibold">Account Setup</h2>
+                    <div className="space-y-3">
+                        <div className="portal-card p-4 space-y-3">
+                            <h2 className="text-sm font-semibold">Account Setup</h2>
                             <div>
-                                <label className="block text-sm font-medium mb-1">Temporary Password *</label>
-                                <input type="password" {...form.register("temporaryPassword")} className="w-full px-3 py-2 border rounded-lg" placeholder="Minimum 8 characters" />
-                                {form.formState.errors.temporaryPassword && <p className="text-red-500 text-xs mt-1">{form.formState.errors.temporaryPassword.message}</p>}
+                                <label className="portal-label">Temporary Password *</label>
+                                <input type="password" {...form.register("temporaryPassword")} className="portal-input" placeholder="Minimum 8 characters" />
+                                {form.formState.errors.temporaryPassword && <p className="text-red-500 text-xs mt-0.5">{form.formState.errors.temporaryPassword.message}</p>}
                                 <p className="text-xs text-gray-500 mt-1">Therapist will receive this via email and should change it on first login</p>
                             </div>
                         </div>
 
-                        <div className="card p-6">
-                            <h2 className="text-lg font-semibold mb-4">Review</h2>
-                            <dl className="space-y-3 text-sm">
+                        <div className="portal-card p-4">
+                            <h2 className="text-sm font-semibold mb-3">Review</h2>
+                            <dl className="space-y-2 text-sm">
                                 <div className="flex justify-between">
                                     <dt className="text-gray-500">Name</dt>
                                     <dd className="font-medium">{form.watch("name")}</dd>
@@ -399,20 +399,20 @@ export default function CreateTherapistForm({ specializations }: Props) {
                 )}
 
                 {/* Navigation */}
-                <div className="flex justify-between mt-6">
+                <div className="flex justify-between mt-4">
                     {step > 1 ? (
-                        <button type="button" onClick={() => setStep(step - 1)} className="btn btn-outline flex items-center gap-2">
-                            <ChevronLeft className="w-4 h-4" /> Previous
+                        <button type="button" onClick={() => setStep(step - 1)} className="portal-btn portal-btn-outline flex items-center gap-1.5">
+                            <ChevronLeft className="w-3.5 h-3.5" /> Previous
                         </button>
                     ) : <div />}
 
                     {step < 4 ? (
-                        <button type="button" onClick={nextStep} className="btn btn-primary flex items-center gap-2">
-                            Next <ChevronRight className="w-4 h-4" />
+                        <button type="button" onClick={nextStep} className="portal-btn portal-btn-primary flex items-center gap-1.5">
+                            Next <ChevronRight className="w-3.5 h-3.5" />
                         </button>
                     ) : (
-                        <button type="submit" disabled={isSubmitting || isUploading} className="btn btn-primary flex items-center gap-2">
-                            {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                        <button type="submit" disabled={isSubmitting || isUploading} className="portal-btn portal-btn-primary flex items-center gap-1.5">
+                            {isSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
                             Create Therapist
                         </button>
                     )}

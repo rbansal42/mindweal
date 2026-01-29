@@ -69,14 +69,14 @@ export default async function EditTherapistPage({ params }: { params: Promise<{ 
     if (!therapist) notFound();
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center gap-4">
-                <Link href={`/admin/therapists/${id}`} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                    <ArrowLeft className="w-5 h-5" />
+        <div className="space-y-4">
+            <div className="flex items-center gap-3">
+                <Link href={`/admin/therapists/${id}`} className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors">
+                    <ArrowLeft className="w-4 h-4" />
                 </Link>
                 <div>
-                    <h1 className="text-2xl font-bold">Edit Therapist</h1>
-                    <p className="text-gray-600">{therapist.name}</p>
+                    <h1 className="portal-title">Edit Therapist</h1>
+                    <p className="text-gray-600 text-sm">{therapist.name}</p>
                 </div>
             </div>
 

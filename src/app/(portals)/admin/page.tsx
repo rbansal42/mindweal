@@ -123,126 +123,124 @@ export default async function AdminDashboard() {
     const stats = await getDashboardStats();
 
     return (
-        <div className="max-w-5xl mx-auto">
-            <div className="mb-6">
-                <h1 className="text-xl font-bold text-gray-900">
-                    Admin Dashboard
-                </h1>
-                <p className="text-gray-600 mt-1">
+        <div className="max-w-5xl mx-auto space-y-4">
+            <div className="mb-4">
+                <h1 className="portal-title">Admin Dashboard</h1>
+                <p className="text-sm text-gray-600">
                     Overview of appointments and activity
                 </p>
             </div>
 
             {/* Quick Stats */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-                <div className="bg-white rounded-xl p-4 shadow-sm">
-                    <div className="flex items-center gap-2 mb-2">
-                        <div className="p-1.5 rounded-lg bg-primary/10">
-                            <Calendar className="w-4 h-4 text-primary" />
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                <div className="portal-card p-3">
+                    <div className="flex items-center gap-2 mb-1">
+                        <div className="p-1 rounded-md bg-primary/10">
+                            <Calendar className="w-3.5 h-3.5 text-primary" />
                         </div>
-                        <p className="text-sm text-gray-500">Today</p>
+                        <p className="text-xs text-gray-500">Today</p>
                     </div>
-                    <p className="text-2xl font-bold text-gray-900">
+                    <p className="text-xl font-bold text-gray-900">
                         {stats.todayCount}
                     </p>
-                    <p className="text-sm text-gray-500">sessions</p>
+                    <p className="text-xs text-gray-500">sessions</p>
                 </div>
-                <div className="bg-white rounded-xl p-4 shadow-sm">
-                    <div className="flex items-center gap-2 mb-2">
-                        <div className="p-1.5 rounded-lg bg-blue-100">
-                            <Clock className="w-4 h-4 text-blue-600" />
+                <div className="portal-card p-3">
+                    <div className="flex items-center gap-2 mb-1">
+                        <div className="p-1 rounded-md bg-blue-100">
+                            <Clock className="w-3.5 h-3.5 text-blue-600" />
                         </div>
-                        <p className="text-sm text-gray-500">This Week</p>
+                        <p className="text-xs text-gray-500">This Week</p>
                     </div>
-                    <p className="text-2xl font-bold text-gray-900">
+                    <p className="text-xl font-bold text-gray-900">
                         {stats.weekCount}
                     </p>
-                    <p className="text-sm text-gray-500">bookings</p>
+                    <p className="text-xs text-gray-500">bookings</p>
                 </div>
-                <div className="bg-white rounded-xl p-4 shadow-sm">
-                    <div className="flex items-center gap-2 mb-2">
-                        <div className="p-1.5 rounded-lg bg-green-100">
-                            <Users className="w-4 h-4 text-green-600" />
+                <div className="portal-card p-3">
+                    <div className="flex items-center gap-2 mb-1">
+                        <div className="p-1 rounded-md bg-green-100">
+                            <Users className="w-3.5 h-3.5 text-green-600" />
                         </div>
-                        <p className="text-sm text-gray-500">Therapists</p>
+                        <p className="text-xs text-gray-500">Therapists</p>
                     </div>
-                    <p className="text-2xl font-bold text-gray-900">
+                    <p className="text-xl font-bold text-gray-900">
                         {stats.therapistCount}
                     </p>
-                    <p className="text-sm text-gray-500">active</p>
+                    <p className="text-xs text-gray-500">active</p>
                 </div>
-                <div className="bg-white rounded-xl p-4 shadow-sm">
-                    <div className="flex items-center gap-2 mb-2">
-                        <div className="p-1.5 rounded-lg bg-purple-100">
-                            <TrendingUp className="w-4 h-4 text-purple-600" />
+                <div className="portal-card p-3">
+                    <div className="flex items-center gap-2 mb-1">
+                        <div className="p-1 rounded-md bg-purple-100">
+                            <TrendingUp className="w-3.5 h-3.5 text-purple-600" />
                         </div>
-                        <p className="text-sm text-gray-500">This Month</p>
+                        <p className="text-xs text-gray-500">This Month</p>
                     </div>
-                    <p className="text-2xl font-bold text-gray-900">
+                    <p className="text-xl font-bold text-gray-900">
                         {stats.monthTotal}
                     </p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-xs text-gray-500">
                         {stats.completedThisMonth} completed
                     </p>
                 </div>
             </div>
 
             {/* Monthly Stats */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-6">
-                <div className="bg-green-50 rounded-xl p-4">
-                    <div className="flex items-center gap-3">
-                        <CheckCircle className="w-6 h-6 text-green-500" />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+                <div className="bg-green-50 rounded-md p-3">
+                    <div className="flex items-center gap-2">
+                        <CheckCircle className="w-5 h-5 text-green-500" />
                         <div>
-                            <p className="text-xl font-bold text-green-700">
+                            <p className="text-lg font-bold text-green-700">
                                 {stats.completedThisMonth}
                             </p>
-                            <p className="text-sm text-green-600">Completed this month</p>
+                            <p className="text-xs text-green-600">Completed this month</p>
                         </div>
                     </div>
                 </div>
-                <div className="bg-red-50 rounded-xl p-4">
-                    <div className="flex items-center gap-3">
-                        <XCircle className="w-6 h-6 text-red-500" />
+                <div className="bg-red-50 rounded-md p-3">
+                    <div className="flex items-center gap-2">
+                        <XCircle className="w-5 h-5 text-red-500" />
                         <div>
-                            <p className="text-xl font-bold text-red-700">
+                            <p className="text-lg font-bold text-red-700">
                                 {stats.cancelledThisMonth}
                             </p>
-                            <p className="text-sm text-red-600">Cancelled this month</p>
+                            <p className="text-xs text-red-600">Cancelled this month</p>
                         </div>
                     </div>
                 </div>
-                <div className="bg-blue-50 rounded-xl p-4">
-                    <div className="flex items-center gap-3">
-                        <Users className="w-6 h-6 text-blue-500" />
+                <div className="bg-blue-50 rounded-md p-3">
+                    <div className="flex items-center gap-2">
+                        <Users className="w-5 h-5 text-blue-500" />
                         <div>
-                            <p className="text-xl font-bold text-blue-700">
+                            <p className="text-lg font-bold text-blue-700">
                                 {stats.clientCount}
                             </p>
-                            <p className="text-sm text-blue-600">Registered clients</p>
+                            <p className="text-xs text-blue-600">Registered clients</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             {/* Recent Bookings */}
-            <div className="bg-white rounded-xl shadow-sm">
-                <div className="p-4 border-b border-gray-100 flex items-center justify-between">
-                    <h2 className="text-base font-semibold text-gray-900">
+            <div className="portal-card">
+                <div className="p-3 border-b border-gray-100 flex items-center justify-between">
+                    <h2 className="text-sm font-semibold text-gray-900">
                         Recent Bookings
                     </h2>
                     <Link
                         href="/admin/bookings"
-                        className="text-primary hover:text-primary-dark text-sm font-medium flex items-center gap-1"
+                        className="text-primary hover:text-primary-dark text-xs font-medium flex items-center gap-1"
                     >
                         View All
-                        <ArrowRight className="w-4 h-4" />
+                        <ArrowRight className="w-3 h-3" />
                     </Link>
                 </div>
                 <div className="divide-y divide-gray-100">
                     {stats.recentBookings.length === 0 ? (
-                        <div className="p-6 text-center">
-                            <Calendar className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-                            <p className="text-gray-500">No bookings yet</p>
+                        <div className="p-4 text-center">
+                            <Calendar className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+                            <p className="text-sm text-gray-500">No bookings yet</p>
                         </div>
                     ) : (
                         stats.recentBookings.map((booking) => {
@@ -252,24 +250,24 @@ export default async function AdminDashboard() {
                                 <Link
                                     key={booking.id}
                                     href={`/booking/${booking.bookingReference}`}
-                                    className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors"
+                                    className="flex items-center gap-2 p-2.5 hover:bg-gray-50 transition-colors"
                                 >
                                     <StatusIcon
-                                        className={`w-5 h-5 ${
+                                        className={`w-4 h-4 ${
                                             statusColors[booking.status as keyof typeof statusColors]
                                         }`}
                                     />
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2">
-                                            <p className="font-medium text-gray-900">
+                                            <p className="text-sm font-medium text-gray-900">
                                                 {booking.clientName}
                                             </p>
-                                            <span className="text-gray-400">→</span>
-                                            <p className="text-gray-600">
+                                            <span className="text-gray-400 text-xs">→</span>
+                                            <p className="text-sm text-gray-600">
                                                 {booking.therapist?.name || "Unknown"}
                                             </p>
                                         </div>
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-xs text-gray-500">
                                             {format(
                                                 new Date(booking.startDatetime),
                                                 "MMM d, yyyy • h:mm a"
@@ -287,16 +285,16 @@ export default async function AdminDashboard() {
             </div>
 
             {/* Quick Actions */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 <Link
                     href="/admin/bookings/new"
-                    className="bg-primary text-white rounded-xl p-4 hover:bg-primary-dark transition-colors"
+                    className="bg-primary text-white rounded-md p-3 hover:bg-primary-dark transition-colors"
                 >
-                    <div className="flex items-center gap-3">
-                        <Calendar className="w-6 h-6" />
+                    <div className="flex items-center gap-2">
+                        <Calendar className="w-5 h-5" />
                         <div>
-                            <h3 className="font-semibold">Create Booking</h3>
-                            <p className="text-sm text-white/80">
+                            <h3 className="text-sm font-semibold">Create Booking</h3>
+                            <p className="text-xs text-white/80">
                                 Schedule a new session
                             </p>
                         </div>
@@ -304,17 +302,17 @@ export default async function AdminDashboard() {
                 </Link>
                 <Link
                     href="/admin/calendar"
-                    className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow"
+                    className="portal-card p-3 hover:shadow-md transition-shadow"
                 >
-                    <div className="flex items-center gap-3">
-                        <div className="p-1.5 rounded-lg bg-blue-100">
-                            <Calendar className="w-5 h-5 text-blue-600" />
+                    <div className="flex items-center gap-2">
+                        <div className="p-1 rounded-md bg-blue-100">
+                            <Calendar className="w-4 h-4 text-blue-600" />
                         </div>
                         <div>
-                            <h3 className="font-semibold text-gray-900">
+                            <h3 className="text-sm font-semibold text-gray-900">
                                 Master Calendar
                             </h3>
-                            <p className="text-sm text-gray-500">
+                            <p className="text-xs text-gray-500">
                                 View all schedules
                             </p>
                         </div>
@@ -322,17 +320,17 @@ export default async function AdminDashboard() {
                 </Link>
                 <Link
                     href="/admin/therapists"
-                    className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow"
+                    className="portal-card p-3 hover:shadow-md transition-shadow"
                 >
-                    <div className="flex items-center gap-3">
-                        <div className="p-1.5 rounded-lg bg-green-100">
-                            <Users className="w-5 h-5 text-green-600" />
+                    <div className="flex items-center gap-2">
+                        <div className="p-1 rounded-md bg-green-100">
+                            <Users className="w-4 h-4 text-green-600" />
                         </div>
                         <div>
-                            <h3 className="font-semibold text-gray-900">
+                            <h3 className="text-sm font-semibold text-gray-900">
                                 Manage Therapists
                             </h3>
-                            <p className="text-sm text-gray-500">
+                            <p className="text-xs text-gray-500">
                                 View and edit profiles
                             </p>
                         </div>

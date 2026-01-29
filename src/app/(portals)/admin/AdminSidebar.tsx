@@ -13,6 +13,11 @@ import {
     X,
     Plus,
     Settings,
+    FileText,
+    HelpCircle,
+    Briefcase,
+    BookOpen,
+    Heart,
 } from "lucide-react";
 import { useState } from "react";
 import { signOut } from "@/lib/auth-client";
@@ -29,11 +34,17 @@ interface AdminSidebarProps {
 
 const navItems = [
     { href: "/admin", icon: Home, label: "Dashboard", roles: ["admin", "reception"] },
-    { href: "/admin/calendar", icon: Calendar, label: "Master Calendar", roles: ["admin", "reception"] },
-    { href: "/admin/bookings", icon: List, label: "All Bookings", roles: ["admin", "reception"] },
+    { href: "/admin/calendar", icon: Calendar, label: "Calendar", roles: ["admin", "reception"] },
+    { href: "/admin/bookings", icon: List, label: "Bookings", roles: ["admin", "reception"] },
     { href: "/admin/bookings/new", icon: Plus, label: "New Booking", roles: ["admin", "reception"] },
     { href: "/admin/therapists", icon: Users, label: "Therapists", roles: ["admin"] },
-    { href: "/admin/users", icon: UserCircle, label: "Users", roles: ["admin"] },
+    { href: "/admin/team-members", icon: UserCircle, label: "Team", roles: ["admin"] },
+    { href: "/admin/programs", icon: BookOpen, label: "Programs", roles: ["admin"] },
+    { href: "/admin/workshops", icon: Calendar, label: "Workshops", roles: ["admin"] },
+    { href: "/admin/community-programs", icon: Heart, label: "Community", roles: ["admin"] },
+    { href: "/admin/faqs", icon: HelpCircle, label: "FAQs", roles: ["admin"] },
+    { href: "/admin/job-postings", icon: Briefcase, label: "Jobs", roles: ["admin"] },
+    { href: "/admin/users", icon: FileText, label: "Users", roles: ["admin"] },
     { href: "/admin/settings/specializations", icon: Settings, label: "Settings", roles: ["admin"] },
 ];
 
@@ -55,9 +66,9 @@ export default function AdminSidebar({ user, role }: AdminSidebarProps) {
             {/* Mobile menu button */}
             <button
                 onClick={() => setMobileMenuOpen(true)}
-                className="lg:hidden fixed top-3 left-3 z-50 p-2 rounded-lg bg-white shadow-md"
+                className="lg:hidden fixed top-2 left-2 z-50 p-1.5 rounded-md bg-white shadow-sm border border-gray-200"
             >
-                <Menu className="w-5 h-5 text-gray-600" />
+                <Menu className="w-4 h-4 text-gray-600" />
             </button>
 
             {/* Mobile overlay */}
@@ -72,51 +83,51 @@ export default function AdminSidebar({ user, role }: AdminSidebarProps) {
             <aside
                 className={`
                     fixed lg:static inset-y-0 left-0 z-50
-                    w-56 bg-gray-900 text-white
+                    w-48 bg-gray-900 text-white
                     transform transition-transform duration-200 ease-in-out
                     ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
                 `}
             >
                 <div className="flex flex-col h-full">
                     {/* Header */}
-                    <div className="p-4 border-b border-gray-800">
+                    <div className="px-3 py-2.5 border-b border-gray-800">
                         <div className="flex items-center justify-between">
                             <Link href="/" className="flex items-center gap-2">
-                                <span className="text-lg font-bold text-primary">
+                                <span className="text-sm font-bold text-primary">
                                     Mindweal
                                 </span>
                             </Link>
                             <button
                                 onClick={() => setMobileMenuOpen(false)}
-                                className="lg:hidden p-1 rounded-lg hover:bg-gray-800"
+                                className="lg:hidden p-1 rounded hover:bg-gray-800"
                             >
-                                <X className="w-4 h-4 text-gray-400" />
+                                <X className="w-3.5 h-3.5 text-gray-400" />
                             </button>
                         </div>
-                        <p className="text-xs text-gray-500 mt-1">Admin Dashboard</p>
+                        <p className="text-[10px] text-gray-500 mt-0.5">Admin Panel</p>
                     </div>
 
                     {/* User info */}
-                    <div className="p-3 border-b border-gray-800">
-                        <div className="flex items-center gap-3">
+                    <div className="px-3 py-2 border-b border-gray-800">
+                        <div className="flex items-center gap-2">
                             {user.image ? (
                                 <img
                                     src={user.image}
                                     alt={user.name}
-                                    className="w-8 h-8 rounded-full object-cover"
+                                    className="w-6 h-6 rounded-full object-cover"
                                 />
                             ) : (
-                                <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
-                                    <span className="text-primary font-medium">
+                                <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+                                    <span className="text-primary text-xs font-medium">
                                         {user.name.charAt(0).toUpperCase()}
                                     </span>
                                 </div>
                             )}
                             <div className="flex-1 min-w-0">
-                                <p className="font-medium text-white truncate">
+                                <p className="text-xs font-medium text-white truncate">
                                     {user.name}
                                 </p>
-                                <p className="text-sm text-gray-400 capitalize">
+                                <p className="text-[10px] text-gray-400 capitalize">
                                     {role}
                                 </p>
                             </div>
@@ -124,8 +135,8 @@ export default function AdminSidebar({ user, role }: AdminSidebarProps) {
                     </div>
 
                     {/* Navigation */}
-                    <nav className="flex-1 p-3">
-                        <ul className="space-y-1">
+                    <nav className="flex-1 p-2 overflow-y-auto">
+                        <ul className="space-y-0.5">
                             {filteredNavItems.map((item) => {
                                 const isActive =
                                     pathname === item.href ||
@@ -138,19 +149,12 @@ export default function AdminSidebar({ user, role }: AdminSidebarProps) {
                                             href={item.href}
                                             onClick={() => setMobileMenuOpen(false)}
                                             className={`
-                                                flex items-center gap-3 px-3 py-2 rounded-lg
-                                                transition-colors
-                                                ${
-                                                    isActive
-                                                        ? "bg-primary text-white"
-                                                        : "text-gray-400 hover:bg-gray-800 hover:text-white"
-                                                }
+                                                portal-nav-item
+                                                ${isActive ? "active" : ""}
                                             `}
                                         >
-                                            <item.icon className="w-4 h-4" />
-                                            <span className="font-medium">
-                                                {item.label}
-                                            </span>
+                                            <item.icon className="portal-nav-icon" />
+                                            <span>{item.label}</span>
                                         </Link>
                                     </li>
                                 );
@@ -159,13 +163,13 @@ export default function AdminSidebar({ user, role }: AdminSidebarProps) {
                     </nav>
 
                     {/* Sign out */}
-                    <div className="p-3 border-t border-gray-800">
+                    <div className="p-2 border-t border-gray-800">
                         <button
                             onClick={handleSignOut}
-                            className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:bg-gray-800 hover:text-white w-full transition-colors"
+                            className="portal-nav-item w-full"
                         >
-                            <LogOut className="w-4 h-4" />
-                            <span className="font-medium">Sign Out</span>
+                            <LogOut className="portal-nav-icon" />
+                            <span>Sign Out</span>
                         </button>
                     </div>
                 </div>

@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useState, useEffect, useCallback } from "react";
 import { Plus, FileText, Filter } from "lucide-react";
 import { ContentTable } from "@/components/admin/ContentTable";
-import { useRouter } from "next/navigation";
 
 interface Program {
     id: string;
@@ -21,7 +20,6 @@ interface Program {
 }
 
 export default function ProgramsPage() {
-    const router = useRouter();
     const [programs, setPrograms] = useState<Program[]>([]);
     const [loading, setLoading] = useState(true);
     const [statusFilter, setStatusFilter] = useState<"" | "draft" | "published">("");
@@ -74,35 +72,35 @@ export default function ProgramsPage() {
     };
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-3">
             {/* Header with actions */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-xl font-bold">Programs</h1>
-                    <p className="text-gray-600 mt-1">
+                    <h1 className="portal-title">Programs</h1>
+                    <p className="text-gray-600 text-sm">
                         Manage therapy and wellness programs
                     </p>
                 </div>
                 <Link
                     href="/admin/programs/new"
-                    className="btn btn-primary flex items-center gap-2"
+                    className="portal-btn portal-btn-primary portal-btn-sm flex items-center gap-1.5"
                 >
                     <Plus className="w-4 h-4" /> New Program
                 </Link>
             </div>
 
             {/* Filter */}
-            <div className="card p-4">
-                <div className="flex items-center gap-4">
+            <div className="portal-card p-3">
+                <div className="flex items-center gap-3">
                     <Filter className="w-4 h-4 text-gray-500" />
-                    <label htmlFor="status-filter" className="text-sm font-medium text-gray-700">
+                    <label htmlFor="status-filter" className="portal-label">
                         Status:
                     </label>
                     <select
                         id="status-filter"
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value as "" | "draft" | "published")}
-                        className="rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 text-sm"
+                        className="portal-input py-1.5 px-2 text-sm w-auto"
                     >
                         <option value="">All</option>
                         <option value="draft">Draft</option>
@@ -112,19 +110,19 @@ export default function ProgramsPage() {
             </div>
 
             {/* Table */}
-            <div className="card">
+            <div className="portal-card">
                 {loading ? (
-                    <div className="p-8 text-center">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600 mx-auto"></div>
-                        <p className="mt-4 text-gray-500">Loading programs...</p>
+                    <div className="p-6 text-center">
+                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-teal-600 mx-auto"></div>
+                        <p className="mt-3 text-gray-500 text-sm">Loading programs...</p>
                     </div>
                 ) : programs.length === 0 ? (
-                    <div className="p-8 text-center">
-                        <FileText className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-                        <p className="text-gray-500">No programs found</p>
+                    <div className="p-6 text-center">
+                        <FileText className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+                        <p className="text-gray-500 text-sm">No programs found</p>
                         <Link
                             href="/admin/programs/new"
-                            className="text-[var(--primary-teal)] hover:underline mt-2 inline-block"
+                            className="text-[var(--primary-teal)] hover:underline mt-1.5 inline-block text-sm"
                         >
                             Create your first program
                         </Link>

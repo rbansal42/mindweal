@@ -56,16 +56,14 @@ export default async function NewBookingPage() {
 
     return (
         <div className="max-w-3xl mx-auto">
-            <div className="mb-8">
-                <h1 className="text-2xl font-bold text-gray-900">
-                    Create New Booking
-                </h1>
-                <p className="text-gray-600 mt-1">
+            <div className="mb-4">
+                <h1 className="portal-title">Create New Booking</h1>
+                <p className="text-gray-600 text-sm mt-0.5">
                     Schedule a session for a client
                 </p>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-sm p-6">
+            <div className="portal-card p-4">
                 <NewBookingForm therapists={therapists} />
             </div>
         </div>

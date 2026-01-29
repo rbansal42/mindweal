@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { format } from "date-fns";
-import { Calendar, Clock, User, Check } from "lucide-react";
+import { User, Check } from "lucide-react";
 
 interface SessionType {
     id: string;
@@ -167,26 +167,26 @@ export default function NewBookingForm({ therapists }: NewBookingFormProps) {
 
     if (success && bookingRef) {
         return (
-            <div className="text-center py-8">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Check className="w-8 h-8 text-green-500" />
+            <div className="text-center py-6">
+                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Check className="w-6 h-6 text-green-500" />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                <h2 className="text-lg font-bold text-gray-900 mb-1">
                     Booking Created!
                 </h2>
-                <p className="text-gray-600 mb-4">
+                <p className="text-gray-600 text-sm mb-3">
                     Reference:{" "}
                     <span className="font-mono font-semibold text-primary">
                         {bookingRef}
                     </span>
                 </p>
-                <p className="text-gray-600 mb-6">
+                <p className="text-gray-600 text-sm mb-4">
                     Confirmation emails have been sent to the client and therapist.
                 </p>
-                <div className="flex gap-4 justify-center">
+                <div className="flex gap-3 justify-center">
                     <a
                         href={`/booking/${bookingRef}`}
-                        className="btn btn-primary"
+                        className="portal-btn portal-btn-primary"
                     >
                         View Booking
                     </a>
@@ -195,7 +195,7 @@ export default function NewBookingForm({ therapists }: NewBookingFormProps) {
                             setSuccess(false);
                             setBookingRef(null);
                         }}
-                        className="btn btn-secondary"
+                        className="portal-btn portal-btn-secondary"
                     >
                         Create Another
                     </button>
@@ -205,19 +205,17 @@ export default function NewBookingForm({ therapists }: NewBookingFormProps) {
     }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {/* Therapist Selection */}
             <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="portal-label">
                     Therapist <span className="text-red-500">*</span>
                 </label>
                 <select
                     {...register("therapistId")}
-                    className={`w-full px-4 py-3 rounded-lg border ${
-                        errors.therapistId
-                            ? "border-red-500 focus:ring-red-500"
-                            : "border-gray-300 focus:ring-primary"
-                    } focus:ring-2 focus:border-transparent outline-none`}
+                    className={`portal-select ${
+                        errors.therapistId ? "border-red-500 focus:ring-red-500" : ""
+                    }`}
                 >
                     <option value="">Select a therapist</option>
                     {therapists.map((therapist) => (
@@ -227,7 +225,7 @@ export default function NewBookingForm({ therapists }: NewBookingFormProps) {
                     ))}
                 </select>
                 {errors.therapistId && (
-                    <p className="mt-1 text-sm text-red-500">
+                    <p className="mt-1 text-xs text-red-500">
                         {errors.therapistId.message}
                     </p>
                 )}
@@ -236,7 +234,7 @@ export default function NewBookingForm({ therapists }: NewBookingFormProps) {
             {/* Session Type */}
             {selectedTherapist && (
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="portal-label">
                         Session Type <span className="text-red-500">*</span>
                     </label>
                     {selectedTherapist.sessionTypes.length === 0 ? (
@@ -246,11 +244,9 @@ export default function NewBookingForm({ therapists }: NewBookingFormProps) {
                     ) : (
                         <select
                             {...register("sessionTypeId")}
-                            className={`w-full px-4 py-3 rounded-lg border ${
-                                errors.sessionTypeId
-                                    ? "border-red-500 focus:ring-red-500"
-                                    : "border-gray-300 focus:ring-primary"
-                            } focus:ring-2 focus:border-transparent outline-none`}
+                            className={`portal-select ${
+                                errors.sessionTypeId ? "border-red-500 focus:ring-red-500" : ""
+                            }`}
                         >
                             <option value="">Select session type</option>
                             {selectedTherapist.sessionTypes.map((st) => (
@@ -262,7 +258,7 @@ export default function NewBookingForm({ therapists }: NewBookingFormProps) {
                         </select>
                     )}
                     {errors.sessionTypeId && (
-                        <p className="mt-1 text-sm text-red-500">
+                        <p className="mt-1 text-xs text-red-500">
                             {errors.sessionTypeId.message}
                         </p>
                     )}
@@ -272,12 +268,12 @@ export default function NewBookingForm({ therapists }: NewBookingFormProps) {
             {/* Date Selection */}
             {sessionTypeId && (
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="portal-label">
                         Date <span className="text-red-500">*</span>
                     </label>
                     {loadingDates ? (
-                        <div className="flex items-center gap-2 text-gray-500">
-                            <div className="animate-spin w-4 h-4 border-2 border-primary border-t-transparent rounded-full"></div>
+                        <div className="flex items-center gap-2 text-gray-500 text-sm">
+                            <div className="animate-spin w-3 h-3 border-2 border-primary border-t-transparent rounded-full"></div>
                             Loading available dates...
                         </div>
                     ) : availableDates.length === 0 ? (
@@ -287,11 +283,9 @@ export default function NewBookingForm({ therapists }: NewBookingFormProps) {
                     ) : (
                         <select
                             {...register("date")}
-                            className={`w-full px-4 py-3 rounded-lg border ${
-                                errors.date
-                                    ? "border-red-500 focus:ring-red-500"
-                                    : "border-gray-300 focus:ring-primary"
-                            } focus:ring-2 focus:border-transparent outline-none`}
+                            className={`portal-select ${
+                                errors.date ? "border-red-500 focus:ring-red-500" : ""
+                            }`}
                         >
                             <option value="">Select a date</option>
                             {availableDates.map((date) => (
@@ -302,7 +296,7 @@ export default function NewBookingForm({ therapists }: NewBookingFormProps) {
                         </select>
                     )}
                     {errors.date && (
-                        <p className="mt-1 text-sm text-red-500">
+                        <p className="mt-1 text-xs text-red-500">
                             {errors.date.message}
                         </p>
                     )}
@@ -312,12 +306,12 @@ export default function NewBookingForm({ therapists }: NewBookingFormProps) {
             {/* Time Selection */}
             {selectedDate && (
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="portal-label">
                         Time <span className="text-red-500">*</span>
                     </label>
                     {loadingSlots ? (
-                        <div className="flex items-center gap-2 text-gray-500">
-                            <div className="animate-spin w-4 h-4 border-2 border-primary border-t-transparent rounded-full"></div>
+                        <div className="flex items-center gap-2 text-gray-500 text-sm">
+                            <div className="animate-spin w-3 h-3 border-2 border-primary border-t-transparent rounded-full"></div>
                             Loading available times...
                         </div>
                     ) : slots.length === 0 ? (
@@ -327,11 +321,9 @@ export default function NewBookingForm({ therapists }: NewBookingFormProps) {
                     ) : (
                         <select
                             {...register("time")}
-                            className={`w-full px-4 py-3 rounded-lg border ${
-                                errors.time
-                                    ? "border-red-500 focus:ring-red-500"
-                                    : "border-gray-300 focus:ring-primary"
-                            } focus:ring-2 focus:border-transparent outline-none`}
+                            className={`portal-select ${
+                                errors.time ? "border-red-500 focus:ring-red-500" : ""
+                            }`}
                         >
                             <option value="">Select a time</option>
                             {slots.map((slot, index) => (
@@ -345,7 +337,7 @@ export default function NewBookingForm({ therapists }: NewBookingFormProps) {
                         </select>
                     )}
                     {errors.time && (
-                        <p className="mt-1 text-sm text-red-500">
+                        <p className="mt-1 text-xs text-red-500">
                             {errors.time.message}
                         </p>
                     )}
@@ -356,45 +348,41 @@ export default function NewBookingForm({ therapists }: NewBookingFormProps) {
 
             {/* Client Details */}
             <div className="flex items-center gap-2 text-gray-700">
-                <User className="w-5 h-5" />
-                <h3 className="font-medium">Client Details</h3>
+                <User className="w-4 h-4" />
+                <h3 className="font-medium text-sm">Client Details</h3>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="portal-label">
                         Full Name <span className="text-red-500">*</span>
                     </label>
                     <input
                         type="text"
                         {...register("clientName")}
-                        className={`w-full px-4 py-3 rounded-lg border ${
-                            errors.clientName
-                                ? "border-red-500 focus:ring-red-500"
-                                : "border-gray-300 focus:ring-primary"
-                        } focus:ring-2 focus:border-transparent outline-none`}
+                        className={`portal-input ${
+                            errors.clientName ? "border-red-500 focus:ring-red-500" : ""
+                        }`}
                     />
                     {errors.clientName && (
-                        <p className="mt-1 text-sm text-red-500">
+                        <p className="mt-1 text-xs text-red-500">
                             {errors.clientName.message}
                         </p>
                     )}
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="portal-label">
                         Email <span className="text-red-500">*</span>
                     </label>
                     <input
                         type="email"
                         {...register("clientEmail")}
-                        className={`w-full px-4 py-3 rounded-lg border ${
-                            errors.clientEmail
-                                ? "border-red-500 focus:ring-red-500"
-                                : "border-gray-300 focus:ring-primary"
-                        } focus:ring-2 focus:border-transparent outline-none`}
+                        className={`portal-input ${
+                            errors.clientEmail ? "border-red-500 focus:ring-red-500" : ""
+                        }`}
                     />
                     {errors.clientEmail && (
-                        <p className="mt-1 text-sm text-red-500">
+                        <p className="mt-1 text-xs text-red-500">
                             {errors.clientEmail.message}
                         </p>
                     )}
@@ -402,57 +390,51 @@ export default function NewBookingForm({ therapists }: NewBookingFormProps) {
             </div>
 
             <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Phone Number
-                </label>
+                <label className="portal-label">Phone Number</label>
                 <input
                     type="tel"
                     {...register("clientPhone")}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                    className="portal-input"
                     placeholder="+91 98765 43210"
                 />
             </div>
 
             <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Client Notes
-                </label>
+                <label className="portal-label">Client Notes</label>
                 <textarea
                     {...register("clientNotes")}
                     rows={2}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none resize-none"
+                    className="portal-input resize-none"
                     placeholder="Notes visible to the client"
                 />
             </div>
 
             <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Internal Notes
-                </label>
+                <label className="portal-label">Internal Notes</label>
                 <textarea
                     {...register("internalNotes")}
                     rows={2}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none resize-none"
+                    className="portal-input resize-none"
                     placeholder="Internal notes (not visible to client)"
                 />
             </div>
 
-            <div className="flex gap-4 pt-4">
+            <div className="flex gap-3 pt-2">
                 <button
                     type="button"
                     onClick={() => router.back()}
-                    className="flex-1 btn btn-secondary"
+                    className="flex-1 portal-btn portal-btn-secondary"
                 >
                     Cancel
                 </button>
                 <button
                     type="submit"
                     disabled={loading}
-                    className="flex-1 btn btn-primary"
+                    className="flex-1 portal-btn portal-btn-primary"
                 >
                     {loading ? (
                         <>
-                            <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2"></div>
+                            <div className="animate-spin w-3 h-3 border-2 border-white border-t-transparent rounded-full mr-2"></div>
                             Creating...
                         </>
                     ) : (

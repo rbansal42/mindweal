@@ -49,29 +49,29 @@ export default function EditWorkshopPage({ params }: PageProps) {
 
     if (isLoading) {
         return (
-            <div className="flex items-center justify-center py-12">
-                <Loader2 className="w-8 h-8 animate-spin text-[var(--primary-teal)]" />
+            <div className="flex items-center justify-center py-8">
+                <Loader2 className="w-6 h-6 animate-spin text-[var(--primary-teal)]" />
             </div>
         );
     }
 
     if (error || !workshop) {
         return (
-            <div className="space-y-6">
-                <div className="flex items-center gap-4">
+            <div className="space-y-3">
+                <div className="flex items-center gap-3">
                     <Link
                         href="/admin/workshops"
-                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                        className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
                     >
-                        <ArrowLeft className="w-5 h-5" />
+                        <ArrowLeft className="w-4 h-4" />
                     </Link>
-                    <h1 className="text-2xl font-bold">Edit Workshop</h1>
+                    <h1 className="portal-title">Edit Workshop</h1>
                 </div>
-                <div className="card p-8 text-center">
-                    <p className="text-red-500">{error || "Workshop not found"}</p>
+                <div className="portal-card p-6 text-center">
+                    <p className="text-red-500 text-sm">{error || "Workshop not found"}</p>
                     <Link
                         href="/admin/workshops"
-                        className="text-[var(--primary-teal)] hover:underline mt-4 inline-block"
+                        className="text-[var(--primary-teal)] hover:underline mt-3 inline-block text-sm"
                     >
                         Back to Workshops
                     </Link>
@@ -81,17 +81,17 @@ export default function EditWorkshopPage({ params }: PageProps) {
     }
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center gap-4">
+        <div className="space-y-3">
+            <div className="flex items-center gap-3">
                 <Link
                     href="/admin/workshops"
-                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                    className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
                 >
-                    <ArrowLeft className="w-5 h-5" />
+                    <ArrowLeft className="w-4 h-4" />
                 </Link>
                 <div>
-                    <h1 className="text-2xl font-bold">Edit Workshop</h1>
-                    <p className="text-gray-600">{workshop.title}</p>
+                    <h1 className="portal-title">Edit Workshop</h1>
+                    <p className="text-gray-600 text-sm">{workshop.title}</p>
                 </div>
             </div>
 

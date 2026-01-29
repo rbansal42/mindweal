@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Plus, Briefcase, MapPin, Clock } from "lucide-react";
-import { ContentTable } from "@/components/admin/ContentTable";
 
 interface JobPosting {
     id: string;
@@ -108,19 +107,19 @@ export default function JobPostingsPage() {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center min-h-[400px]">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600"></div>
+            <div className="flex items-center justify-center min-h-[300px]">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-teal-600"></div>
             </div>
         );
     }
 
     if (error) {
         return (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                <p className="text-red-600">{error}</p>
+            <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                <p className="text-red-600 text-sm">{error}</p>
                 <button
                     onClick={fetchJobPostings}
-                    className="mt-2 text-sm text-red-700 underline"
+                    className="mt-1 text-xs text-red-700 underline"
                 >
                     Try again
                 </button>
@@ -129,32 +128,32 @@ export default function JobPostingsPage() {
     }
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-3">
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-xl font-bold">Job Postings</h1>
-                    <p className="text-gray-600 mt-1">
+                    <h1 className="portal-title">Job Postings</h1>
+                    <p className="text-gray-600 text-sm">
                         Manage career opportunities
                     </p>
                 </div>
                 <Link
                     href="/admin/job-postings/new"
-                    className="btn btn-primary flex items-center gap-2"
+                    className="portal-btn portal-btn-primary flex items-center gap-1.5"
                 >
-                    <Plus className="w-4 h-4" /> New Job Posting
+                    <Plus className="w-4 h-4" /> New Job
                 </Link>
             </div>
 
             {/* Filter */}
-            <div className="flex items-center gap-4">
-                <label className="text-sm font-medium text-gray-700">
+            <div className="flex items-center gap-3">
+                <label className="portal-label">
                     Filter by status:
                 </label>
                 <select
                     value={statusFilter}
                     onChange={(e) => handleStatusFilter(e.target.value)}
-                    className="rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 text-sm"
+                    className="portal-input py-1 w-auto"
                 >
                     <option value="all">All</option>
                     <option value="draft">Draft</option>
@@ -163,72 +162,58 @@ export default function JobPostingsPage() {
             </div>
 
             {/* Table */}
-            <div className="card overflow-hidden">
+            <div className="portal-card overflow-hidden">
                 {jobPostings.length === 0 ? (
-                    <div className="p-8 text-center">
-                        <Briefcase className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-                        <p className="text-gray-500">No job postings found</p>
+                    <div className="p-6 text-center">
+                        <Briefcase className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+                        <p className="text-gray-500 text-sm">No job postings found</p>
                         <Link
                             href="/admin/job-postings/new"
-                            className="text-[var(--primary-teal)] hover:underline mt-2 inline-block"
+                            className="text-[var(--primary-teal)] hover:underline mt-1 inline-block text-sm"
                         >
                             Create your first job posting
                         </Link>
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-50">
+                        <table className="portal-table">
+                            <thead>
                                 <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Title
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Department
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Type
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Status
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Active
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Updated
-                                    </th>
-                                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Actions
-                                    </th>
+                                    <th>Title</th>
+                                    <th>Department</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Active</th>
+                                    <th>Updated</th>
+                                    <th className="text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
+                            <tbody>
                                 {jobPostings.map((job) => (
                                     <tr key={job.id}>
-                                        <td className="px-6 py-4 whitespace-nowrap">
+                                        <td>
                                             <div className="text-sm font-medium text-gray-900">
                                                 {job.title}
                                             </div>
-                                            <div className="text-xs text-gray-500 flex items-center gap-1 mt-1">
+                                            <div className="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
                                                 <MapPin className="w-3 h-3" />
                                                 {job.location}
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
+                                        <td>
                                             <span className="text-sm text-gray-700">
                                                 {job.department}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                                        <td>
+                                            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
                                                 <Clock className="w-3 h-3" />
                                                 {typeLabels[job.type]}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
+                                        <td>
                                             <span
-                                                className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                                className={`px-1.5 py-0.5 inline-flex text-xs font-semibold rounded-full ${
                                                     job.status === "published"
                                                         ? "bg-green-100 text-green-800"
                                                         : "bg-yellow-100 text-yellow-800"
@@ -237,28 +222,28 @@ export default function JobPostingsPage() {
                                                 {job.status}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
+                                        <td>
                                             <button
                                                 type="button"
                                                 onClick={() => handleToggleActive(job.id, !job.isActive)}
-                                                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 ${
+                                                className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-1 ${
                                                     job.isActive ? "bg-teal-600" : "bg-gray-200"
                                                 }`}
                                             >
                                                 <span
-                                                    className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                                                        job.isActive ? "translate-x-5" : "translate-x-0"
+                                                    className={`inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                                                        job.isActive ? "translate-x-4" : "translate-x-0"
                                                     }`}
                                                 />
                                             </button>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <td className="text-xs text-gray-500">
                                             {new Date(job.updatedAt).toLocaleDateString()}
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                        <td className="text-right text-sm space-x-2">
                                             <Link
                                                 href={`/admin/job-postings/${job.id}/edit`}
-                                                className="text-teal-600 hover:text-teal-900"
+                                                className="text-teal-600 hover:text-teal-900 text-xs"
                                             >
                                                 Edit
                                             </Link>
@@ -269,7 +254,7 @@ export default function JobPostingsPage() {
                                                         handleDelete(job.id);
                                                     }
                                                 }}
-                                                className="text-red-600 hover:text-red-900"
+                                                className="text-red-600 hover:text-red-900 text-xs"
                                             >
                                                 Delete
                                             </button>

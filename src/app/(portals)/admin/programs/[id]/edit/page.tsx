@@ -58,21 +58,21 @@ export default async function EditProgramPage({ params }: EditProgramPageProps) 
     }
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center gap-4">
+        <div className="space-y-3">
+            <div className="flex items-center gap-3">
                 <Link
                     href="/admin/programs"
-                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                    className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
                 >
-                    <ArrowLeft className="w-5 h-5" />
+                    <ArrowLeft className="w-4 h-4" />
                 </Link>
                 <div>
-                    <h1 className="text-2xl font-bold">Edit Program</h1>
-                    <p className="text-gray-600">Update program details</p>
+                    <h1 className="portal-title">Edit Program</h1>
+                    <p className="text-gray-600 text-sm">Update program details</p>
                 </div>
             </div>
 
-            <div className="card p-6">
+            <div className="portal-card p-4">
                 <ProgramForm
                     mode="edit"
                     initialData={{

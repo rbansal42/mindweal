@@ -92,47 +92,47 @@ export default function CommunityProgramsPage() {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center h-64">
-                <div className="text-gray-500">Loading...</div>
+            <div className="flex items-center justify-center h-48">
+                <div className="text-gray-500 text-sm">Loading...</div>
             </div>
         );
     }
 
     if (error) {
         return (
-            <div className="flex items-center justify-center h-64">
-                <div className="text-red-500">{error}</div>
+            <div className="flex items-center justify-center h-48">
+                <div className="text-red-500 text-sm">{error}</div>
             </div>
         );
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-3">
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold">Community Programs</h1>
-                    <p className="text-gray-600 mt-1">
+                    <h1 className="portal-title">Community Programs</h1>
+                    <p className="text-gray-600 text-sm">
                         Manage community programs and workshops
                     </p>
                 </div>
                 <Link
                     href="/admin/community-programs/new"
-                    className="btn btn-primary flex items-center gap-2"
+                    className="portal-btn portal-btn-primary flex items-center gap-1.5"
                 >
-                    <Plus className="w-4 h-4" /> New Community Program
+                    <Plus className="w-4 h-4" /> New Program
                 </Link>
             </div>
 
             {/* Filter */}
-            <div className="card p-4">
-                <div className="flex items-center gap-4">
+            <div className="portal-card p-3">
+                <div className="flex items-center gap-3">
                     <Filter className="w-4 h-4 text-gray-500" />
-                    <label className="text-sm font-medium text-gray-700">Status:</label>
+                    <label className="portal-label">Status:</label>
                     <select
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
-                        className="px-3 py-1.5 border rounded-lg text-sm"
+                        className="portal-input py-1 w-auto"
                     >
                         <option value="all">All</option>
                         <option value="draft">Draft</option>
@@ -142,7 +142,7 @@ export default function CommunityProgramsPage() {
             </div>
 
             {/* Table */}
-            <div className="card">
+            <div className="portal-card">
                 <ContentTable
                     items={programs.map(p => ({
                         id: p.id,

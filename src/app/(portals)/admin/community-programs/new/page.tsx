@@ -12,17 +12,17 @@ export const metadata: Metadata = {
 
 export default function NewCommunityProgramPage() {
     return (
-        <div className="space-y-6">
-            <div className="flex items-center gap-4">
+        <div className="space-y-3">
+            <div className="flex items-center gap-3">
                 <Link
                     href="/admin/community-programs"
-                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                    className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
                 >
-                    <ArrowLeft className="w-5 h-5" />
+                    <ArrowLeft className="w-4 h-4" />
                 </Link>
                 <div>
-                    <h1 className="text-2xl font-bold">New Community Program</h1>
-                    <p className="text-gray-600">Create a new community program or workshop</p>
+                    <h1 className="portal-title">New Community Program</h1>
+                    <p className="text-gray-600 text-sm">Create a new community program or workshop</p>
                 </div>
             </div>
 

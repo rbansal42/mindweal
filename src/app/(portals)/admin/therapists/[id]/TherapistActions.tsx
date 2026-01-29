@@ -52,36 +52,36 @@ export default function TherapistActions({ therapistId, isActive }: Props) {
         <div className="relative">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="p-2 hover:bg-gray-100 rounded-lg"
+                className="p-1.5 hover:bg-gray-100 rounded-lg"
                 disabled={isLoading}
             >
-                {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <MoreVertical className="w-5 h-5" />}
+                {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <MoreVertical className="w-4 h-4" />}
             </button>
 
             {isOpen && (
                 <>
                     <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border z-20">
+                    <div className="absolute right-0 mt-1 w-40 bg-white rounded-lg shadow-lg border z-20">
                         {isActive ? (
                             <button
                                 onClick={handleUnpublish}
-                                className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2"
+                                className="w-full px-3 py-1.5 text-left text-xs hover:bg-gray-50 flex items-center gap-2"
                             >
-                                <EyeOff className="w-4 h-4" /> Unpublish
+                                <EyeOff className="w-3.5 h-3.5" /> Unpublish
                             </button>
                         ) : (
                             <button
                                 onClick={handlePublish}
-                                className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2"
+                                className="w-full px-3 py-1.5 text-left text-xs hover:bg-gray-50 flex items-center gap-2"
                             >
-                                <Eye className="w-4 h-4" /> Publish
+                                <Eye className="w-3.5 h-3.5" /> Publish
                             </button>
                         )}
                         <button
                             onClick={handleDelete}
-                            className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
+                            className="w-full px-3 py-1.5 text-left text-xs text-red-600 hover:bg-red-50 flex items-center gap-2"
                         >
-                            <Trash2 className="w-4 h-4" /> Delete
+                            <Trash2 className="w-3.5 h-3.5" /> Delete
                         </button>
                     </div>
                 </>

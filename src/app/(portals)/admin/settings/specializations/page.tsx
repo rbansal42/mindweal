@@ -33,10 +33,10 @@ export default async function SpecializationsPage() {
     const specializations = await getSpecializations();
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-3">
             <div>
-                <h1 className="text-2xl font-bold">Manage Specializations</h1>
-                <p className="text-gray-600 mt-1">
+                <h1 className="portal-title">Manage Specializations</h1>
+                <p className="text-gray-600 text-sm">
                     Add, edit, or remove specializations that can be assigned to therapists.
                 </p>
             </div>

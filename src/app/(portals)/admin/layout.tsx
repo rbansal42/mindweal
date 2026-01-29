@@ -20,10 +20,10 @@ export default async function AdminLayout({
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gray-100">
             <div className="flex">
                 <AdminSidebar user={session.user} role={userRole} />
-                <main className="flex-1 p-4 lg:p-6">{children}</main>
+                <main className="flex-1 p-3 lg:p-4">{children}</main>
             </div>
         </div>
     );

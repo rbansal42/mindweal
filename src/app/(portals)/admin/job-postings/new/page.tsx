@@ -61,31 +61,31 @@ export default function NewJobPostingPage() {
     };
 
     return (
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto space-y-3">
             {/* Header */}
-            <div className="mb-6">
+            <div>
                 <Link
                     href="/admin/job-postings"
-                    className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
+                    className="inline-flex items-center gap-1.5 text-gray-600 hover:text-gray-900 mb-2 text-sm"
                 >
                     <ArrowLeft className="w-4 h-4" />
                     Back to Job Postings
                 </Link>
-                <h1 className="text-xl font-bold">New Job Posting</h1>
-                <p className="text-gray-600 mt-1">
+                <h1 className="portal-title">New Job Posting</h1>
+                <p className="text-gray-600 text-sm">
                     Create a new career opportunity
                 </p>
             </div>
 
             {/* Error message */}
             {error && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                    <p className="text-red-600">{error}</p>
+                <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <p className="text-red-600 text-sm">{error}</p>
                 </div>
             )}
 
             {/* Form */}
-            <div className="card p-6">
+            <div className="portal-card p-4">
                 <ContentForm
                     status={status}
                     isActive={isActive}
@@ -96,10 +96,10 @@ export default function NewJobPostingPage() {
                     isSubmitting={isSubmitting}
                     submitLabel="Create Job Posting"
                 >
-                    <div className="space-y-6">
+                    <div className="space-y-4">
                         {/* Title */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="portal-label">
                                 Title <span className="text-red-500">*</span>
                             </label>
                             <input
@@ -107,14 +107,14 @@ export default function NewJobPostingPage() {
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
                                 placeholder="e.g., Licensed Clinical Psychologist"
-                                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                                className="portal-input"
                                 required
                             />
                         </div>
 
                         {/* Department */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="portal-label">
                                 Department <span className="text-red-500">*</span>
                             </label>
                             <input
@@ -122,14 +122,14 @@ export default function NewJobPostingPage() {
                                 value={department}
                                 onChange={(e) => setDepartment(e.target.value)}
                                 placeholder="e.g., Clinical Services"
-                                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                                className="portal-input"
                                 required
                             />
                         </div>
 
                         {/* Location */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="portal-label">
                                 Location <span className="text-red-500">*</span>
                             </label>
                             <input
@@ -137,20 +137,20 @@ export default function NewJobPostingPage() {
                                 value={location}
                                 onChange={(e) => setLocation(e.target.value)}
                                 placeholder="e.g., New Delhi, India"
-                                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                                className="portal-input"
                                 required
                             />
                         </div>
 
                         {/* Type */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="portal-label">
                                 Employment Type <span className="text-red-500">*</span>
                             </label>
                             <select
                                 value={type}
                                 onChange={(e) => setType(e.target.value as "full-time" | "part-time" | "contract")}
-                                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                                className="portal-input"
                             >
                                 <option value="full-time">Full-time</option>
                                 <option value="part-time">Part-time</option>
@@ -160,7 +160,7 @@ export default function NewJobPostingPage() {
 
                         {/* Description */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="portal-label">
                                 Description <span className="text-red-500">*</span>
                             </label>
                             <RichTextEditor
@@ -172,7 +172,7 @@ export default function NewJobPostingPage() {
 
                         {/* Requirements */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="portal-label">
                                 Requirements
                             </label>
                             <RichTextEditor
@@ -180,7 +180,7 @@ export default function NewJobPostingPage() {
                                 onChange={setRequirements}
                                 placeholder="List the qualifications and requirements..."
                             />
-                            <p className="mt-1 text-sm text-gray-500">
+                            <p className="mt-1 text-xs text-gray-500">
                                 Optional. List qualifications, experience, and skills required.
                             </p>
                         </div>

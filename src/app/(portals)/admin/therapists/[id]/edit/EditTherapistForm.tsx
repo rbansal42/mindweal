@@ -121,60 +121,60 @@ export default function EditTherapistForm({ therapist, specializations }: Props)
     return (
         <div className="max-w-3xl">
             {error && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">{error}</div>
+                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">{error}</div>
             )}
 
-            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
                 {/* Profile Info */}
-                <div className="card p-6 space-y-6">
-                    <h2 className="text-lg font-semibold">Profile Information</h2>
+                <div className="portal-card p-4 space-y-4">
+                    <h2 className="text-sm font-semibold">Profile Information</h2>
 
-                    <div className="grid md:grid-cols-2 gap-4">
+                    <div className="grid md:grid-cols-2 gap-3">
                         <div>
-                            <label className="block text-sm font-medium mb-1">Name *</label>
-                            <input {...form.register("name")} className="w-full px-3 py-2 border rounded-lg" />
-                            {form.formState.errors.name && <p className="text-red-500 text-xs mt-1">{form.formState.errors.name.message}</p>}
+                            <label className="portal-label">Name *</label>
+                            <input {...form.register("name")} className="portal-input" />
+                            {form.formState.errors.name && <p className="text-red-500 text-xs mt-0.5">{form.formState.errors.name.message}</p>}
                         </div>
                         <div>
-                            <label className="block text-sm font-medium mb-1">Title *</label>
-                            <input {...form.register("title")} className="w-full px-3 py-2 border rounded-lg" />
-                            {form.formState.errors.title && <p className="text-red-500 text-xs mt-1">{form.formState.errors.title.message}</p>}
+                            <label className="portal-label">Title *</label>
+                            <input {...form.register("title")} className="portal-input" />
+                            {form.formState.errors.title && <p className="text-red-500 text-xs mt-0.5">{form.formState.errors.title.message}</p>}
                         </div>
                     </div>
 
-                    <div className="grid md:grid-cols-2 gap-4">
+                    <div className="grid md:grid-cols-2 gap-3">
                         <div>
-                            <label className="block text-sm font-medium mb-1">Email *</label>
-                            <input type="email" {...form.register("email")} className="w-full px-3 py-2 border rounded-lg" />
-                            {form.formState.errors.email && <p className="text-red-500 text-xs mt-1">{form.formState.errors.email.message}</p>}
+                            <label className="portal-label">Email *</label>
+                            <input type="email" {...form.register("email")} className="portal-input" />
+                            {form.formState.errors.email && <p className="text-red-500 text-xs mt-0.5">{form.formState.errors.email.message}</p>}
                         </div>
                         <div>
-                            <label className="block text-sm font-medium mb-1">Phone *</label>
-                            <input {...form.register("phone")} className="w-full px-3 py-2 border rounded-lg" />
-                            {form.formState.errors.phone && <p className="text-red-500 text-xs mt-1">{form.formState.errors.phone.message}</p>}
+                            <label className="portal-label">Phone *</label>
+                            <input {...form.register("phone")} className="portal-input" />
+                            {form.formState.errors.phone && <p className="text-red-500 text-xs mt-0.5">{form.formState.errors.phone.message}</p>}
                         </div>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Bio *</label>
-                        <textarea {...form.register("bio")} rows={5} className="w-full px-3 py-2 border rounded-lg" />
-                        {form.formState.errors.bio && <p className="text-red-500 text-xs mt-1">{form.formState.errors.bio.message}</p>}
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium mb-1">Photo</label>
-                        <div className="flex items-center gap-4">
+                        <label className="portal-label">Bio *</label>
+                        <textarea {...form.register("bio")} rows={4} className="portal-input" />
+                        {form.formState.errors.bio && <p className="text-red-500 text-xs mt-0.5">{form.formState.errors.bio.message}</p>}
+                    </div>
+
+                    <div>
+                        <label className="portal-label">Photo</label>
+                        <div className="flex items-center gap-3">
                             {photoPreview ? (
-                                <img src={photoPreview} alt="Preview" className="w-20 h-20 rounded-full object-cover" />
+                                <img src={photoPreview} alt="Preview" className="w-16 h-16 rounded-full object-cover" />
                             ) : (
-                                <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center">
-                                    <User className="w-6 h-6 text-gray-400" />
+                                <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center">
+                                    <User className="w-5 h-5 text-gray-400" />
                                 </div>
                             )}
                             <div>
                                 <input type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" id="photo-upload" />
-                                <label htmlFor="photo-upload" className="btn btn-outline cursor-pointer">
-                                    {isUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Change Photo"}
+                                <label htmlFor="photo-upload" className="portal-btn portal-btn-outline cursor-pointer">
+                                    {isUploading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : "Change Photo"}
                                 </label>
                                 <p className="text-xs text-gray-500 mt-1">Max 4MB, will be optimized to WebP</p>
                             </div>
@@ -182,8 +182,8 @@ export default function EditTherapistForm({ therapist, specializations }: Props)
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium mb-2">Specializations *</label>
-                        <div className="flex flex-wrap gap-2">
+                        <label className="portal-label">Specializations *</label>
+                        <div className="flex flex-wrap gap-1.5 mt-1">
                             {specializations.map((spec) => {
                                 const selected = form.watch("specializationIds").includes(spec.id);
                                 return (
@@ -196,7 +196,7 @@ export default function EditTherapistForm({ therapist, specializations }: Props)
                                                 ? current.filter(id => id !== spec.id)
                                                 : [...current, spec.id]);
                                         }}
-                                        className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                                        className={`px-2 py-1 rounded text-xs border transition-colors ${
                                             selected
                                                 ? "bg-[var(--primary-teal)] text-white border-[var(--primary-teal)]"
                                                 : "border-gray-300 hover:border-[var(--primary-teal)]"
@@ -207,38 +207,38 @@ export default function EditTherapistForm({ therapist, specializations }: Props)
                                 );
                             })}
                         </div>
-                        {form.formState.errors.specializationIds && <p className="text-red-500 text-xs mt-1">{form.formState.errors.specializationIds.message}</p>}
+                        {form.formState.errors.specializationIds && <p className="text-red-500 text-xs mt-0.5">{form.formState.errors.specializationIds.message}</p>}
                     </div>
                 </div>
 
                 {/* Booking Settings */}
-                <div className="card p-6 space-y-4">
-                    <h2 className="text-lg font-semibold">Booking Settings</h2>
-                    <div className="grid md:grid-cols-2 gap-4">
+                <div className="portal-card p-4 space-y-3">
+                    <h2 className="text-sm font-semibold">Booking Settings</h2>
+                    <div className="grid md:grid-cols-2 gap-3">
                         <div>
-                            <label className="block text-sm font-medium mb-1">Default Session Duration (min)</label>
-                            <input type="number" {...form.register("defaultSessionDuration", { valueAsNumber: true })} className="w-full px-3 py-2 border rounded-lg" />
+                            <label className="portal-label">Default Session Duration (min)</label>
+                            <input type="number" {...form.register("defaultSessionDuration", { valueAsNumber: true })} className="portal-input" />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium mb-1">Buffer Time (min)</label>
-                            <input type="number" {...form.register("bufferTime", { valueAsNumber: true })} className="w-full px-3 py-2 border rounded-lg" />
+                            <label className="portal-label">Buffer Time (min)</label>
+                            <input type="number" {...form.register("bufferTime", { valueAsNumber: true })} className="portal-input" />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium mb-1">Advance Booking (days)</label>
-                            <input type="number" {...form.register("advanceBookingDays", { valueAsNumber: true })} className="w-full px-3 py-2 border rounded-lg" />
+                            <label className="portal-label">Advance Booking (days)</label>
+                            <input type="number" {...form.register("advanceBookingDays", { valueAsNumber: true })} className="portal-input" />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium mb-1">Min Booking Notice (hours)</label>
-                            <input type="number" {...form.register("minBookingNotice", { valueAsNumber: true })} className="w-full px-3 py-2 border rounded-lg" />
+                            <label className="portal-label">Min Booking Notice (hours)</label>
+                            <input type="number" {...form.register("minBookingNotice", { valueAsNumber: true })} className="portal-input" />
                         </div>
                     </div>
                 </div>
 
                 {/* Submit */}
-                <div className="flex justify-end gap-3">
-                    <Link href={`/admin/therapists/${therapist.id}`} className="btn btn-outline">Cancel</Link>
-                    <button type="submit" disabled={isSubmitting || isUploading} className="btn btn-primary flex items-center gap-2">
-                        {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                <div className="flex justify-end gap-2">
+                    <Link href={`/admin/therapists/${therapist.id}`} className="portal-btn portal-btn-outline">Cancel</Link>
+                    <button type="submit" disabled={isSubmitting || isUploading} className="portal-btn portal-btn-primary flex items-center gap-1.5">
+                        {isSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
                         Save Changes
                     </button>
                 </div>

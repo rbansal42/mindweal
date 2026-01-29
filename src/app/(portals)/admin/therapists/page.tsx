@@ -72,38 +72,38 @@ export default async function TherapistsPage() {
     const therapists = await getTherapists();
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-3">
             {/* Header with actions */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-xl font-bold">Therapists</h1>
-                    <p className="text-gray-600 mt-1">
+                    <h1 className="portal-title">Therapists</h1>
+                    <p className="text-gray-600 text-sm">
                         Manage therapist profiles and view their statistics
                     </p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                     <Link
                         href="/admin/therapists/archived"
-                        className="btn btn-outline flex items-center gap-2"
+                        className="portal-btn portal-btn-outline flex items-center gap-1.5"
                     >
-                        <Archive className="w-4 h-4" /> Archived
+                        <Archive className="w-3.5 h-3.5" /> Archived
                     </Link>
                     <Link
                         href="/admin/therapists/new"
-                        className="btn btn-primary flex items-center gap-2"
+                        className="portal-btn portal-btn-primary flex items-center gap-1.5"
                     >
-                        <Plus className="w-4 h-4" /> Add Therapist
+                        <Plus className="w-3.5 h-3.5" /> Add Therapist
                     </Link>
                 </div>
             </div>
 
             {/* Therapist Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {therapists.length === 0 ? (
-                    <div className="col-span-2 card p-8 text-center">
-                        <Users className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-                        <p className="text-gray-500">No therapists found</p>
-                        <Link href="/admin/therapists/new" className="text-[var(--primary-teal)] hover:underline mt-2 inline-block">
+                    <div className="col-span-2 portal-card p-6 text-center">
+                        <Users className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+                        <p className="text-gray-500 text-sm">No therapists found</p>
+                        <Link href="/admin/therapists/new" className="text-[var(--primary-teal)] hover:underline mt-1 inline-block text-sm">
                             Add your first therapist
                         </Link>
                     </div>
@@ -112,38 +112,38 @@ export default async function TherapistsPage() {
                         <Link
                             key={therapist.id}
                             href={`/admin/therapists/${therapist.id}`}
-                            className="card overflow-hidden hover:shadow-lg transition-shadow"
+                            className="portal-card overflow-hidden hover:shadow-md transition-shadow"
                         >
-                            <div className="p-4">
-                                <div className="flex items-start gap-3">
+                            <div className="p-3">
+                                <div className="flex items-start gap-2.5">
                                     {therapist.photoUrl ? (
                                         <img
                                             src={therapist.photoUrl}
                                             alt={therapist.name}
-                                            className="w-12 h-12 rounded-full object-cover"
+                                            className="w-10 h-10 rounded-full object-cover"
                                         />
                                     ) : (
-                                        <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
-                                            <User className="w-5 h-5 text-gray-400" />
+                                        <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                                            <User className="w-4 h-4 text-gray-400" />
                                         </div>
                                     )}
                                     <div className="flex-1 min-w-0">
-                                        <div className="flex items-center gap-2">
-                                            <h3 className="text-base font-semibold truncate">
+                                        <div className="flex items-center gap-1.5">
+                                            <h3 className="text-sm font-semibold truncate">
                                                 {therapist.name}
                                             </h3>
-                                            <span className={`px-2 py-0.5 text-xs rounded-full shrink-0 ${
+                                            <span className={`portal-badge shrink-0 ${
                                                 therapist.isActive
-                                                    ? "bg-green-100 text-green-700"
-                                                    : "bg-yellow-100 text-yellow-700"
+                                                    ? "portal-badge-success"
+                                                    : "portal-badge-warning"
                                             }`}>
                                                 {therapist.isActive ? "Published" : "Draft"}
                                             </span>
                                         </div>
-                                        <p className="text-gray-500 text-sm truncate">
+                                        <p className="text-gray-500 text-xs truncate">
                                             {therapist.title}
                                         </p>
-                                        <p className="text-gray-400 text-sm flex items-center gap-1 mt-1">
+                                        <p className="text-gray-400 text-xs flex items-center gap-1 mt-0.5">
                                             <Mail className="w-3 h-3" />
                                             {therapist.email}
                                         </p>
@@ -152,14 +152,14 @@ export default async function TherapistsPage() {
 
                                 {/* Specializations */}
                                 {therapist.specializations.length > 0 && (
-                                    <div className="mt-4 flex flex-wrap gap-1">
+                                    <div className="mt-2.5 flex flex-wrap gap-1">
                                         {therapist.specializations.slice(0, 3).map(spec => (
-                                            <span key={spec.id} className="px-2 py-0.5 bg-[var(--primary-teal)]/10 text-[var(--primary-teal)] text-xs rounded-full">
+                                            <span key={spec.id} className="px-1.5 py-0.5 bg-[var(--primary-teal)]/10 text-[var(--primary-teal)] text-xs rounded">
                                                 {spec.name}
                                             </span>
                                         ))}
                                         {therapist.specializations.length > 3 && (
-                                            <span className="px-2 py-0.5 bg-gray-100 text-gray-500 text-xs rounded-full">
+                                            <span className="px-1.5 py-0.5 bg-gray-100 text-gray-500 text-xs rounded">
                                                 +{therapist.specializations.length - 3} more
                                             </span>
                                         )}
@@ -167,17 +167,17 @@ export default async function TherapistsPage() {
                                 )}
 
                                 {/* Stats */}
-                                <div className="grid grid-cols-3 gap-3 mt-3 pt-3 border-t">
+                                <div className="grid grid-cols-3 gap-2 mt-2.5 pt-2.5 border-t">
                                     <div className="text-center">
-                                        <p className="text-lg font-bold">{therapist.sessionTypeCount}</p>
+                                        <p className="text-base font-bold">{therapist.sessionTypeCount}</p>
                                         <p className="text-xs text-gray-500">Sessions</p>
                                     </div>
                                     <div className="text-center">
-                                        <p className="text-lg font-bold">{therapist.upcomingBookings}</p>
+                                        <p className="text-base font-bold">{therapist.upcomingBookings}</p>
                                         <p className="text-xs text-gray-500">Upcoming</p>
                                     </div>
                                     <div className="text-center">
-                                        <p className="text-lg font-bold">{therapist.totalBookings}</p>
+                                        <p className="text-base font-bold">{therapist.totalBookings}</p>
                                         <p className="text-xs text-gray-500">Total</p>
                                     </div>
                                 </div>

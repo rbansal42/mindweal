@@ -33,39 +33,39 @@ export default async function ArchivedTherapistsPage() {
     const therapists = await getArchivedTherapists();
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center gap-4">
+        <div className="space-y-4">
+            <div className="flex items-center gap-3">
                 <Link
                     href="/admin/therapists"
-                    className="p-2 hover:bg-gray-100 rounded-lg"
+                    className="p-1.5 hover:bg-gray-100 rounded-lg"
                 >
-                    <ArrowLeft className="w-5 h-5" />
+                    <ArrowLeft className="w-4 h-4" />
                 </Link>
                 <div>
-                    <h1 className="text-2xl font-bold">Archived Therapists</h1>
-                    <p className="text-gray-600">Restore or permanently manage archived therapists</p>
+                    <h1 className="portal-title">Archived Therapists</h1>
+                    <p className="text-gray-600 text-sm">Restore or permanently manage archived therapists</p>
                 </div>
             </div>
 
             {therapists.length === 0 ? (
-                <div className="card p-12 text-center">
-                    <p className="text-gray-500">No archived therapists</p>
+                <div className="portal-card p-8 text-center">
+                    <p className="text-gray-500 text-sm">No archived therapists</p>
                 </div>
             ) : (
-                <div className="card divide-y">
+                <div className="portal-card divide-y">
                     {therapists.map((t) => (
-                        <div key={t.id} className="p-4 flex items-center justify-between">
-                            <div className="flex items-center gap-4">
+                        <div key={t.id} className="p-3 flex items-center justify-between">
+                            <div className="flex items-center gap-3">
                                 {t.photoUrl ? (
-                                    <img src={t.photoUrl} alt={t.name} className="w-12 h-12 rounded-full object-cover" />
+                                    <img src={t.photoUrl} alt={t.name} className="w-10 h-10 rounded-full object-cover" />
                                 ) : (
-                                    <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
-                                        <User className="w-6 h-6 text-gray-400" />
+                                    <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                                        <User className="w-5 h-5 text-gray-400" />
                                     </div>
                                 )}
                                 <div>
-                                    <p className="font-medium">{t.name}</p>
-                                    <p className="text-sm text-gray-500">{t.title}</p>
+                                    <p className="font-medium text-sm">{t.name}</p>
+                                    <p className="text-xs text-gray-500">{t.title}</p>
                                     <p className="text-xs text-gray-400">
                                         Archived {t.deletedAt?.toLocaleDateString()}
                                     </p>

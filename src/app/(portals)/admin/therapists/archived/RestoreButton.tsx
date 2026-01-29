@@ -29,9 +29,9 @@ export default function RestoreButton({ therapistId }: { therapistId: string }) 
         <button
             onClick={handleRestore}
             disabled={isLoading}
-            className="flex items-center gap-2 px-3 py-1.5 text-sm bg-[var(--primary-teal)] text-white rounded-lg hover:bg-[var(--primary-teal-dark)] disabled:opacity-50"
+            className="portal-btn portal-btn-primary flex items-center gap-1.5"
         >
-            {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <RotateCcw className="w-4 h-4" />}
+            {isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RotateCcw className="w-3.5 h-3.5" />}
             Restore
         </button>
     );
