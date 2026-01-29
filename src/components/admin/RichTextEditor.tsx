@@ -19,6 +19,7 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
       }),
     ],
     content,
+    immediatelyRender: false, // Prevent SSR hydration mismatch
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
     },
