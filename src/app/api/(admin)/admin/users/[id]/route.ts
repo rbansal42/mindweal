@@ -57,9 +57,11 @@ export async function PATCH(
             );
         }
 
-        // 4. Prevent self-demotion/deactivation
+        // 4. Parse request body once
+        const body = await request.json();
+
+        // 5. Prevent self-demotion/deactivation
         if (id === session.user.id) {
-            const body = await request.json();
             if (body.role && body.role !== "admin") {
                 return NextResponse.json(
                     { error: "Cannot demote yourself from admin" },
@@ -74,11 +76,10 @@ export async function PATCH(
             }
         }
 
-        // 5. Parse updates
-        const body = await request.json();
+        // 6. Parse updates
         const { email, name, role, phone, timezone, active } = body;
 
-        // 6. Validate new role permission
+        // 7. Validate new role permission
         if (role && !canManageUserRole(userRole, role)) {
             return NextResponse.json(
                 { error: "Reception can only assign client role" },
@@ -86,7 +87,7 @@ export async function PATCH(
             );
         }
 
-        // 7. Check last admin protection
+        // 8. Check last admin protection
         if (existingUser.role === "admin" && (role !== "admin" || active === false)) {
             const adminCount = await userRepo.count({ where: { role: "admin" } });
             if (adminCount <= 1) {
@@ -97,7 +98,7 @@ export async function PATCH(
             }
         }
 
-        // 8. Handle email change
+        // 9. Handle email change
         let emailVerified = existingUser.emailVerified;
         let emailChanged = false;
         if (email && email !== existingUser.email) {
@@ -125,7 +126,7 @@ export async function PATCH(
             }
         }
 
-        // 9. Update basic user fields
+        // 10. Update basic user fields
         if (name || phone || timezone) {
             existingUser.name = name || existingUser.name;
             existingUser.phone = phone !== undefined ? phone : existingUser.phone;
@@ -133,7 +134,7 @@ export async function PATCH(
             await userRepo.save(existingUser);
         }
 
-        // 10. Update role if changed
+        // 11. Update role if changed
         if (role && role !== existingUser.role) {
             try {
                 await auth.api.setRole({
@@ -153,13 +154,18 @@ export async function PATCH(
             }
         }
 
-        // 11. Update ban status
+        // 12. Update ban status
         if (active !== undefined) {
             try {
                 // Get current ban status from Better Auth
                 // We need to check if user is currently banned before toggling
                 const userList = await auth.api.listUsers({
-                    query: {},
+                    query: {
+                        limit: 1,
+                        filterField: "id",
+                        filterValue: id,
+                        filterOperator: "eq"
+                    },
                     headers: request.headers
                 });
 

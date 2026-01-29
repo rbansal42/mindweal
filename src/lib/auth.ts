@@ -85,10 +85,12 @@ export const auth = betterAuth({
             phone: {
                 type: "string",
                 required: false,
+                input: true,
             },
             timezone: {
                 type: "string",
                 defaultValue: "Asia/Kolkata",
+                input: true,
             },
         },
     },
