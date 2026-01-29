@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ChevronRight, Heart, TrendingUp, Users } from "lucide-react";
 import { AppDataSource } from "@/lib/db";
 import { JobPosting } from "@/entities/JobPosting";
 
@@ -62,12 +63,12 @@ export default async function JoinUsPage() {
                     <h2 className="text-3xl font-bold mb-12 text-center">Why Join MindWeal?</h2>
                     <div className="grid md:grid-cols-3 gap-8">
                         {[
-                            { icon: "💚", title: "Meaningful Work", desc: "Make a real difference in people's mental health journeys." },
-                            { icon: "📈", title: "Growth", desc: "Continuous learning opportunities and professional development." },
-                            { icon: "🤝", title: "Supportive Culture", desc: "Work with a team that practices what we preach about wellbeing." },
+                            { icon: <Heart className="w-8 h-8 text-[var(--primary-teal)]" />, title: "Meaningful Work", desc: "Make a real difference in people's mental health journeys." },
+                            { icon: <TrendingUp className="w-8 h-8 text-[var(--primary-teal)]" />, title: "Growth", desc: "Continuous learning opportunities and professional development." },
+                            { icon: <Users className="w-8 h-8 text-[var(--primary-teal)]" />, title: "Supportive Culture", desc: "Work with a team that practices what we preach about wellbeing." },
                         ].map((item, index) => (
                             <div key={index} className="text-center p-6">
-                                <div className="text-4xl mb-4">{item.icon}</div>
+                                <div className="flex justify-center mb-4">{item.icon}</div>
                                 <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
                                 <p className="text-gray-600">{item.desc}</p>
                             </div>
@@ -102,9 +103,7 @@ export default async function JoinUsPage() {
                                             <span>{job.location}</span>
                                         </div>
                                     </div>
-                                    <svg className="w-5 h-5 text-gray-400 group-hover:text-[var(--primary-teal)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                    </svg>
+                                    <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-[var(--primary-teal)]" />
                                 </Link>
                             ))}
                         </div>

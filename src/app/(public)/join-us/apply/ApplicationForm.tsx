@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { useSearchParams } from "next/navigation";
+import { CloudUpload } from "lucide-react";
 
 export default function ApplicationForm() {
     const searchParams = useSearchParams();
@@ -164,9 +165,7 @@ export default function ApplicationForm() {
                         className="hidden"
                     />
                     <label htmlFor="resume" className="cursor-pointer">
-                        <svg className="w-10 h-10 mx-auto text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                        </svg>
+                        <CloudUpload className="w-10 h-10 mx-auto text-gray-400 mb-3" />
                         {resume ? (
                             <p className="text-[var(--primary-teal)] font-medium">{resume.name}</p>
                         ) : (

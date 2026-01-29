@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { Calendar } from "lucide-react";
 import { notFound } from "next/navigation";
 import { AppDataSource } from "@/lib/db";
 import { Workshop } from "@/entities/Workshop";
@@ -103,9 +104,7 @@ export default async function WorkshopDetailPage({ params }: { params: Promise<{
                         </Link>
                         <div className="flex flex-wrap gap-3 mb-4">
                             <span className="inline-flex items-center gap-2 px-3 py-1 bg-[var(--secondary-green)]/10 text-[var(--secondary-green)] text-sm rounded-full font-medium">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
+                                <Calendar className="w-4 h-4" />
                                 {formatDate(workshop.date)}
                             </span>
                             <span className="px-3 py-1 bg-gray-100 text-gray-600 text-sm rounded-full">

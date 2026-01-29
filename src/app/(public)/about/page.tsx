@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Zap, Eye, Heart, Lock, Star, Users } from "lucide-react";
 import { appConfig } from "@/config";
+import { Placeholder } from "@/components/Placeholder";
 
 export const metadata: Metadata = {
     title: "About Us",
-    description: `Learn about ${appConfig.name} - our mission, vision, and commitment to mental wellness.`,
+    description: `Learn about ${appConfig.name} by Pihu Suri - our mission, vision, and commitment to mental wellness.`,
 };
 
 export default function AboutPage() {
@@ -17,9 +19,9 @@ export default function AboutPage() {
                         <h1 className="text-4xl md:text-5xl font-bold">
                             About <span className="text-gradient-mixed">{appConfig.name}</span>
                         </h1>
+                        <p className="text-lg text-gray-500 font-medium mt-2">{appConfig.founder}</p>
                         <p className="mt-6 text-xl text-gray-600 leading-relaxed">
-                            {appConfig.tagline} — We are dedicated to making mental health care
-                            accessible, compassionate, and effective for everyone.
+                            {appConfig.tagline} — A safe space for healing, growth, and transformation.
                         </p>
                     </div>
                 </div>
@@ -33,64 +35,90 @@ export default function AboutPage() {
                             <h2 className="text-3xl font-bold">Our Story</h2>
                             <div className="mt-6 space-y-4 text-gray-600">
                                 <p>
-                                    MindWeal was founded with a simple yet powerful vision: to create a safe
-                                    space where individuals can untangle their thoughts, heal their minds,
-                                    and thrive in life.
+                                    MindWeal by Pihu Suri began with a simple belief: everyone deserves access 
+                                    to compassionate, professional mental health support. What started as a 
+                                    personal mission to break the stigma around mental health has grown into 
+                                    a thriving practice dedicated to helping individuals untangle their thoughts, 
+                                    heal from their struggles, and thrive in life.
                                 </p>
                                 <p>
-                                    We understand that seeking help for mental health can feel daunting.
-                                    That&apos;s why we&apos;ve built a practice centered on empathy, professionalism,
-                                    and genuine care for every individual who walks through our doors.
+                                    Founded by Pihu Suri, a passionate clinical psychologist, MindWeal has 
+                                    impacted over 1,400 lives through individual therapy, trained over 1,000 
+                                    professionals in Psychological First Aid, guided 300+ individuals in career 
+                                    decisions, and mentored 10+ aspiring psychologists who are now practicing 
+                                    professionals.
                                 </p>
                                 <p>
-                                    Our team of experienced therapists brings together diverse expertise
-                                    and a shared commitment to helping you navigate life&apos;s challenges
-                                    with resilience and hope.
+                                    We understand that seeking help for mental health can feel daunting. 
+                                    That&apos;s why we&apos;ve built a practice centered on empathy, professionalism, 
+                                    and genuine care for every individual who walks through our doors or 
+                                    connects with us online.
                                 </p>
                             </div>
                         </div>
                         <div className="relative">
-                            <div className="aspect-[4/3] rounded-2xl bg-gradient-to-br from-[var(--primary-teal)]/20 to-[var(--primary-purple)]/20 flex items-center justify-center">
-                                <span className="text-6xl">🧠💚</span>
+                            <div className="aspect-[4/3] rounded-2xl bg-gradient-to-br from-[var(--primary-teal)]/20 to-[var(--secondary-green)]/20 flex items-center justify-center">
+                                <div className="text-center">
+                                    <Placeholder text="MindWeal" className="rounded-2xl" />
+                                    <p className="mt-4 text-gray-600 font-medium">Untangle | Heal | Thrive</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Mission & Vision */}
+            {/* The Name MindWeal */}
             <section className="section section-alt">
+                <div className="container-custom">
+                    <div className="max-w-3xl mx-auto text-center">
+                        <h2 className="text-3xl font-bold mb-6">The Name &ldquo;MindWeal&rdquo;</h2>
+                        <div className="text-gray-600 space-y-4">
+                            <p className="text-lg">
+                                The word <strong>&ldquo;Weal&rdquo;</strong> means <em>well-being, prosperity, and happiness</em>.
+                            </p>
+                            <p>
+                                MindWeal represents our commitment to nurturing the well-being of the mind. 
+                                We believe that mental wellness is the foundation of a fulfilling life, and 
+                                our name reflects our dedication to helping you achieve that state of inner 
+                                peace, balance, and prosperity.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Mission & Vision */}
+            <section className="section bg-white">
                 <div className="container-custom">
                     <div className="grid md:grid-cols-2 gap-8">
                         <div className="card">
                             <div className="card-body p-10">
                                 <div className="w-14 h-14 rounded-xl bg-[var(--primary-teal)]/10 flex items-center justify-center mb-6">
-                                    <svg className="w-7 h-7 text-[var(--primary-teal)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                    </svg>
+                                    <Zap className="w-7 h-7 text-[var(--primary-teal)]" />
                                 </div>
                                 <h3 className="text-2xl font-bold mb-4">Our Mission</h3>
                                 <p className="text-gray-600">
-                                    To provide accessible, compassionate, and evidence-based mental health
-                                    services that empower individuals to overcome challenges and lead
-                                    fulfilling lives.
+                                    To provide accessible, compassionate, and evidence-based mental health 
+                                    services that empower individuals to understand themselves better, 
+                                    overcome their challenges, and build resilience for a fulfilling life. 
+                                    We are committed to breaking the stigma around mental health and creating 
+                                    a supportive community where healing is possible.
                                 </p>
                             </div>
                         </div>
 
                         <div className="card">
                             <div className="card-body p-10">
-                                <div className="w-14 h-14 rounded-xl bg-[var(--primary-purple)]/10 flex items-center justify-center mb-6">
-                                    <svg className="w-7 h-7 text-[var(--primary-purple)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                    </svg>
+                                <div className="w-14 h-14 rounded-xl bg-[var(--secondary-green)]/10 flex items-center justify-center mb-6">
+                                    <Eye className="w-7 h-7 text-[var(--secondary-green)]" />
                                 </div>
                                 <h3 className="text-2xl font-bold mb-4">Our Vision</h3>
                                 <p className="text-gray-600">
-                                    A world where mental wellness is prioritized, stigma is eliminated,
-                                    and everyone has the support they need to thrive emotionally
-                                    and psychologically.
+                                    A world where mental wellness is prioritized, stigma is eliminated, 
+                                    and everyone has access to the support they need to thrive emotionally 
+                                    and psychologically. We envision communities that embrace mental health 
+                                    as an integral part of overall well-being.
                                 </p>
                             </div>
                         </div>
@@ -99,7 +127,7 @@ export default function AboutPage() {
             </section>
 
             {/* Our Values */}
-            <section className="section bg-white">
+            <section className="section section-alt">
                 <div className="container-custom">
                     <div className="text-center max-w-2xl mx-auto mb-16">
                         <h2 className="text-3xl md:text-4xl font-bold">Our Core Values</h2>
@@ -110,13 +138,29 @@ export default function AboutPage() {
 
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {[
-                            { icon: "💚", title: "Compassion", desc: "We approach every interaction with empathy and understanding." },
-                            { icon: "🔒", title: "Confidentiality", desc: "Your privacy and trust are sacred to us." },
-                            { icon: "⭐", title: "Excellence", desc: "We maintain the highest standards in our practice." },
-                            { icon: "🤝", title: "Inclusivity", desc: "We welcome everyone, regardless of background." },
+                            { 
+                                icon: <Heart className="w-8 h-8 text-[var(--primary-teal)]" />, 
+                                title: "Compassion", 
+                                desc: "We approach every interaction with empathy, warmth, and genuine care for your well-being." 
+                            },
+                            { 
+                                icon: <Lock className="w-8 h-8 text-[var(--primary-teal)]" />, 
+                                title: "Confidentiality", 
+                                desc: "Your privacy is sacred. Everything shared in our space stays protected and secure." 
+                            },
+                            { 
+                                icon: <Star className="w-8 h-8 text-[var(--primary-teal)]" />, 
+                                title: "Excellence", 
+                                desc: "We maintain the highest professional standards, using evidence-based practices in our work." 
+                            },
+                            { 
+                                icon: <Users className="w-8 h-8 text-[var(--primary-teal)]" />, 
+                                title: "Inclusivity", 
+                                desc: "We welcome everyone, regardless of background, identity, or circumstances." 
+                            },
                         ].map((value, index) => (
                             <div key={index} className="text-center">
-                                <div className="text-4xl mb-4">{value.icon}</div>
+                                <div className="mb-4">{value.icon}</div>
                                 <h3 className="text-xl font-semibold mb-2">{value.title}</h3>
                                 <p className="text-gray-600 text-sm">{value.desc}</p>
                             </div>
@@ -125,14 +169,74 @@ export default function AboutPage() {
                 </div>
             </section>
 
+            {/* Founder Message */}
+            <section className="section bg-white">
+                <div className="container-custom">
+                    <div className="max-w-4xl mx-auto">
+                        <div className="bg-gradient-to-br from-[var(--primary-teal)]/5 to-[var(--secondary-green)]/5 rounded-2xl p-8 md:p-12">
+                            <h2 className="text-3xl font-bold mb-6">A Message from the Founder</h2>
+                            <div className="space-y-4 text-gray-600">
+                                <p>
+                                    Mental health is not a destination but a journey — one that requires 
+                                    patience, support, and the right guidance. I founded MindWeal with the 
+                                    belief that every person deserves access to quality mental health care, 
+                                    delivered with compassion and without judgment.
+                                </p>
+                                <p>
+                                    Over the years, I&apos;ve had the privilege of walking alongside hundreds 
+                                    of individuals through their darkest moments and watching them emerge 
+                                    stronger, more resilient, and more connected to themselves. This work 
+                                    is deeply personal to me, and I&apos;m committed to making mental health 
+                                    support accessible to as many people as possible.
+                                </p>
+                                <p>
+                                    Whether you&apos;re seeking therapy, looking to train as a mental health 
+                                    professional, or simply want to learn more about psychological well-being, 
+                                    you&apos;ve come to the right place. Welcome to MindWeal.
+                                </p>
+                            </div>
+                            <div className="mt-8 flex items-center gap-4">
+                                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[var(--primary-teal)] to-[var(--secondary-green)] flex items-center justify-center text-white text-2xl font-bold">
+                                    P
+                                </div>
+                                <div>
+                                    <p className="font-semibold text-gray-900">Pihu Suri</p>
+                                    <p className="text-sm text-gray-500">Founder, MindWeal</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Impact Stats */}
+            <section className="py-16 bg-gradient-to-r from-[var(--primary-teal)] to-[var(--secondary-green)] text-white">
+                <div className="container-custom">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                        {[
+                            { value: "1,400+", label: "Lives Impacted" },
+                            { value: "1,000+", label: "PFA Trainees" },
+                            { value: "300+", label: "Career Guidance" },
+                            { value: "10+", label: "Mentees Practicing" },
+                        ].map((stat, index) => (
+                            <div key={index}>
+                                <div className="text-4xl md:text-5xl font-bold">{stat.value}</div>
+                                <p className="mt-2 opacity-90">{stat.label}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
             {/* CTA */}
-            <section className="section bg-gradient-to-br from-[var(--primary-teal)] to-[var(--secondary-green)] text-white">
+            <section className="section bg-white">
                 <div className="container-custom text-center">
                     <h2 className="text-3xl font-bold">Meet Our Team</h2>
-                    <p className="mt-4 text-xl opacity-90 max-w-xl mx-auto">
-                        Get to know the dedicated professionals behind MindWeal.
+                    <p className="mt-4 text-xl text-gray-600 max-w-xl mx-auto">
+                        Get to know the dedicated professionals behind MindWeal who are committed 
+                        to supporting your mental wellness journey.
                     </p>
-                    <Link href="/team" className="btn bg-white text-[var(--primary-teal)] hover:bg-gray-100 mt-8 px-8 py-4">
+                    <Link href="/team" className="btn btn-primary mt-8 px-8 py-4">
                         View Our Team
                     </Link>
                 </div>

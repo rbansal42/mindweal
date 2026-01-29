@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { Clock, Handshake } from "lucide-react";
 import { AppDataSource } from "@/lib/db";
 import { CommunityProgram } from "@/entities/CommunityProgram";
 
@@ -68,7 +69,7 @@ export default async function CommunityPage() {
                                                 className="w-full h-full object-cover"
                                             />
                                         ) : (
-                                            <span className="text-5xl">🤝</span>
+                                            <Handshake className="w-12 h-12 text-[var(--primary-teal)]" />
                                         )}
                                     </div>
                                     <div className="card-body p-6">
@@ -80,9 +81,7 @@ export default async function CommunityPage() {
                                             }}
                                         />
                                         <div className="mt-4 flex items-center gap-2 text-sm text-[var(--secondary-violet)]">
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
+                                            <Clock className="w-4 h-4" />
                                             {program.schedule}
                                         </div>
                                     </div>

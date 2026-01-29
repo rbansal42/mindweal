@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import Image from "next/image";
+import { ChevronRight } from "lucide-react";
 import { appConfig } from "@/config";
 
 export const metadata: Metadata = {
@@ -6,17 +9,35 @@ export const metadata: Metadata = {
     description: `Meet the dedicated professionals behind ${appConfig.name}. Our team of experienced therapists and mental health experts.`,
 };
 
-// Sample team data - will be replaced with Strapi data
-const teamMembers = [
-    {
-        name: "Dr. Pihu Suri",
-        role: "Founder & Clinical Psychologist",
-        bio: "With over a decade of experience in clinical psychology, Dr. Suri founded MindWeal with a vision to make mental health care accessible and stigma-free.",
-        specializations: ["Anxiety", "Depression", "Trauma"],
-    },
-];
+interface TeamMember {
+    id: string;
+    name: string;
+    slug: string;
+    role: string;
+    qualifications: string | null;
+    bio: string;
+    photoUrl: string | null;
+    areasOfExpertise: string[] | null;
+    quote: string | null;
+    displayOrder: number;
+}
 
-export default function TeamPage() {
+async function getTeamMembers(): Promise<TeamMember[]> {
+    try {
+        const res = await fetch(`${appConfig.url}/api/team-members`, {
+            next: { revalidate: 60 }, // Revalidate every 60 seconds
+        });
+        if (!res.ok) return [];
+        const data = await res.json();
+        return data.data || [];
+    } catch {
+        return [];
+    }
+}
+
+export default async function TeamPage() {
+    const teamMembers = await getTeamMembers();
+
     return (
         <>
             {/* Hero Section */}
@@ -28,7 +49,8 @@ export default function TeamPage() {
                         </h1>
                         <p className="mt-6 text-xl text-gray-600 leading-relaxed">
                             Our team of dedicated professionals is committed to supporting you on your
-                            journey to mental wellness.
+                            journey to mental wellness. Each member brings unique expertise and a shared
+                            passion for helping others thrive.
                         </p>
                     </div>
                 </div>
@@ -37,42 +59,103 @@ export default function TeamPage() {
             {/* Team Grid */}
             <section className="section bg-white">
                 <div className="container-custom">
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {teamMembers.map((member, index) => (
-                            <div key={index} className="card group">
-                                <div className="aspect-[4/3] bg-gradient-to-br from-[var(--primary-teal)]/20 to-[var(--primary-purple)]/20 flex items-center justify-center">
-                                    <div className="w-24 h-24 rounded-full bg-white/80 flex items-center justify-center text-4xl">
-                                        👤
-                                    </div>
-                                </div>
-                                <div className="card-body p-6">
-                                    <h3 className="text-xl font-semibold">{member.name}</h3>
-                                    <p className="text-[var(--primary-teal)] text-sm font-medium mt-1">
-                                        {member.role}
-                                    </p>
-                                    <p className="text-gray-600 mt-3 text-sm">{member.bio}</p>
-                                    {member.specializations && (
-                                        <div className="mt-4 flex flex-wrap gap-2">
-                                            {member.specializations.map((spec, i) => (
-                                                <span
-                                                    key={i}
-                                                    className="px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded-full"
-                                                >
-                                                    {spec}
-                                                </span>
-                                            ))}
+                    {teamMembers.length > 0 ? (
+                        <div className="grid md:grid-cols-2 gap-8">
+                            {teamMembers.map((member) => (
+                                <Link
+                                    key={member.id}
+                                    href={`/team/${member.slug}`}
+                                    className="card group hover:shadow-lg transition-shadow"
+                                >
+                                    <div className="flex flex-col sm:flex-row gap-6 p-6">
+                                        {/* Photo */}
+                                        <div className="flex-shrink-0">
+                                            {member.photoUrl ? (
+                                                <Image
+                                                    src={member.photoUrl}
+                                                    alt={member.name}
+                                                    width={160}
+                                                    height={160}
+                                                    className="w-40 h-40 object-cover rounded-xl"
+                                                />
+                                            ) : (
+                                                <div className="w-40 h-40 bg-gradient-to-br from-[var(--primary-teal)]/20 to-[var(--secondary-green)]/20 rounded-xl flex items-center justify-center">
+                                                    <span className="text-5xl text-[var(--primary-teal)]">
+                                                        {member.name.charAt(0)}
+                                                    </span>
+                                                </div>
+                                            )}
                                         </div>
-                                    )}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
 
-                    {/* Placeholder for more team members */}
-                    <div className="mt-12 text-center">
-                        <p className="text-gray-500">
-                            More team members coming soon. Check back later!
-                        </p>
+                                        {/* Info */}
+                                        <div className="flex-1">
+                                            <h3 className="text-xl font-semibold group-hover:text-[var(--primary-teal)] transition-colors">
+                                                {member.name}
+                                            </h3>
+                                            <p className="text-[var(--primary-teal)] text-sm font-medium mt-1">
+                                                {member.role}
+                                            </p>
+                                            {member.qualifications && (
+                                                <p className="text-gray-500 text-sm mt-1">
+                                                    {member.qualifications}
+                                                </p>
+                                            )}
+                                            <p className="text-gray-600 mt-3 text-sm line-clamp-3">
+                                                {member.bio}
+                                            </p>
+
+                                            {member.areasOfExpertise && member.areasOfExpertise.length > 0 && (
+                                                <div className="mt-4 flex flex-wrap gap-2">
+                                                    {member.areasOfExpertise.slice(0, 4).map((area, i) => (
+                                                        <span
+                                                            key={i}
+                                                            className="px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded-full"
+                                                        >
+                                                            {area}
+                                                        </span>
+                                                    ))}
+                                                    {member.areasOfExpertise.length > 4 && (
+                                                        <span className="px-3 py-1 bg-gray-100 text-gray-500 text-xs rounded-full">
+                                                            +{member.areasOfExpertise.length - 4} more
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            )}
+
+                                            <span className="inline-flex items-center mt-4 text-[var(--primary-teal)] text-sm font-medium group-hover:gap-2 transition-all">
+                                                View Profile
+                                                <ChevronRight className="w-4 h-4 ml-1" />
+                                            </span>
+                                        </div>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="text-center py-12">
+                            <p className="text-gray-500 text-lg">
+                                Team information coming soon. Check back later!
+                            </p>
+                        </div>
+                    )}
+                </div>
+            </section>
+
+            {/* Quote Section */}
+            <section className="section bg-gradient-to-br from-[var(--primary-teal)] to-[var(--secondary-green)] text-white">
+                <div className="container-custom text-center">
+                    <h2 className="text-3xl font-bold">Join Our Community</h2>
+                    <p className="mt-4 text-xl opacity-90 max-w-2xl mx-auto">
+                        We believe in creating a supportive environment where everyone can find
+                        the help they need to untangle, heal, and thrive.
+                    </p>
+                    <div className="mt-10 flex flex-wrap justify-center gap-4">
+                        <Link href="/therapists" className="btn bg-white text-[var(--primary-teal)] hover:bg-gray-100 text-lg px-8 py-4">
+                            Book a Session
+                        </Link>
+                        <Link href="/contact" className="btn border-2 border-white text-white hover:bg-white/10 text-lg px-8 py-4">
+                            Get in Touch
+                        </Link>
                     </div>
                 </div>
             </section>

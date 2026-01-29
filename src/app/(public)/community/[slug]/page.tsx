@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { Users } from "lucide-react";
 import { AppDataSource } from "@/lib/db";
 import { CommunityProgram } from "@/entities/CommunityProgram";
 
@@ -76,9 +77,7 @@ export default async function CommunityProgramDetailPage({ params }: { params: P
                             ← Back to Community Programs
                         </Link>
                         <span className="inline-flex items-center gap-2 px-3 py-1 bg-[var(--secondary-violet)]/10 text-[var(--secondary-violet)] text-sm rounded-full font-medium mb-4">
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                            </svg>
+                            <Users className="w-4 h-4" />
                             Community Program
                         </span>
                         <h1 className="text-4xl md:text-5xl font-bold">

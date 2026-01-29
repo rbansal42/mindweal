@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import { appConfig } from "@/config";
+import { Mail, Clock, Link as LinkIcon, AlertTriangle } from "lucide-react";
+import { WhatsAppIcon, InstagramIcon, LinkedInIcon } from "@/components/icons";
+import { appConfig, socialLinks } from "@/config";
 import ContactForm from "./ContactForm";
 
 export const metadata: Metadata = {
@@ -43,37 +45,66 @@ export default function ContactPage() {
                                 {/* Email */}
                                 <div className="flex gap-4">
                                     <div className="w-12 h-12 rounded-xl bg-[var(--primary-teal)]/10 flex items-center justify-center flex-shrink-0">
-                                        <svg className="w-6 h-6 text-[var(--primary-teal)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                        </svg>
+                                        <Mail className="w-6 h-6 text-[var(--primary-teal)]" />
                                     </div>
                                     <div>
                                         <h4 className="font-semibold text-gray-900">Email</h4>
-                                        <a href="mailto:hello@mindweal.in" className="text-[var(--primary-teal)] hover:underline">
-                                            hello@mindweal.in
+                                        <a href={`mailto:${socialLinks.email}`} className="text-[var(--primary-teal)] hover:underline">
+                                            {socialLinks.email}
                                         </a>
                                     </div>
                                 </div>
 
-                                {/* Phone */}
+                                {/* Phone / WhatsApp */}
                                 <div className="flex gap-4">
-                                    <div className="w-12 h-12 rounded-xl bg-[var(--primary-purple)]/10 flex items-center justify-center flex-shrink-0">
-                                        <svg className="w-6 h-6 text-[var(--primary-purple)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                        </svg>
+                                    <div className="w-12 h-12 rounded-xl bg-[var(--secondary-green)]/10 flex items-center justify-center flex-shrink-0">
+                                        <WhatsAppIcon size={24} />
                                     </div>
                                     <div>
-                                        <h4 className="font-semibold text-gray-900">Phone</h4>
-                                        <p className="text-gray-600">+91 XXXXXXXXXX</p>
+                                        <h4 className="font-semibold text-gray-900">WhatsApp</h4>
+                                        <a 
+                                            href={`https://wa.me/91${socialLinks.phone.replace(/\D/g, '').slice(-10)}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-[var(--secondary-green)] hover:underline"
+                                        >
+                                            {socialLinks.phone}
+                                        </a>
+                                    </div>
+                                </div>
+
+                                {/* Social Links */}
+                                <div className="flex gap-4">
+                                    <div className="w-12 h-12 rounded-xl bg-[var(--primary-teal)]/10 flex items-center justify-center flex-shrink-0">
+                                        <LinkIcon className="w-6 h-6 text-[var(--primary-teal)]" />
+                                    </div>
+                                    <div>
+                                        <h4 className="font-semibold text-gray-900">Social Media</h4>
+                                        <div className="flex gap-4 mt-2">
+                                            <a
+                                                href={socialLinks.instagram}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-gray-600 hover:text-[var(--primary-teal)] transition-colors"
+                                            >
+                                                <InstagramIcon size={24} />
+                                            </a>
+                                            <a
+                                                href={socialLinks.linkedin}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-gray-600 hover:text-[var(--primary-teal)] transition-colors"
+                                            >
+                                                <LinkedInIcon size={24} />
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
 
                                 {/* Hours */}
                                 <div className="flex gap-4">
-                                    <div className="w-12 h-12 rounded-xl bg-[var(--secondary-green)]/10 flex items-center justify-center flex-shrink-0">
-                                        <svg className="w-6 h-6 text-[var(--secondary-green)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
+                                    <div className="w-12 h-12 rounded-xl bg-[var(--primary-teal)]/10 flex items-center justify-center flex-shrink-0">
+                                        <Clock className="w-6 h-6 text-[var(--primary-teal)]" />
                                     </div>
                                     <div>
                                         <h4 className="font-semibold text-gray-900">Working Hours</h4>
@@ -86,9 +117,7 @@ export default function ContactPage() {
                             {/* Emergency Note */}
                             <div className="mt-10 p-6 bg-red-50 rounded-xl border border-red-100">
                                 <h4 className="font-semibold text-red-800 flex items-center gap-2">
-                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                                    </svg>
+                                    <AlertTriangle className="w-5 h-5" />
                                     In Case of Emergency
                                 </h4>
                                 <p className="mt-2 text-red-700 text-sm">

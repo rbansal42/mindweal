@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { ChevronRight } from "lucide-react";
 import { AppDataSource } from "@/lib/db";
 import { Program } from "@/entities/Program";
 
@@ -100,9 +101,7 @@ export default async function ProgramsPage() {
                                             )}
                                             <span className="text-[var(--primary-teal)] font-medium inline-flex items-center mt-6">
                                                 Learn More
-                                                <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                                </svg>
+                                                <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                                             </span>
                                         </div>
                                     </Link>
