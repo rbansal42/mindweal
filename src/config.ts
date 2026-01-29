@@ -11,7 +11,7 @@ export const appConfig = {
     url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
     title: process.env.NEXT_PUBLIC_SITE_TITLE || 'MindWeal - Mental Health Clinic',
     description: process.env.NEXT_PUBLIC_SITE_DESCRIPTION || 'Untangle - Heal - Thrive. Professional mental health services and therapy.',
-    tagline: 'Untangle - Heal - Thrive',
+    tagline: 'Untangle | Heal | Thrive',
     founder: 'By Pihu Suri',
 } as const;
 
@@ -97,6 +97,7 @@ export const navigationConfig = {
         { name: 'Therapists', href: '/therapists' },
         { name: 'The Team', href: '/team' },
         { name: 'Join Us', href: '/join-us' },
+        { name: 'FAQ', href: '/faq' },
         { name: 'Contact', href: '/contact' },
     ],
     footerNav: {
@@ -112,6 +113,7 @@ export const navigationConfig = {
             { name: 'Contact', href: '/contact' },
         ],
         resources: [
+            { name: 'FAQ', href: '/faq' },
             { name: 'Emergency Helplines', href: '/resources/emergency-helplines' },
             { name: 'Grounding Techniques', href: '/resources/grounding-techniques' },
         ],

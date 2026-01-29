@@ -167,6 +167,7 @@ export const createProgramSchema = z.object({
     duration: z.string().min(1, "Duration is required").max(100),
     coverImage: z.string().url("Invalid cover image URL").nullable().optional(),
     benefits: z.array(z.string()).nullable().optional(),
+    category: z.enum(["therapy-service", "professional-programs", "workshop"]).default("therapy-service"),
     status: z.enum(["draft", "published"]).default("draft"),
     isActive: z.boolean().default(true),
 });
@@ -207,3 +208,45 @@ export const updateCommunityProgramSchema = createCommunityProgramSchema.partial
 
 export type CreateCommunityProgramInput = z.infer<typeof createCommunityProgramSchema>;
 export type UpdateCommunityProgramInput = z.infer<typeof updateCommunityProgramSchema>;
+
+// Team Member schemas
+export const createTeamMemberSchema = z.object({
+    name: z.string().min(2, "Name must be at least 2 characters").max(255),
+    role: z.string().min(2, "Role must be at least 2 characters").max(255),
+    qualifications: z.string().max(500).nullable().optional(),
+    bio: z.string().min(10, "Bio must be at least 10 characters"),
+    photoUrl: z.string().url("Invalid photo URL").nullable().optional(),
+    email: z.string().email("Invalid email address").nullable().optional(),
+    phone: z.string().max(50).nullable().optional(),
+    location: z.string().max(255).nullable().optional(),
+    educationalQualifications: z.array(z.string()).nullable().optional(),
+    professionalExperience: z.array(z.string()).nullable().optional(),
+    areasOfExpertise: z.array(z.string()).nullable().optional(),
+    therapeuticApproach: z.string().max(255).nullable().optional(),
+    therapyModalities: z.array(z.string()).nullable().optional(),
+    servicesOffered: z.array(z.string()).nullable().optional(),
+    focusAreas: z.array(z.string()).nullable().optional(),
+    professionalValues: z.array(z.string()).nullable().optional(),
+    quote: z.string().nullable().optional(),
+    displayOrder: z.number().int().default(0),
+    isActive: z.boolean().default(true),
+});
+
+export const updateTeamMemberSchema = createTeamMemberSchema.partial();
+
+export type CreateTeamMemberInput = z.infer<typeof createTeamMemberSchema>;
+export type UpdateTeamMemberInput = z.infer<typeof updateTeamMemberSchema>;
+
+// FAQ schemas
+export const createFAQSchema = z.object({
+    question: z.string().min(5, "Question must be at least 5 characters").max(500),
+    answer: z.string().min(10, "Answer must be at least 10 characters"),
+    category: z.enum(["therapy", "booking", "programs", "general"]).default("general"),
+    displayOrder: z.number().int().default(0),
+    isActive: z.boolean().default(true),
+});
+
+export const updateFAQSchema = createFAQSchema.partial();
+
+export type CreateFAQInput = z.infer<typeof createFAQSchema>;
+export type UpdateFAQInput = z.infer<typeof updateFAQSchema>;
