@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "db:setup": "bun run scripts/setup-db.ts",
+    "db:seed": "bun run scripts/seed-content.ts",
     "typeorm": "typeorm-ts-node-commonjs",
     "migration:run": "typeorm-ts-node-commonjs migration:run -d ./data-source.ts",
     "migration:revert": "typeorm-ts-node-commonjs migration:revert -d ./data-source.ts",
