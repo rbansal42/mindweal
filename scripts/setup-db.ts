@@ -25,6 +25,10 @@ import { Session } from "../src/entities/Session";
 import { Account } from "../src/entities/Account";
 import { VerificationToken } from "../src/entities/VerificationToken";
 import { Specialization } from "../src/entities/Specialization";
+import { Program } from "../src/entities/Program";
+import { Workshop } from "../src/entities/Workshop";
+import { CommunityProgram } from "../src/entities/CommunityProgram";
+import { JobPosting } from "../src/entities/JobPosting";
 
 // Database configuration
 const databaseConfig = {
@@ -78,6 +82,10 @@ async function setupDatabase() {
             Account,
             VerificationToken,
             Specialization,
+            Program,
+            Workshop,
+            CommunityProgram,
+            JobPosting,
         ],
     });
 

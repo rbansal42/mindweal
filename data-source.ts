@@ -13,7 +13,8 @@ const databaseConfig = {
     database: process.env.DATABASE_NAME || "mindweal",
 };
 
-// TypeORM CLI DataSource
+// TypeORM CLI DataSource (for migrations only)
+// Note: entities are not loaded here to avoid ESM resolution issues with CLI
 export const AppDataSource = new DataSource({
     type: "mysql",
     host: databaseConfig.host,
@@ -23,7 +24,7 @@ export const AppDataSource = new DataSource({
     database: databaseConfig.database,
     synchronize: false,
     logging: true,
-    entities: ["src/entities/**/*.ts"],
+    entities: [],
     migrations: ["migrations/**/*.ts"],
-    subscribers: ["src/subscribers/**/*.ts"],
+    subscribers: [],
 });
