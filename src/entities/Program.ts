@@ -6,6 +6,8 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 
+export type ProgramCategory = "therapy-service" | "professional-programs" | "workshop";
+
 @Entity("programs")
 export class Program {
   @PrimaryGeneratedColumn("uuid")
@@ -23,11 +25,18 @@ export class Program {
   @Column({ length: 100 })
   duration!: string;
 
-  @Column({ length: 500, nullable: true })
+  @Column({ type: "varchar", length: 500, nullable: true })
   coverImage!: string | null;
 
   @Column("json", { nullable: true })
   benefits!: string[] | null;
+
+  @Column({
+    type: "enum",
+    enum: ["therapy-service", "professional-programs", "workshop"],
+    default: "therapy-service",
+  })
+  category!: ProgramCategory;
 
   @Column({ type: "enum", enum: ["draft", "published"], default: "draft" })
   status!: "draft" | "published";

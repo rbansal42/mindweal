@@ -23,7 +23,7 @@ export class CommunityProgram {
   @Column({ length: 255 })
   schedule!: string;
 
-  @Column({ length: 500, nullable: true })
+  @Column({ type: "varchar", length: 500, nullable: true })
   coverImage!: string | null;
 
   @Column({ type: "enum", enum: ["draft", "published"], default: "draft" })

@@ -14,9 +14,6 @@ export class Therapist {
     @Column({ type: "varchar", length: 36, nullable: true })
     userId!: string | null;
 
-    @Column({ type: "int", nullable: true })
-    strapiId!: number | null;
-
     @Column({ type: "varchar", length: 255, unique: true })
     slug!: string;
 

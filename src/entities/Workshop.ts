@@ -29,7 +29,7 @@ export class Workshop {
   @Column({ type: "int", default: 20 })
   capacity!: number;
 
-  @Column({ length: 500, nullable: true })
+  @Column({ type: "varchar", length: 500, nullable: true })
   coverImage!: string | null;
 
   @Column({ type: "enum", enum: ["draft", "published"], default: "draft" })
