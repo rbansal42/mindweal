@@ -1,4 +1,5 @@
 import { betterAuth } from "better-auth";
+import { admin } from "better-auth/plugins";
 import { createPool } from "mysql2/promise";
 import bcrypt from "bcryptjs";
 import { databaseConfig, authConfig, appConfig } from "@/config";
@@ -103,6 +104,12 @@ export const auth = betterAuth({
     verification: {
         modelName: "verification_tokens",
     },
+
+    plugins: [
+        admin({
+            defaultRole: "client",
+        }),
+    ],
 });
 
 export type Session = typeof auth.$Infer.Session;
