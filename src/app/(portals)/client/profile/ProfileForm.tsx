@@ -106,23 +106,23 @@ export default function ProfileForm({ user }: ProfileFormProps) {
     };
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-4">
             {/* Profile Information */}
-            <div className="bg-white rounded-2xl shadow-sm p-6">
-                <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 rounded-lg bg-primary/10">
-                        <User className="w-5 h-5 text-primary" />
+            <div className="portal-card p-4">
+                <div className="flex items-center gap-2 mb-4">
+                    <div className="p-1.5 rounded-lg bg-primary/10">
+                        <User className="w-4 h-4 text-primary" />
                     </div>
-                    <h2 className="text-lg font-semibold text-gray-900">
+                    <h2 className="text-base font-semibold text-gray-900">
                         Profile Information
                     </h2>
                 </div>
 
-                <form onSubmit={handleProfileSubmit(onProfileSubmit)} className="space-y-4">
+                <form onSubmit={handleProfileSubmit(onProfileSubmit)} className="space-y-3">
                     <div>
                         <label
                             htmlFor="email"
-                            className="block text-sm font-medium text-gray-700 mb-1"
+                            className="portal-label"
                         >
                             Email Address
                         </label>
@@ -131,9 +131,9 @@ export default function ProfileForm({ user }: ProfileFormProps) {
                             type="email"
                             value={user.email}
                             disabled
-                            className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 text-gray-500 cursor-not-allowed"
+                            className="portal-input bg-gray-50 text-gray-500 cursor-not-allowed"
                         />
-                        <p className="text-sm text-gray-500 mt-1">
+                        <p className="text-xs text-gray-500 mt-1">
                             Email cannot be changed
                         </p>
                     </div>
@@ -141,7 +141,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
                     <div>
                         <label
                             htmlFor="name"
-                            className="block text-sm font-medium text-gray-700 mb-1"
+                            className="portal-label"
                         >
                             Full Name
                         </label>
@@ -149,14 +149,12 @@ export default function ProfileForm({ user }: ProfileFormProps) {
                             id="name"
                             type="text"
                             {...registerProfile("name")}
-                            className={`w-full px-4 py-3 rounded-lg border ${
-                                profileErrors.name
-                                    ? "border-red-500 focus:ring-red-500"
-                                    : "border-gray-300 focus:ring-primary"
-                            } focus:ring-2 focus:border-transparent outline-none transition-all`}
+                            className={`portal-input ${
+                                profileErrors.name ? "portal-input-error" : ""
+                            }`}
                         />
                         {profileErrors.name && (
-                            <p className="mt-1 text-sm text-red-500">
+                            <p className="mt-1 text-xs text-red-500">
                                 {profileErrors.name.message}
                             </p>
                         )}
@@ -165,7 +163,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
                     <div>
                         <label
                             htmlFor="phone"
-                            className="block text-sm font-medium text-gray-700 mb-1"
+                            className="portal-label"
                         >
                             Phone Number
                         </label>
@@ -173,7 +171,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
                             id="phone"
                             type="tel"
                             {...registerProfile("phone")}
-                            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                            className="portal-input"
                             placeholder="+91 98765 43210"
                         />
                     </div>
@@ -181,16 +179,16 @@ export default function ProfileForm({ user }: ProfileFormProps) {
                     <button
                         type="submit"
                         disabled={profileLoading}
-                        className="btn btn-primary flex items-center gap-2"
+                        className="portal-btn portal-btn-primary flex items-center gap-2"
                     >
                         {profileLoading ? (
                             <>
-                                <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
+                                <div className="animate-spin w-3 h-3 border-2 border-white border-t-transparent rounded-full"></div>
                                 Saving...
                             </>
                         ) : profileSuccess ? (
                             <>
-                                <Check className="w-4 h-4" />
+                                <Check className="w-3 h-3" />
                                 Saved!
                             </>
                         ) : (
@@ -201,21 +199,21 @@ export default function ProfileForm({ user }: ProfileFormProps) {
             </div>
 
             {/* Change Password */}
-            <div className="bg-white rounded-2xl shadow-sm p-6">
-                <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 rounded-lg bg-primary/10">
-                        <Lock className="w-5 h-5 text-primary" />
+            <div className="portal-card p-4">
+                <div className="flex items-center gap-2 mb-4">
+                    <div className="p-1.5 rounded-lg bg-primary/10">
+                        <Lock className="w-4 h-4 text-primary" />
                     </div>
-                    <h2 className="text-lg font-semibold text-gray-900">
+                    <h2 className="text-base font-semibold text-gray-900">
                         Change Password
                     </h2>
                 </div>
 
-                <form onSubmit={handlePasswordSubmit(onPasswordSubmit)} className="space-y-4">
+                <form onSubmit={handlePasswordSubmit(onPasswordSubmit)} className="space-y-3">
                     <div>
                         <label
                             htmlFor="currentPassword"
-                            className="block text-sm font-medium text-gray-700 mb-1"
+                            className="portal-label"
                         >
                             Current Password
                         </label>
@@ -223,14 +221,12 @@ export default function ProfileForm({ user }: ProfileFormProps) {
                             id="currentPassword"
                             type="password"
                             {...registerPassword("currentPassword")}
-                            className={`w-full px-4 py-3 rounded-lg border ${
-                                passwordErrors.currentPassword
-                                    ? "border-red-500 focus:ring-red-500"
-                                    : "border-gray-300 focus:ring-primary"
-                            } focus:ring-2 focus:border-transparent outline-none transition-all`}
+                            className={`portal-input ${
+                                passwordErrors.currentPassword ? "portal-input-error" : ""
+                            }`}
                         />
                         {passwordErrors.currentPassword && (
-                            <p className="mt-1 text-sm text-red-500">
+                            <p className="mt-1 text-xs text-red-500">
                                 {passwordErrors.currentPassword.message}
                             </p>
                         )}
@@ -239,7 +235,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
                     <div>
                         <label
                             htmlFor="newPassword"
-                            className="block text-sm font-medium text-gray-700 mb-1"
+                            className="portal-label"
                         >
                             New Password
                         </label>
@@ -247,14 +243,12 @@ export default function ProfileForm({ user }: ProfileFormProps) {
                             id="newPassword"
                             type="password"
                             {...registerPassword("newPassword")}
-                            className={`w-full px-4 py-3 rounded-lg border ${
-                                passwordErrors.newPassword
-                                    ? "border-red-500 focus:ring-red-500"
-                                    : "border-gray-300 focus:ring-primary"
-                            } focus:ring-2 focus:border-transparent outline-none transition-all`}
+                            className={`portal-input ${
+                                passwordErrors.newPassword ? "portal-input-error" : ""
+                            }`}
                         />
                         {passwordErrors.newPassword && (
-                            <p className="mt-1 text-sm text-red-500">
+                            <p className="mt-1 text-xs text-red-500">
                                 {passwordErrors.newPassword.message}
                             </p>
                         )}
@@ -263,7 +257,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
                     <div>
                         <label
                             htmlFor="confirmPassword"
-                            className="block text-sm font-medium text-gray-700 mb-1"
+                            className="portal-label"
                         >
                             Confirm New Password
                         </label>
@@ -271,14 +265,12 @@ export default function ProfileForm({ user }: ProfileFormProps) {
                             id="confirmPassword"
                             type="password"
                             {...registerPassword("confirmPassword")}
-                            className={`w-full px-4 py-3 rounded-lg border ${
-                                passwordErrors.confirmPassword
-                                    ? "border-red-500 focus:ring-red-500"
-                                    : "border-gray-300 focus:ring-primary"
-                            } focus:ring-2 focus:border-transparent outline-none transition-all`}
+                            className={`portal-input ${
+                                passwordErrors.confirmPassword ? "portal-input-error" : ""
+                            }`}
                         />
                         {passwordErrors.confirmPassword && (
-                            <p className="mt-1 text-sm text-red-500">
+                            <p className="mt-1 text-xs text-red-500">
                                 {passwordErrors.confirmPassword.message}
                             </p>
                         )}
@@ -287,16 +279,16 @@ export default function ProfileForm({ user }: ProfileFormProps) {
                     <button
                         type="submit"
                         disabled={passwordLoading}
-                        className="btn btn-primary flex items-center gap-2"
+                        className="portal-btn portal-btn-primary flex items-center gap-2"
                     >
                         {passwordLoading ? (
                             <>
-                                <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
+                                <div className="animate-spin w-3 h-3 border-2 border-white border-t-transparent rounded-full"></div>
                                 Updating...
                             </>
                         ) : passwordSuccess ? (
                             <>
-                                <Check className="w-4 h-4" />
+                                <Check className="w-3 h-3" />
                                 Password Changed!
                             </>
                         ) : (

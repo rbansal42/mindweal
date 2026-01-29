@@ -35,9 +35,9 @@ export default function ClientSidebar({ user }: ClientSidebarProps) {
             {/* Mobile menu button */}
             <button
                 onClick={() => setMobileMenuOpen(true)}
-                className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-white shadow-md"
+                className="lg:hidden fixed top-3 left-3 z-50 p-2 rounded-lg bg-white shadow-md"
             >
-                <Menu className="w-6 h-6 text-gray-600" />
+                <Menu className="w-5 h-5 text-gray-600" />
             </button>
 
             {/* Mobile overlay */}
@@ -52,17 +52,17 @@ export default function ClientSidebar({ user }: ClientSidebarProps) {
             <aside
                 className={`
                     fixed lg:static inset-y-0 left-0 z-50
-                    w-64 bg-white border-r border-gray-200
+                    w-56 bg-white border-r border-gray-200
                     transform transition-transform duration-200 ease-in-out
                     ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
                 `}
             >
                 <div className="flex flex-col h-full">
                     {/* Header */}
-                    <div className="p-6 border-b border-gray-100">
+                    <div className="p-4 border-b border-gray-100">
                         <div className="flex items-center justify-between">
                             <Link href="/" className="flex items-center gap-2">
-                                <span className="text-xl font-bold text-primary">
+                                <span className="text-lg font-bold text-primary">
                                     Mindweal
                                 </span>
                             </Link>
@@ -70,33 +70,33 @@ export default function ClientSidebar({ user }: ClientSidebarProps) {
                                 onClick={() => setMobileMenuOpen(false)}
                                 className="lg:hidden p-1 rounded-lg hover:bg-gray-100"
                             >
-                                <X className="w-5 h-5 text-gray-500" />
+                                <X className="w-4 h-4 text-gray-500" />
                             </button>
                         </div>
-                        <p className="text-xs text-gray-500 mt-1">Client Portal</p>
+                        <p className="text-xs text-gray-500 mt-0.5">Client Portal</p>
                     </div>
 
                     {/* User info */}
-                    <div className="p-4 border-b border-gray-100">
-                        <div className="flex items-center gap-3">
+                    <div className="p-3 border-b border-gray-100">
+                        <div className="flex items-center gap-2">
                             {user.image ? (
                                 <img
                                     src={user.image}
                                     alt={user.name}
-                                    className="w-10 h-10 rounded-full object-cover"
+                                    className="w-8 h-8 rounded-full object-cover"
                                 />
                             ) : (
-                                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                                    <span className="text-primary font-medium">
+                                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                                    <span className="text-primary font-medium text-sm">
                                         {user.name.charAt(0).toUpperCase()}
                                     </span>
                                 </div>
                             )}
                             <div className="flex-1 min-w-0">
-                                <p className="font-medium text-gray-900 truncate">
+                                <p className="font-medium text-gray-900 truncate text-sm">
                                     {user.name}
                                 </p>
-                                <p className="text-sm text-gray-500 truncate">
+                                <p className="text-xs text-gray-500 truncate">
                                     {user.email}
                                 </p>
                             </div>
@@ -104,7 +104,7 @@ export default function ClientSidebar({ user }: ClientSidebarProps) {
                     </div>
 
                     {/* Navigation */}
-                    <nav className="flex-1 p-4">
+                    <nav className="flex-1 p-3">
                         <ul className="space-y-1">
                             {navItems.map((item) => {
                                 const isActive =
@@ -118,8 +118,8 @@ export default function ClientSidebar({ user }: ClientSidebarProps) {
                                             href={item.href}
                                             onClick={() => setMobileMenuOpen(false)}
                                             className={`
-                                                flex items-center gap-3 px-4 py-3 rounded-lg
-                                                transition-colors
+                                                flex items-center gap-2 px-3 py-2 rounded-lg
+                                                transition-colors text-sm
                                                 ${
                                                     isActive
                                                         ? "bg-primary/10 text-primary"
@@ -127,7 +127,7 @@ export default function ClientSidebar({ user }: ClientSidebarProps) {
                                                 }
                                             `}
                                         >
-                                            <item.icon className="w-5 h-5" />
+                                            <item.icon className="w-4 h-4" />
                                             <span className="font-medium">
                                                 {item.label}
                                             </span>
@@ -139,12 +139,12 @@ export default function ClientSidebar({ user }: ClientSidebarProps) {
                     </nav>
 
                     {/* Sign out */}
-                    <div className="p-4 border-t border-gray-100">
+                    <div className="p-3 border-t border-gray-100">
                         <button
                             onClick={handleSignOut}
-                            className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-100 w-full transition-colors"
+                            className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-100 w-full transition-colors text-sm"
                         >
-                            <LogOut className="w-5 h-5" />
+                            <LogOut className="w-4 h-4" />
                             <span className="font-medium">Sign Out</span>
                         </button>
                     </div>

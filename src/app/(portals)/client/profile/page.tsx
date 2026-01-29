@@ -13,9 +13,9 @@ export default async function ProfilePage() {
 
     return (
         <div className="max-w-2xl mx-auto">
-            <div className="mb-8">
-                <h1 className="text-2xl font-bold text-gray-900">Profile Settings</h1>
-                <p className="text-gray-600 mt-1">
+            <div className="mb-4">
+                <h1 className="portal-title">Profile Settings</h1>
+                <p className="text-gray-600 text-sm mt-0.5">
                     Manage your account information and preferences
                 </p>
             </div>

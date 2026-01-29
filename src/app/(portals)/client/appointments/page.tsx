@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { format, isFuture, isPast } from "date-fns";
-import { Calendar, Video, MapPin, Phone, ArrowRight, Filter } from "lucide-react";
+import { Calendar, Video, MapPin, Phone, ArrowRight } from "lucide-react";
 import { getServerSession } from "@/lib/auth-middleware";
 import { AppDataSource } from "@/lib/db";
 import { Booking } from "@/entities/Booking";
@@ -84,76 +84,74 @@ export default async function AppointmentsPage() {
 
     return (
         <div className="max-w-4xl mx-auto">
-            <div className="mb-8 flex items-center justify-between">
+            <div className="mb-4 flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">
-                        My Appointments
-                    </h1>
-                    <p className="text-gray-600 mt-1">
+                    <h1 className="portal-title">My Appointments</h1>
+                    <p className="text-gray-600 text-sm mt-0.5">
                         View and manage all your therapy sessions
                     </p>
                 </div>
                 <Link
                     href="/therapists"
-                    className="btn btn-primary"
+                    className="portal-btn portal-btn-primary"
                 >
                     Book New Session
                 </Link>
             </div>
 
             {/* Upcoming Appointments */}
-            <div className="mb-8">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            <div className="mb-4">
+                <h2 className="text-base font-semibold text-gray-900 mb-3">
                     Upcoming ({upcomingBookings.length})
                 </h2>
                 {upcomingBookings.length === 0 ? (
-                    <div className="bg-white rounded-xl p-8 text-center shadow-sm">
-                        <Calendar className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                        <p className="text-gray-500 mb-4">
+                    <div className="portal-card p-6 text-center">
+                        <Calendar className="w-10 h-10 text-gray-300 mx-auto mb-3" />
+                        <p className="text-gray-500 text-sm mb-3">
                             No upcoming appointments
                         </p>
                         <Link
                             href="/therapists"
-                            className="btn btn-primary inline-flex"
+                            className="portal-btn portal-btn-primary inline-flex"
                         >
                             Book a Session
                         </Link>
                     </div>
                 ) : (
-                    <div className="space-y-4">
+                    <div className="space-y-2">
                         {upcomingBookings.map((booking) => {
                             const Icon = meetingTypeIcons[booking.meetingType];
                             return (
                                 <Link
                                     key={booking.id}
                                     href={`/booking/${booking.bookingReference}`}
-                                    className="block bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow"
+                                    className="block portal-card p-4 hover:shadow-md transition-shadow"
                                 >
-                                    <div className="flex items-start gap-4">
-                                        <div className="p-3 rounded-lg bg-primary/10">
-                                            <Icon className="w-6 h-6 text-primary" />
+                                    <div className="flex items-start gap-3">
+                                        <div className="p-2 rounded-lg bg-primary/10">
+                                            <Icon className="w-5 h-5 text-primary" />
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-start justify-between">
                                                 <div>
-                                                    <h3 className="font-semibold text-gray-900">
+                                                    <h3 className="font-semibold text-gray-900 text-sm">
                                                         {booking.therapist?.name || "Therapist"}
                                                     </h3>
-                                                    <p className="text-sm text-gray-500">
+                                                    <p className="text-xs text-gray-500">
                                                         {booking.therapist?.title}
                                                     </p>
                                                 </div>
                                                 <span
-                                                    className={`px-3 py-1 rounded-full text-xs font-medium capitalize ${
+                                                    className={`px-2 py-0.5 rounded-full text-xs font-medium capitalize ${
                                                         statusColors[booking.status]
                                                     }`}
                                                 >
                                                     {booking.status}
                                                 </span>
                                             </div>
-                                            <div className="mt-3 flex flex-wrap gap-4 text-sm text-gray-600">
+                                            <div className="mt-2 flex flex-wrap gap-3 text-xs text-gray-600">
                                                 <span className="flex items-center gap-1">
-                                                    <Calendar className="w-4 h-4" />
+                                                    <Calendar className="w-3 h-3" />
                                                     {format(
                                                         new Date(booking.startDatetime),
                                                         "EEE, MMMM d, yyyy"
@@ -165,21 +163,21 @@ export default async function AppointmentsPage() {
                                                 </span>
                                             </div>
                                             {booking.meetingType === "video" && booking.meetingLink && (
-                                                <div className="mt-3">
+                                                <div className="mt-2">
                                                     <a
                                                         href={booking.meetingLink}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
                                                         onClick={(e) => e.stopPropagation()}
-                                                        className="inline-flex items-center gap-2 text-primary hover:text-primary-dark text-sm font-medium"
+                                                        className="inline-flex items-center gap-1 text-primary hover:text-primary-dark text-xs font-medium"
                                                     >
-                                                        <Video className="w-4 h-4" />
+                                                        <Video className="w-3 h-3" />
                                                         Join Video Call
                                                     </a>
                                                 </div>
                                             )}
                                         </div>
-                                        <ArrowRight className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                                        <ArrowRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
                                     </div>
                                 </Link>
                             );
@@ -190,31 +188,31 @@ export default async function AppointmentsPage() {
 
             {/* Past Appointments */}
             <div>
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                <h2 className="text-base font-semibold text-gray-900 mb-3">
                     Past Sessions ({pastBookings.length})
                 </h2>
                 {pastBookings.length === 0 ? (
-                    <div className="bg-white rounded-xl p-8 text-center shadow-sm">
-                        <p className="text-gray-500">No past sessions yet</p>
+                    <div className="portal-card p-6 text-center">
+                        <p className="text-gray-500 text-sm">No past sessions yet</p>
                     </div>
                 ) : (
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                         {pastBookings.map((booking) => {
                             const Icon = meetingTypeIcons[booking.meetingType];
                             return (
                                 <Link
                                     key={booking.id}
                                     href={`/booking/${booking.bookingReference}`}
-                                    className="flex items-center gap-4 bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow"
+                                    className="flex items-center gap-3 portal-card p-3 hover:shadow-md transition-shadow"
                                 >
                                     <div className="p-2 rounded-lg bg-gray-100">
-                                        <Icon className="w-5 h-5 text-gray-500" />
+                                        <Icon className="w-4 h-4 text-gray-500" />
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <p className="font-medium text-gray-900">
+                                        <p className="font-medium text-gray-900 text-sm">
                                             {booking.therapist?.name || "Therapist"}
                                         </p>
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-xs text-gray-500">
                                             {format(
                                                 new Date(booking.startDatetime),
                                                 "MMM d, yyyy • h:mm a"
@@ -222,13 +220,13 @@ export default async function AppointmentsPage() {
                                         </p>
                                     </div>
                                     <span
-                                        className={`px-3 py-1 rounded-full text-xs font-medium capitalize ${
+                                        className={`px-2 py-0.5 rounded-full text-xs font-medium capitalize ${
                                             statusColors[booking.status]
                                         }`}
                                     >
                                         {booking.status}
                                     </span>
-                                    <ArrowRight className="w-5 h-5 text-gray-400" />
+                                    <ArrowRight className="w-4 h-4 text-gray-400" />
                                 </Link>
                             );
                         })}
