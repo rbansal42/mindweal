@@ -49,7 +49,7 @@ export default function TimeSlotPicker({
 
                 return (
                     <button
-                        key={index}
+                        key={new Date(slot.start).toISOString()}
                         type="button"
                         onClick={() => onSelect(slot)}
                         className={`
