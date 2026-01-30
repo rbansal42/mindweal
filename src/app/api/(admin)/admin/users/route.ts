@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { canManageUserRole } from "@/lib/permissions";
 import { AppDataSource } from "@/lib/db";
 import { User } from "@/entities/User";
+import { createUserSchema } from "@/lib/validation";
 import crypto from "crypto";
 
 async function getDataSource() {
@@ -32,17 +33,18 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // 2. Parse request body
+        // 2. Parse and validate request body
         const body = await request.json();
-        const { email, name, role, phone, timezone } = body;
-
-        // 3. Validate required fields
-        if (!email || !name || !role) {
+        const validated = createUserSchema.safeParse(body);
+        
+        if (!validated.success) {
             return NextResponse.json(
-                { error: "Missing required fields: email, name, role" },
+                { error: "Validation failed", details: validated.error.flatten() },
                 { status: 400 }
             );
         }
+
+        const { email, name, role, phone, timezone } = validated.data;
 
         // 4. Validate permissions
         if (!canManageUserRole(userRole, role)) {
@@ -63,7 +65,7 @@ export async function POST(request: NextRequest) {
                     email,
                     name,
                     password: tempPassword,
-                    role
+                    role: role as "admin" | "user", // Cast for Better Auth (actual role stored via DB)
                 },
                 headers: request.headers
             });
