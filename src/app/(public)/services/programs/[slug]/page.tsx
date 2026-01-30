@@ -4,6 +4,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { AppDataSource } from "@/lib/db";
 import { Program } from "@/entities/Program";
+import { sanitizeHtml } from "@/lib/sanitize";
 
 export const dynamic = "force-dynamic";
 
@@ -110,7 +111,7 @@ export default async function ProgramDetailPage({ params }: { params: Promise<{ 
                         <div className="lg:col-span-2">
                             <div
                                 className="prose prose-teal max-w-none"
-                                dangerouslySetInnerHTML={{ __html: program.description }}
+                                dangerouslySetInnerHTML={{ __html: sanitizeHtml(program.description) }}
                             />
                         </div>
 

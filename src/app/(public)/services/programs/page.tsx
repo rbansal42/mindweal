@@ -4,6 +4,7 @@ import Image from "next/image";
 import { ChevronRight } from "lucide-react";
 import { AppDataSource } from "@/lib/db";
 import { Program } from "@/entities/Program";
+import { sanitizeHtml } from "@/lib/sanitize";
 
 export const dynamic = "force-dynamic";
 
@@ -88,7 +89,7 @@ export default async function ProgramsPage() {
                                             <h2 className="text-2xl font-bold">{program.title}</h2>
                                             <div
                                                 className="prose prose-teal max-w-none mt-3 text-gray-600 line-clamp-3"
-                                                dangerouslySetInnerHTML={{ __html: program.description }}
+                                                dangerouslySetInnerHTML={{ __html: sanitizeHtml(program.description) }}
                                             />
                                             {program.benefits && program.benefits.length > 0 && (
                                                 <div className="mt-4 flex flex-wrap gap-2">

@@ -5,6 +5,7 @@ import { Calendar } from "lucide-react";
 import { MoreThanOrEqual } from "typeorm";
 import { AppDataSource } from "@/lib/db";
 import { Workshop } from "@/entities/Workshop";
+import { sanitizeHtml } from "@/lib/sanitize";
 
 export const dynamic = "force-dynamic";
 
@@ -108,7 +109,7 @@ export default async function WorkshopsPage() {
                                         <div
                                             className="text-gray-600 mt-2 text-sm line-clamp-2 prose prose-sm prose-teal max-w-none"
                                             dangerouslySetInnerHTML={{
-                                                __html: workshop.description.substring(0, 150) + (workshop.description.length > 150 ? "..." : ""),
+                                                __html: sanitizeHtml(workshop.description.substring(0, 150) + (workshop.description.length > 150 ? "..." : "")),
                                             }}
                                         />
                                         <div className="mt-4 flex items-center justify-between text-sm">

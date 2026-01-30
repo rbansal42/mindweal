@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
+import { sanitizeHtml } from "@/lib/sanitize";
 
 interface FAQ {
     id: string;
@@ -53,7 +54,7 @@ export function FAQAccordion({ faqs }: FAQAccordionProps) {
                         >
                             <div
                                 className="p-5 pt-0 text-gray-600 prose prose-sm max-w-none"
-                                dangerouslySetInnerHTML={{ __html: faq.answer }}
+                                dangerouslySetInnerHTML={{ __html: sanitizeHtml(faq.answer) }}
                             />
                         </div>
                     </div>

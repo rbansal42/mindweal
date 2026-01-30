@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { Users } from "lucide-react";
 import { AppDataSource } from "@/lib/db";
 import { CommunityProgram } from "@/entities/CommunityProgram";
+import { sanitizeHtml } from "@/lib/sanitize";
 
 export const dynamic = "force-dynamic";
 
@@ -106,7 +107,7 @@ export default async function CommunityProgramDetailPage({ params }: { params: P
                             )}
                             <div
                                 className="prose prose-teal max-w-none"
-                                dangerouslySetInnerHTML={{ __html: program.description }}
+                                dangerouslySetInnerHTML={{ __html: sanitizeHtml(program.description) }}
                             />
                         </div>
 

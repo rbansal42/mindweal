@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Clock, Handshake } from "lucide-react";
 import { AppDataSource } from "@/lib/db";
 import { CommunityProgram } from "@/entities/CommunityProgram";
+import { sanitizeHtml } from "@/lib/sanitize";
 
 export const dynamic = "force-dynamic";
 
@@ -77,7 +78,7 @@ export default async function CommunityPage() {
                                         <div
                                             className="text-gray-600 mt-2 text-sm line-clamp-3 prose prose-teal max-w-none prose-sm"
                                             dangerouslySetInnerHTML={{
-                                                __html: program.description.substring(0, 200) + (program.description.length > 200 ? "..." : ""),
+                                                __html: sanitizeHtml(program.description.substring(0, 200) + (program.description.length > 200 ? "..." : "")),
                                             }}
                                         />
                                         <div className="mt-4 flex items-center gap-2 text-sm text-[var(--secondary-violet)]">
