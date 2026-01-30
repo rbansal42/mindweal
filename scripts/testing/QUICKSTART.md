@@ -13,10 +13,10 @@ cd ~/mindweal
 bash scripts/testing/setup-testing-env.sh
 
 # Or explicitly use Docker mode:
-USE_DOCKER=1 DB_PASSWORD=mindweal_root_2026 bash scripts/testing/setup-testing-env.sh
+USE_DOCKER=1 DB_PASSWORD=mindweal_password bash scripts/testing/setup-testing-env.sh
 
 # 3. Follow the prompts
-#    - Enter MySQL root password when prompted (default: mindweal_root_2026)
+#    - Enter MySQL password when prompted (default: mindweal_password)
 #    - Confirm database recreation if it already exists
 
 # 4. After SQL setup completes, create user accounts
@@ -41,7 +41,7 @@ bash scripts/testing/setup-testing-env.sh
 
 ```bash
 # 1. Run SQL script through Docker container
-docker exec -i mindweal-mysql mysql -u root -pmindweal_root_2026 < scripts/testing/setup-testing-database.sql
+docker exec -i mindweal-mysql mysql -u mindweal -pmindweal_password < scripts/testing/setup-testing-database.sql
 
 # 2. Create users via your app's signup page
 #    OR run the Node.js script as shown above
@@ -68,10 +68,10 @@ All users have password: **Test123!**
 
 ```bash
 # Check users were created (via Docker)
-docker exec -i mindweal-mysql mysql -u root -pmindweal_root_2026 mindweal -e "SELECT role, COUNT(*) as count FROM users GROUP BY role;"
+docker exec -i mindweal-mysql mysql -u mindweal -pmindweal_password mindweal -e "SELECT role, COUNT(*) as count FROM users GROUP BY role;"
 
 # Or with native MySQL client:
-mysql -u root -p mindweal -e "SELECT role, COUNT(*) as count FROM users GROUP BY role;"
+mysql -u mindweal -p mindweal -e "SELECT role, COUNT(*) as count FROM users GROUP BY role;"
 
 # Expected output:
 # +-----------+-------+

@@ -10,7 +10,7 @@
 # Environment variables (optional):
 #   DB_HOST       - Database host (default: localhost)
 #   DB_PORT       - Database port (default: 3306)
-#   DB_USER       - Database user (default: root)
+#   DB_USER       - Database user (default: mindweal)
 #   DB_PASSWORD   - Database password (will prompt if not set)
 #   DB_NAME       - Database name (default: mindweal)
 #   USE_DOCKER    - Set to "1" to use docker exec instead of mysql client
@@ -29,7 +29,7 @@ NC='\033[0m' # No Color
 # Configuration with defaults
 DB_HOST="${DB_HOST:-localhost}"
 DB_PORT="${DB_PORT:-3306}"
-DB_USER="${DB_USER:-root}"
+DB_USER="${DB_USER:-mindweal}"
 DB_NAME="${DB_NAME:-mindweal}"
 USE_DOCKER="${USE_DOCKER:-0}"
 CONTAINER="${CONTAINER:-mindweal-mysql}"
