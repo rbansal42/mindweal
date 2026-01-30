@@ -51,4 +51,15 @@ const dataSourceOptions: DataSourceOptions = {
 
 export const AppDataSource = new DataSource(dataSourceOptions);
 
+/**
+ * Get initialized DataSource. Use this in API routes instead of
+ * defining a local getDataSource function.
+ */
+export async function getDataSource() {
+    if (!AppDataSource.isInitialized) {
+        await AppDataSource.initialize();
+    }
+    return AppDataSource;
+}
+
 export { dataSourceOptions };
