@@ -20,12 +20,14 @@ export const rescheduleBookingSchema = z.object({
     startDatetime: z.string().datetime(),
     endDatetime: z.string().datetime(),
     timezone: z.string().optional(),
+    bookingEmail: z.string().email().optional(), // For ownership verification
 });
 
 export type RescheduleBookingInput = z.infer<typeof rescheduleBookingSchema>;
 
 export const cancelBookingSchema = z.object({
     reason: z.string().min(1, "Please provide a reason for cancellation"),
+    bookingEmail: z.string().email().optional(), // For ownership verification
 });
 
 export type CancelBookingInput = z.infer<typeof cancelBookingSchema>;
@@ -250,3 +252,36 @@ export const updateFAQSchema = createFAQSchema.partial();
 
 export type CreateFAQInput = z.infer<typeof createFAQSchema>;
 export type UpdateFAQInput = z.infer<typeof updateFAQSchema>;
+
+// Contact form schema
+export const contactFormSchema = z.object({
+    name: z.string().min(2, "Name must be at least 2 characters"),
+    email: z.string().email("Invalid email address"),
+    phone: z.string().optional(),
+    subject: z.string().optional(),
+    message: z.string().min(10, "Message must be at least 10 characters"),
+});
+
+export type ContactFormInput = z.infer<typeof contactFormSchema>;
+
+// Job application schema
+export const jobApplicationSchema = z.object({
+    name: z.string().min(2, "Name must be at least 2 characters"),
+    email: z.string().email("Invalid email address"),
+    phone: z.string().optional(),
+    position: z.string().optional(),
+    coverLetter: z.string().optional(),
+});
+
+export type JobApplicationInput = z.infer<typeof jobApplicationSchema>;
+
+// Admin create user schema
+export const createUserSchema = z.object({
+    email: z.string().email("Invalid email address"),
+    name: z.string().min(2, "Name must be at least 2 characters"),
+    role: z.enum(["client", "therapist", "admin", "reception"]),
+    phone: z.string().optional(),
+    timezone: z.string().default("Asia/Kolkata"),
+});
+
+export type CreateUserInput = z.infer<typeof createUserSchema>;
