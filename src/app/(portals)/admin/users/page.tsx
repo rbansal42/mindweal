@@ -31,15 +31,15 @@ async function getUsers() {
 }
 
 async function getUserBanStatus() {
-    // Get ban status from Better Auth
-    const userListResult = await auth.api.listUsers({
-        query: { limit: 1000 }
-    });
+    // Query database directly for ban status
+    // Better Auth stores ban status in the users table
+    const ds = await getDataSource();
+    const result = await ds.query(
+        `SELECT id FROM users WHERE banned = true`
+    );
 
     const bannedUserIds = new Set(
-        userListResult.users
-            ?.filter(u => u.banned)
-            .map(u => u.id) || []
+        result.map((row: any) => row.id)
     );
 
     return bannedUserIds;
