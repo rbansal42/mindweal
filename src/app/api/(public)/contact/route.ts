@@ -1,28 +1,34 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { emailConfig, appConfig } from "@/config";
+import { contactFormSchema } from "@/lib/validation";
+import { checkRateLimit, getRateLimitKey } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
     try {
+        // Rate limit: 5 requests per minute
+        const rateLimitKey = getRateLimitKey(request, "contact");
+        const rateLimit = checkRateLimit(rateLimitKey, { maxRequests: 5 });
+
+        if (rateLimit.limited) {
+            return NextResponse.json(
+                { error: "Too many requests. Please try again later." },
+                { status: 429, headers: { "Retry-After": String(rateLimit.retryAfter) } }
+            );
+        }
+
         const body = await request.json();
-        const { name, email, phone, subject, message } = body;
 
-        // Validate required fields
-        if (!name || !email || !message) {
+        // Validate with Zod
+        const validated = contactFormSchema.safeParse(body);
+        if (!validated.success) {
             return NextResponse.json(
-                { error: "Missing required fields" },
+                { error: "Validation failed", details: validated.error.flatten() },
                 { status: 400 }
             );
         }
 
-        // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            return NextResponse.json(
-                { error: "Invalid email format" },
-                { status: 400 }
-            );
-        }
+        const { name, email, phone, subject, message } = validated.data;
 
         // Create transporter
         const transporter = nodemailer.createTransport({

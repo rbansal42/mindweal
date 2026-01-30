@@ -3,9 +3,30 @@ import nodemailer from "nodemailer";
 import { emailConfig, appConfig } from "@/config";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
+import { jobApplicationSchema } from "@/lib/validation";
+import { checkRateLimit, getRateLimitKey } from "@/lib/rate-limit";
+
+// File validation constants
+const ALLOWED_RESUME_TYPES = [
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+];
+const MAX_RESUME_SIZE = 5 * 1024 * 1024; // 5MB
 
 export async function POST(request: NextRequest) {
     try {
+        // Rate limit: 3 requests per minute for job applications
+        const rateLimitKey = getRateLimitKey(request, "application");
+        const rateLimit = checkRateLimit(rateLimitKey, { maxRequests: 3 });
+
+        if (rateLimit.limited) {
+            return NextResponse.json(
+                { error: "Too many requests. Please try again later." },
+                { status: 429, headers: { "Retry-After": String(rateLimit.retryAfter) } }
+            );
+        }
+
         const formData = await request.formData();
 
         const name = formData.get("name") as string;
@@ -15,26 +36,36 @@ export async function POST(request: NextRequest) {
         const coverLetter = formData.get("coverLetter") as string;
         const resume = formData.get("resume") as File | null;
 
-        // Validate required fields
-        if (!name || !email) {
+        // Validate with Zod
+        const validated = jobApplicationSchema.safeParse({
+            name, email, phone, position, coverLetter
+        });
+        if (!validated.success) {
             return NextResponse.json(
-                { error: "Name and email are required" },
+                { error: "Validation failed", details: validated.error.flatten() },
                 { status: 400 }
             );
         }
 
-        // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            return NextResponse.json(
-                { error: "Invalid email format" },
-                { status: 400 }
-            );
-        }
-
-        // Handle resume upload
+        // Handle resume upload with validation
         let resumeFilename = "";
         if (resume) {
+            // Validate file type
+            if (!ALLOWED_RESUME_TYPES.includes(resume.type)) {
+                return NextResponse.json(
+                    { error: "Invalid file type. Please upload PDF or Word document." },
+                    { status: 400 }
+                );
+            }
+
+            // Validate file size
+            if (resume.size > MAX_RESUME_SIZE) {
+                return NextResponse.json(
+                    { error: "File too large. Maximum size is 5MB." },
+                    { status: 400 }
+                );
+            }
+
             const bytes = await resume.arrayBuffer();
             const buffer = Buffer.from(bytes);
 
@@ -42,10 +73,11 @@ export async function POST(request: NextRequest) {
             const uploadsDir = path.join(process.cwd(), "uploads", "resumes");
             await mkdir(uploadsDir, { recursive: true });
 
-            // Generate unique filename
+            // Generate unique filename with sanitization
             const timestamp = Date.now();
             const sanitizedName = name.replace(/[^a-zA-Z0-9]/g, "_");
-            const extension = resume.name.split(".").pop();
+            const originalFilename = resume.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+            const extension = originalFilename.split(".").pop();
             resumeFilename = `${sanitizedName}_${timestamp}.${extension}`;
 
             // Save file
