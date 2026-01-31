@@ -3,7 +3,7 @@ import { AppDataSource } from "@/lib/db";
 import { TherapistAvailability } from "@/entities/TherapistAvailability";
 import { Therapist } from "@/entities/Therapist";
 import { auth } from "@/lib/auth";
-import { availabilityInputSchema } from "@/lib/validation";
+import { updateAvailabilitySchema } from "@/lib/validation";
 
 async function getDataSource() {
     if (!AppDataSource.isInitialized) {
@@ -74,8 +74,8 @@ export async function PUT(
         const { id } = await params;
         const body = await request.json();
 
-        // Validate input
-        const validated = availabilityInputSchema.safeParse(body);
+        // Validate input (without therapistId - it comes from existing record)
+        const validated = updateAvailabilitySchema.safeParse(body);
         if (!validated.success) {
             return NextResponse.json(
                 { error: "Validation failed", details: validated.error.flatten() },

@@ -77,12 +77,16 @@ export const availabilitySchema = z.object({
 export type AvailabilityInput = z.infer<typeof availabilitySchema>;
 
 export const availabilityInputSchema = z.object({
+    therapistId: z.string().uuid({ message: "Invalid therapist ID" }),
     dayOfWeek: z.number().int().min(0).max(6),
     startTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (HH:MM)"),
     endTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (HH:MM)"),
 });
 
+export const updateAvailabilitySchema = availabilityInputSchema.omit({ therapistId: true });
+
 export type AvailabilityInputData = z.infer<typeof availabilityInputSchema>;
+export type UpdateAvailabilityData = z.infer<typeof updateAvailabilitySchema>;
 
 export const blockedDateSchema = z.object({
     therapistId: z.string().uuid({ message: "Invalid therapist ID" }),

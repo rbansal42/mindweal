@@ -20,9 +20,8 @@ export async function POST(request: NextRequest) {
         }
 
         const body = await request.json();
-        const { therapistId } = body;
         
-        // Validate input
+        // Validate input (including therapistId)
         const validated = availabilityInputSchema.safeParse(body);
         if (!validated.success) {
             return NextResponse.json(
@@ -30,7 +29,7 @@ export async function POST(request: NextRequest) {
                 { status: 400 }
             );
         }
-        const { dayOfWeek, startTime, endTime } = validated.data;
+        const { therapistId, dayOfWeek, startTime, endTime } = validated.data;
 
         const ds = await getDataSource();
         const therapistRepo = ds.getRepository(Therapist);
