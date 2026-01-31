@@ -44,8 +44,7 @@ export async function PATCH(request: NextRequest) {
         }
 
         // Verify user has access
-        const userRole = (session.user as any).role;
-        if (therapist.email !== session.user.email && userRole !== "admin") {
+        if (therapist.email !== session.user.email && session.user.role !== "admin") {
             return NextResponse.json({ error: "Forbidden" }, { status: 403 });
         }
 
