@@ -2,16 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth-middleware";
 import { auth } from "@/lib/auth";
 import { canManageUserRole } from "@/lib/permissions";
-import { AppDataSource } from "@/lib/db";
+import { getDataSource } from "@/lib/db";
 import { User } from "@/entities/User";
 import { sendEmail } from "@/lib/email";
-
-async function getDataSource() {
-    if (!AppDataSource.isInitialized) {
-        await AppDataSource.initialize();
-    }
-    return AppDataSource;
-}
 
 export async function PATCH(
     request: NextRequest,

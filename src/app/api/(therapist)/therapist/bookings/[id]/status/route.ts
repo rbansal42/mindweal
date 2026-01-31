@@ -3,13 +3,14 @@ import { getDataSource } from "@/lib/db";
 import { Booking } from "@/entities/Booking";
 import { Therapist } from "@/entities/Therapist";
 import { auth } from "@/lib/auth";
+import type { AuthSession } from "@/types/auth";
 
 export async function PATCH(
     request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const session = await auth.api.getSession({ headers: request.headers });
+        const session = await auth.api.getSession({ headers: request.headers }) as AuthSession | null;
         if (!session) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
@@ -42,8 +43,7 @@ export async function PATCH(
             where: { id: booking.therapistId },
         });
 
-        const userRole = (session.user as any).role;
-        if (therapist?.email !== session.user.email && userRole !== "admin") {
+        if (therapist?.email !== session.user.email && session.user.role !== "admin") {
             return NextResponse.json({ error: "Forbidden" }, { status: 403 });
         }
 

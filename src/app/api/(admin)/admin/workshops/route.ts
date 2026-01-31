@@ -1,16 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { AppDataSource } from "@/lib/db";
+import { getDataSource } from "@/lib/db";
 import { Workshop } from "@/entities/Workshop";
 import { createWorkshopSchema } from "@/lib/validation";
 import { generateUniqueSlug } from "@/lib/slug";
-
-async function getDataSource() {
-    if (!AppDataSource.isInitialized) {
-        await AppDataSource.initialize();
-    }
-    return AppDataSource;
-}
 
 export async function GET(request: NextRequest) {
     try {

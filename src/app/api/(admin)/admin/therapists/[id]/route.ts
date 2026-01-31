@@ -1,7 +1,7 @@
 // frontend/src/app/api/admin/therapists/[id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { AppDataSource } from "@/lib/db";
+import { getDataSource } from "@/lib/db";
 import { Therapist } from "@/entities/Therapist";
 import { SessionType } from "@/entities/SessionType";
 import { TherapistAvailability } from "@/entities/TherapistAvailability";
@@ -9,13 +9,6 @@ import { Booking } from "@/entities/Booking";
 import { Specialization } from "@/entities/Specialization";
 import { updateTherapistSchema } from "@/lib/validation";
 import { IsNull, MoreThanOrEqual } from "typeorm";
-
-async function getDataSource() {
-    if (!AppDataSource.isInitialized) {
-        await AppDataSource.initialize();
-    }
-    return AppDataSource;
-}
 
 interface RouteParams {
     params: Promise<{ id: string }>;

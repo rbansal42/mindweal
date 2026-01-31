@@ -1,18 +1,11 @@
 // frontend/src/app/api/admin/specializations/[id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { AppDataSource } from "@/lib/db";
+import { getDataSource } from "@/lib/db";
 import { Specialization } from "@/entities/Specialization";
 import { Therapist } from "@/entities/Therapist";
 import { updateSpecializationSchema } from "@/lib/validation";
 import { IsNull } from "typeorm";
-
-async function getDataSource() {
-    if (!AppDataSource.isInitialized) {
-        await AppDataSource.initialize();
-    }
-    return AppDataSource;
-}
 
 interface RouteParams {
     params: Promise<{ id: string }>;

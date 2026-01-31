@@ -1,16 +1,9 @@
 // frontend/src/app/api/admin/therapists/[id]/publish/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { AppDataSource } from "@/lib/db";
+import { getDataSource } from "@/lib/db";
 import { Therapist } from "@/entities/Therapist";
 import { IsNull } from "typeorm";
-
-async function getDataSource() {
-    if (!AppDataSource.isInitialized) {
-        await AppDataSource.initialize();
-    }
-    return AppDataSource;
-}
 
 interface RouteParams {
     params: Promise<{ id: string }>;

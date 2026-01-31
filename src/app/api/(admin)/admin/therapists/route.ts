@@ -1,7 +1,7 @@
 // frontend/src/app/api/admin/therapists/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { AppDataSource } from "@/lib/db";
+import { getDataSource } from "@/lib/db";
 import { Therapist } from "@/entities/Therapist";
 import { User } from "@/entities/User";
 import { Account } from "@/entities/Account";
@@ -11,13 +11,6 @@ import { Specialization } from "@/entities/Specialization";
 import { createTherapistSchema } from "@/lib/validation";
 import { IsNull } from "typeorm";
 import bcrypt from "bcryptjs";
-
-async function getDataSource() {
-    if (!AppDataSource.isInitialized) {
-        await AppDataSource.initialize();
-    }
-    return AppDataSource;
-}
 
 function generateSlug(name: string): string {
     return name
