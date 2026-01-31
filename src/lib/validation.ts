@@ -94,18 +94,22 @@ export const blockedDateSchema = z.object({
 
 export type BlockedDateInput = z.infer<typeof blockedDateSchema>;
 
-// Session type schema
+// Session type schema (for therapist routes)
 export const sessionTypeSchema = z.object({
-    name: z.string().min(2, "Name must be at least 2 characters"),
-    duration: z.number().min(15, "Duration must be at least 15 minutes"),
+    therapistId: z.string().uuid("Invalid therapist ID"),
+    name: z.string().min(1, "Name is required").max(100, "Name must be at most 100 characters"),
+    description: z.string().max(500, "Description must be at most 500 characters").optional().nullable(),
+    duration: z.number().int("Duration must be a whole number").min(15, "Duration must be at least 15 minutes").max(480, "Duration must be at most 8 hours"),
+    price: z.number().min(0, "Price cannot be negative").nullable().optional(),
     meetingType: z.enum(["in_person", "video", "phone"]),
-    price: z.number().optional(),
-    description: z.string().optional(),
-    isActive: z.boolean().default(true),
+    isActive: z.boolean().optional(),
     color: z.string().default("#00A99D"),
 });
 
+export const updateSessionTypeSchema = sessionTypeSchema.omit({ therapistId: true }).partial();
+
 export type SessionTypeInput = z.infer<typeof sessionTypeSchema>;
+export type UpdateSessionTypeInput = z.infer<typeof updateSessionTypeSchema>;
 
 // Admin booking schema (can assign to any client/therapist)
 export const adminBookingSchema = z.object({

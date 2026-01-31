@@ -3,6 +3,7 @@ import { AppDataSource } from "@/lib/db";
 import { SessionType } from "@/entities/SessionType";
 import { Therapist } from "@/entities/Therapist";
 import { auth } from "@/lib/auth";
+import { sessionTypeSchema } from "@/lib/validation";
 
 async function getDataSource() {
     if (!AppDataSource.isInitialized) {
@@ -19,7 +20,17 @@ export async function POST(request: NextRequest) {
         }
 
         const body = await request.json();
-        const { therapistId, name, duration, meetingType, price, description } = body;
+        
+        // Validate input
+        const validated = sessionTypeSchema.safeParse(body);
+        if (!validated.success) {
+            return NextResponse.json(
+                { error: "Validation failed", details: validated.error.flatten() },
+                { status: 400 }
+            );
+        }
+
+        const { therapistId, name, duration, meetingType, price, description } = validated.data;
 
         const ds = await getDataSource();
         const therapistRepo = ds.getRepository(Therapist);
@@ -47,10 +58,10 @@ export async function POST(request: NextRequest) {
             name,
             duration,
             meetingType,
-            price: price || null,
-            description: description || null,
+            price: price ?? null,
+            description: description ?? null,
             isActive: true,
-            color: "#00A99D",
+            color: validated.data.color,
         });
 
         await sessionTypeRepo.save(sessionType);
