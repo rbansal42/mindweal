@@ -8,7 +8,7 @@ interface GoogleButtonProps {
     callbackURL?: string;
 }
 
-export default function GoogleButton({ callbackURL = "/client" }: GoogleButtonProps) {
+export default function GoogleButton({ callbackURL }: GoogleButtonProps) {
     const [isLoading, setIsLoading] = useState(false);
 
     const handleGoogleSignIn = async () => {
@@ -16,7 +16,8 @@ export default function GoogleButton({ callbackURL = "/client" }: GoogleButtonPr
         try {
             await signIn.social({
                 provider: "google",
-                callbackURL,
+                // callbackURL is optional - Better Auth hook handles role-based redirect
+                ...(callbackURL && { callbackURL }),
             });
         } catch (error) {
             console.error("Google sign-in error:", error);
