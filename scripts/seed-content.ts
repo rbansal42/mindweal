@@ -8,10 +8,15 @@
 
 import { DataSource } from "typeorm";
 import * as dotenv from "dotenv";
+import * as fs from "fs";
 import { v4 as uuidv4 } from "uuid";
 
-// Load environment variables
-dotenv.config({ path: ".env.local" });
+// Load environment variables (try .env.local first, then .env)
+if (fs.existsSync(".env.local")) {
+    dotenv.config({ path: ".env.local" });
+} else {
+    dotenv.config({ path: ".env" });
+}
 
 // Import entities
 import { TeamMember } from "../src/entities/TeamMember";
