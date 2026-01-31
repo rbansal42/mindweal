@@ -1,37 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { AppDataSource } from "@/lib/db";
+import { getDataSource } from "@/lib/db";
 import { Workshop } from "@/entities/Workshop";
-import { z } from "zod";
-import slugify from "slugify";
-
-async function getDataSource() {
-    if (!AppDataSource.isInitialized) {
-        await AppDataSource.initialize();
-    }
-    return AppDataSource;
-}
-
-const createWorkshopSchema = z.object({
-    title: z.string().min(2, "Title must be at least 2 characters"),
-    description: z.string().min(10, "Description must be at least 10 characters"),
-    date: z.string().refine((val) => !isNaN(Date.parse(val)), "Invalid date"),
-    duration: z.string().min(1, "Duration is required"),
-    capacity: z.number().min(1, "Capacity must be at least 1").default(20),
-    coverImage: z.string().url().nullable().optional(),
-    status: z.enum(["draft", "published"]).default("draft"),
-    isActive: z.boolean().default(true),
-});
+import { createWorkshopSchema } from "@/lib/validation";
+import { generateUniqueSlug } from "@/lib/slug";
+import type { AuthSession } from "@/types/auth";
 
 export async function GET(request: NextRequest) {
     try {
-        const session = await auth.api.getSession({ headers: request.headers });
+        const session = await auth.api.getSession({ headers: request.headers }) as AuthSession | null;
         if (!session) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const userRole = (session.user as { role?: string }).role;
-        if (userRole !== "admin") {
+        if (session.user.role !== "admin") {
             return NextResponse.json({ error: "Forbidden" }, { status: 403 });
         }
 
@@ -59,30 +41,14 @@ export async function GET(request: NextRequest) {
     }
 }
 
-async function generateUniqueSlug(title: string, repo: ReturnType<typeof AppDataSource.getRepository<Workshop>>): Promise<string> {
-    const baseSlug = slugify(title, { lower: true, strict: true });
-    let slug = baseSlug;
-    let counter = 1;
-
-    while (true) {
-        const existing = await repo.findOne({ where: { slug } });
-        if (!existing) {
-            return slug;
-        }
-        slug = `${baseSlug}-${counter}`;
-        counter++;
-    }
-}
-
 export async function POST(request: NextRequest) {
     try {
-        const session = await auth.api.getSession({ headers: request.headers });
+        const session = await auth.api.getSession({ headers: request.headers }) as AuthSession | null;
         if (!session) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const userRole = (session.user as { role?: string }).role;
-        if (userRole !== "admin") {
+        if (session.user.role !== "admin") {
             return NextResponse.json({ error: "Forbidden" }, { status: 403 });
         }
 

@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getServerSession } from "@/lib/auth-middleware";
+import type { AuthSession } from "@/types/auth";
 import TherapistSidebar from "./TherapistSidebar";
 import { AppDataSource } from "@/lib/db";
 import { Therapist } from "@/entities/Therapist";
@@ -22,14 +23,14 @@ export default async function TherapistLayout({
 }: {
     children: React.ReactNode;
 }) {
-    const session = await getServerSession();
+    const session = await getServerSession() as AuthSession | null;
 
     if (!session) {
         redirect("/auth/login?callbackUrl=/therapist");
     }
 
     // Check if user is a therapist
-    const userRole = (session.user as any).role;
+    const userRole = session.user.role;
     if (userRole !== "therapist" && userRole !== "admin") {
         // Try to find therapist by email
         const therapist = await getTherapistProfile(session.user.email);

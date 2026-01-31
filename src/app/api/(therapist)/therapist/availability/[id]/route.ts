@@ -1,23 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { AppDataSource } from "@/lib/db";
+import { getDataSource } from "@/lib/db";
 import { TherapistAvailability } from "@/entities/TherapistAvailability";
 import { Therapist } from "@/entities/Therapist";
 import { auth } from "@/lib/auth";
+import type { AuthSession } from "@/types/auth";
 import { updateAvailabilitySchema } from "@/lib/validation";
-
-async function getDataSource() {
-    if (!AppDataSource.isInitialized) {
-        await AppDataSource.initialize();
-    }
-    return AppDataSource;
-}
 
 export async function DELETE(
     request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const session = await auth.api.getSession({ headers: request.headers });
+        const session = await auth.api.getSession({ headers: request.headers }) as AuthSession | null;
         if (!session) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
@@ -44,8 +38,7 @@ export async function DELETE(
             where: { id: availability.therapistId },
         });
 
-        const userRole = (session.user as any).role;
-        if (therapist?.email !== session.user.email && userRole !== "admin") {
+        if (therapist?.email !== session.user.email && session.user.role !== "admin") {
             return NextResponse.json({ error: "Forbidden" }, { status: 403 });
         }
 
@@ -66,7 +59,7 @@ export async function PUT(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const session = await auth.api.getSession({ headers: request.headers });
+        const session = await auth.api.getSession({ headers: request.headers }) as AuthSession | null;
         if (!session) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
@@ -103,8 +96,7 @@ export async function PUT(
             where: { id: availability.therapistId },
         });
 
-        const userRole = (session.user as any).role;
-        if (therapist?.email !== session.user.email && userRole !== "admin") {
+        if (therapist?.email !== session.user.email && session.user.role !== "admin") {
             return NextResponse.json({ error: "Forbidden" }, { status: 403 });
         }
 

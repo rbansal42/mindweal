@@ -1,11 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { AppDataSource } from "@/lib/db";
+import { getDataSource } from "@/lib/db";
 import { TeamMember } from "@/entities/TeamMember";
-
-async function getDataSource() {
-    if (!AppDataSource.isInitialized) await AppDataSource.initialize();
-    return AppDataSource;
-}
 
 export async function GET(
     request: NextRequest,

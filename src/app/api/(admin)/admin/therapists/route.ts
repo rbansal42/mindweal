@@ -1,7 +1,8 @@
 // frontend/src/app/api/admin/therapists/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { AppDataSource } from "@/lib/db";
+import type { AuthSession } from "@/types/auth";
+import { getDataSource } from "@/lib/db";
 import { Therapist } from "@/entities/Therapist";
 import { User } from "@/entities/User";
 import { Account } from "@/entities/Account";
@@ -12,13 +13,6 @@ import { createTherapistSchema } from "@/lib/validation";
 import { IsNull } from "typeorm";
 import bcrypt from "bcryptjs";
 
-async function getDataSource() {
-    if (!AppDataSource.isInitialized) {
-        await AppDataSource.initialize();
-    }
-    return AppDataSource;
-}
-
 function generateSlug(name: string): string {
     return name
         .toLowerCase()
@@ -28,13 +22,12 @@ function generateSlug(name: string): string {
 
 export async function GET(request: NextRequest) {
     try {
-        const session = await auth.api.getSession({ headers: request.headers });
+        const session = await auth.api.getSession({ headers: request.headers }) as AuthSession | null;
         if (!session) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const userRole = (session.user as any).role;
-        if (userRole !== "admin" && userRole !== "reception") {
+        if (session.user.role !== "admin" && session.user.role !== "reception") {
             return NextResponse.json({ error: "Forbidden" }, { status: 403 });
         }
 
@@ -75,13 +68,12 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
     try {
-        const session = await auth.api.getSession({ headers: request.headers });
+        const session = await auth.api.getSession({ headers: request.headers }) as AuthSession | null;
         if (!session) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const userRole = (session.user as any).role;
-        if (userRole !== "admin") {
+        if (session.user.role !== "admin") {
             return NextResponse.json({ error: "Forbidden" }, { status: 403 });
         }
 

@@ -1,40 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { AppDataSource } from "@/lib/db";
+import { getDataSource } from "@/lib/db";
 import { Workshop } from "@/entities/Workshop";
-import { z } from "zod";
-
-async function getDataSource() {
-    if (!AppDataSource.isInitialized) {
-        await AppDataSource.initialize();
-    }
-    return AppDataSource;
-}
+import { updateWorkshopSchema } from "@/lib/validation";
+import type { AuthSession } from "@/types/auth";
 
 interface RouteParams {
     params: Promise<{ id: string }>;
 }
 
-const updateWorkshopSchema = z.object({
-    title: z.string().min(2, "Title must be at least 2 characters").optional(),
-    description: z.string().min(10, "Description must be at least 10 characters").optional(),
-    date: z.string().refine((val) => !isNaN(Date.parse(val)), "Invalid date").optional(),
-    duration: z.string().min(1, "Duration is required").optional(),
-    capacity: z.number().min(1, "Capacity must be at least 1").optional(),
-    coverImage: z.string().url().nullable().optional(),
-    status: z.enum(["draft", "published"]).optional(),
-    isActive: z.boolean().optional(),
-});
-
 export async function GET(request: NextRequest, { params }: RouteParams) {
     try {
-        const session = await auth.api.getSession({ headers: request.headers });
+        const session = await auth.api.getSession({ headers: request.headers }) as AuthSession | null;
         if (!session) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const userRole = (session.user as { role?: string }).role;
-        if (userRole !== "admin") {
+        if (session.user.role !== "admin") {
             return NextResponse.json({ error: "Forbidden" }, { status: 403 });
         }
 
@@ -56,13 +38,12 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
 export async function PUT(request: NextRequest, { params }: RouteParams) {
     try {
-        const session = await auth.api.getSession({ headers: request.headers });
+        const session = await auth.api.getSession({ headers: request.headers }) as AuthSession | null;
         if (!session) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const userRole = (session.user as { role?: string }).role;
-        if (userRole !== "admin") {
+        if (session.user.role !== "admin") {
             return NextResponse.json({ error: "Forbidden" }, { status: 403 });
         }
 
@@ -103,13 +84,12 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
     try {
-        const session = await auth.api.getSession({ headers: request.headers });
+        const session = await auth.api.getSession({ headers: request.headers }) as AuthSession | null;
         if (!session) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const userRole = (session.user as { role?: string }).role;
-        if (userRole !== "admin") {
+        if (session.user.role !== "admin") {
             return NextResponse.json({ error: "Forbidden" }, { status: 403 });
         }
 

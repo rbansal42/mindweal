@@ -1,20 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { AppDataSource } from "@/lib/db";
+import { getDataSource } from "@/lib/db";
 import { BlockedDate } from "@/entities/BlockedDate";
 import { Therapist } from "@/entities/Therapist";
 import { auth } from "@/lib/auth";
+import type { AuthSession } from "@/types/auth";
 import { blockedDateSchema } from "@/lib/validation";
-
-async function getDataSource() {
-    if (!AppDataSource.isInitialized) {
-        await AppDataSource.initialize();
-    }
-    return AppDataSource;
-}
 
 export async function POST(request: NextRequest) {
     try {
-        const session = await auth.api.getSession({ headers: request.headers });
+        const session = await auth.api.getSession({ headers: request.headers }) as AuthSession | null;
         if (!session) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
@@ -49,8 +43,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Check if user has access (is the therapist or admin)
-        const userRole = (session.user as any).role;
-        if (therapist.email !== session.user.email && userRole !== "admin") {
+        if (therapist.email !== session.user.email && session.user.role !== "admin") {
             return NextResponse.json({ error: "Forbidden" }, { status: 403 });
         }
 
