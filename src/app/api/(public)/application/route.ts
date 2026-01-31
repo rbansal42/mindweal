@@ -5,6 +5,7 @@ import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import { jobApplicationSchema } from "@/lib/validation";
 import { checkRateLimit, getRateLimitKey } from "@/lib/rate-limit";
+import { escapeHtml } from "@/lib/html-escape";
 
 // File validation constants
 const ALLOWED_RESUME_TYPES = [
@@ -101,15 +102,15 @@ export async function POST(request: NextRequest) {
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #00A99D;">New Job Application</h2>
         <hr style="border: 1px solid #eee;" />
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Phone:</strong> ${phone || "Not provided"}</p>
-        <p><strong>Position:</strong> ${position || "General Application"}</p>
+        <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+        <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+        <p><strong>Phone:</strong> ${phone ? escapeHtml(phone) : "Not provided"}</p>
+        <p><strong>Position:</strong> ${position ? escapeHtml(position) : "General Application"}</p>
         <p><strong>Resume:</strong> ${resumeFilename || "Not uploaded"}</p>
         <hr style="border: 1px solid #eee;" />
         <h3>Cover Letter / Message:</h3>
         <p style="background: #f5f5f5; padding: 15px; border-radius: 5px;">
-          ${coverLetter || "No cover letter provided"}
+          ${coverLetter ? escapeHtml(coverLetter) : "No cover letter provided"}
         </p>
       </div>
     `;
@@ -141,11 +142,11 @@ export async function POST(request: NextRequest) {
           <p style="color: #6B4C9A; margin: 5px 0;">${appConfig.tagline}</p>
         </div>
         
-        <h2>Thank you for your application, ${name}!</h2>
+        <h2>Thank you for your application, ${escapeHtml(name)}!</h2>
         
         <p>We're excited that you're interested in joining the ${appConfig.name} team!</p>
         
-        <p>We have received your application${position ? ` for the <strong>${position}</strong> position` : ""} and our team will carefully review it.</p>
+        <p>We have received your application${position ? ` for the <strong>${escapeHtml(position)}</strong> position` : ""} and our team will carefully review it.</p>
         
         <p>If your qualifications match our current needs, we will reach out to you for the next steps in our recruitment process.</p>
         

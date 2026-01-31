@@ -3,6 +3,7 @@ import { AppDataSource } from "@/lib/db";
 import { TherapistAvailability } from "@/entities/TherapistAvailability";
 import { Therapist } from "@/entities/Therapist";
 import { auth } from "@/lib/auth";
+import { availabilityInputSchema } from "@/lib/validation";
 
 async function getDataSource() {
     if (!AppDataSource.isInitialized) {

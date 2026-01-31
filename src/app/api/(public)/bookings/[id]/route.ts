@@ -10,6 +10,7 @@ import { sendEmail } from "@/lib/email";
 import { appConfig } from "@/config";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { checkRateLimit, getRateLimitKey } from "@/lib/rate-limit";
 
 async function getDataSource() {
     if (!AppDataSource.isInitialized) {
@@ -24,6 +25,16 @@ export async function GET(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        // Rate limiting
+        const rateLimitKey = getRateLimitKey(request, "booking-lookup");
+        const rateLimit = checkRateLimit(rateLimitKey, { maxRequests: 20, windowMs: 60000 });
+        if (rateLimit.limited) {
+            return NextResponse.json(
+                { error: "Too many requests" },
+                { status: 429, headers: { "Retry-After": String(rateLimit.retryAfter) } }
+            );
+        }
+
         const { id } = await params;
 
         // Check authentication or email param
@@ -121,6 +132,16 @@ export async function PATCH(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        // Rate limiting
+        const rateLimitKey = getRateLimitKey(request, "booking-reschedule");
+        const rateLimit = checkRateLimit(rateLimitKey, { maxRequests: 10, windowMs: 60000 });
+        if (rateLimit.limited) {
+            return NextResponse.json(
+                { error: "Too many requests" },
+                { status: 429, headers: { "Retry-After": String(rateLimit.retryAfter) } }
+            );
+        }
+
         const { id } = await params;
         const body = await request.json();
 

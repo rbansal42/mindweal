@@ -3,6 +3,7 @@ import nodemailer from "nodemailer";
 import { emailConfig, appConfig } from "@/config";
 import { contactFormSchema } from "@/lib/validation";
 import { checkRateLimit, getRateLimitKey } from "@/lib/rate-limit";
+import { escapeHtml } from "@/lib/html-escape";
 
 export async function POST(request: NextRequest) {
     try {
@@ -46,13 +47,13 @@ export async function POST(request: NextRequest) {
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #00A99D;">New Contact Form Submission</h2>
         <hr style="border: 1px solid #eee;" />
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Phone:</strong> ${phone || "Not provided"}</p>
-        <p><strong>Subject:</strong> ${subject || "General Inquiry"}</p>
+        <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+        <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+        <p><strong>Phone:</strong> ${phone ? escapeHtml(phone) : "Not provided"}</p>
+        <p><strong>Subject:</strong> ${subject ? escapeHtml(subject) : "General Inquiry"}</p>
         <hr style="border: 1px solid #eee;" />
         <h3>Message:</h3>
-        <p style="background: #f5f5f5; padding: 15px; border-radius: 5px;">${message}</p>
+        <p style="background: #f5f5f5; padding: 15px; border-radius: 5px;">${escapeHtml(message)}</p>
       </div>
     `;
 
@@ -72,7 +73,7 @@ export async function POST(request: NextRequest) {
           <p style="color: #6B4C9A; margin: 5px 0;">${appConfig.tagline}</p>
         </div>
         
-        <h2>Thank you for reaching out, ${name}!</h2>
+        <h2>Thank you for reaching out, ${escapeHtml(name)}!</h2>
         
         <p>We have received your message and appreciate you taking the time to contact us.</p>
         
@@ -80,7 +81,7 @@ export async function POST(request: NextRequest) {
         
         <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; margin: 20px 0;">
           <h3 style="margin-top: 0;">Your Message:</h3>
-          <p style="color: #666;">${message}</p>
+          <p style="color: #666;">${escapeHtml(message)}</p>
         </div>
         
         <p>If you have any urgent concerns in the meantime, please don't hesitate to call us.</p>

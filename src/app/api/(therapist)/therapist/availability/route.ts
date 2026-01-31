@@ -3,6 +3,7 @@ import { AppDataSource } from "@/lib/db";
 import { TherapistAvailability } from "@/entities/TherapistAvailability";
 import { Therapist } from "@/entities/Therapist";
 import { auth } from "@/lib/auth";
+import { availabilityInputSchema } from "@/lib/validation";
 
 async function getDataSource() {
     if (!AppDataSource.isInitialized) {
@@ -19,7 +20,17 @@ export async function POST(request: NextRequest) {
         }
 
         const body = await request.json();
-        const { therapistId, dayOfWeek, startTime, endTime } = body;
+        const { therapistId } = body;
+        
+        // Validate input
+        const validated = availabilityInputSchema.safeParse(body);
+        if (!validated.success) {
+            return NextResponse.json(
+                { error: "Validation failed", details: validated.error.flatten() },
+                { status: 400 }
+            );
+        }
+        const { dayOfWeek, startTime, endTime } = validated.data;
 
         const ds = await getDataSource();
         const therapistRepo = ds.getRepository(Therapist);

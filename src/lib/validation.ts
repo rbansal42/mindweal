@@ -76,10 +76,19 @@ export const availabilitySchema = z.object({
 
 export type AvailabilityInput = z.infer<typeof availabilitySchema>;
 
+export const availabilityInputSchema = z.object({
+    dayOfWeek: z.number().int().min(0).max(6),
+    startTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (HH:MM)"),
+    endTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (HH:MM)"),
+});
+
+export type AvailabilityInputData = z.infer<typeof availabilityInputSchema>;
+
 export const blockedDateSchema = z.object({
-    startDatetime: z.string().datetime(),
-    endDatetime: z.string().datetime(),
-    reason: z.string().optional(),
+    therapistId: z.string().uuid({ message: "Invalid therapist ID" }),
+    startDatetime: z.string().datetime({ message: "Invalid start date format" }),
+    endDatetime: z.string().datetime({ message: "Invalid end date format" }),
+    reason: z.string().max(200).optional().nullable(),
     isAllDay: z.boolean().default(false),
 });
 
@@ -285,3 +294,14 @@ export const createUserSchema = z.object({
 });
 
 export type CreateUserInput = z.infer<typeof createUserSchema>;
+
+// Therapist settings schema
+export const therapistSettingsSchema = z.object({
+    therapistId: z.string().uuid("Invalid therapist ID"),
+    defaultSessionDuration: z.number().min(15, "Duration must be at least 15 minutes").max(480, "Duration cannot exceed 8 hours").optional(),
+    bufferTime: z.number().min(0, "Buffer time cannot be negative").max(120, "Buffer time cannot exceed 2 hours").optional(),
+    advanceBookingDays: z.number().min(1, "Must allow at least 1 day advance booking").max(365, "Cannot exceed 1 year advance booking").optional(),
+    minBookingNotice: z.number().min(0, "Minimum notice cannot be negative").max(168, "Minimum notice cannot exceed 1 week").optional(),
+});
+
+export type TherapistSettingsInput = z.infer<typeof therapistSettingsSchema>;
