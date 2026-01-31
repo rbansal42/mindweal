@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth-middleware";
 import { auth } from "@/lib/auth";
+import type { AuthSession } from "@/types/auth";
 import { canManageUserRole } from "@/lib/permissions";
 import { getDataSource } from "@/lib/db";
 import { User } from "@/entities/User";
@@ -10,7 +11,7 @@ import crypto from "crypto";
 export async function POST(request: NextRequest) {
     try {
         // 1. Check session and role
-        const session = await getServerSession();
+        const session = await getServerSession() as AuthSession | null;
         if (!session) {
             return NextResponse.json(
                 { error: "Unauthorized" },
@@ -18,8 +19,7 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const userRole = (session.user as any).role;
-        if (!["admin", "reception"].includes(userRole)) {
+        if (!["admin", "reception"].includes(session.user.role)) {
             return NextResponse.json(
                 { error: "Forbidden - insufficient permissions" },
                 { status: 403 }
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
         const { email, name, role, phone, timezone } = validated.data;
 
         // 4. Validate permissions
-        if (!canManageUserRole(userRole, role)) {
+        if (!canManageUserRole(session.user.role, role)) {
             return NextResponse.json(
                 { error: "Reception can only create client accounts" },
                 { status: 403 }

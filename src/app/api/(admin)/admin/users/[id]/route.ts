@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth-middleware";
 import { auth } from "@/lib/auth";
+import type { AuthSession } from "@/types/auth";
 import { canManageUserRole } from "@/lib/permissions";
 import { getDataSource } from "@/lib/db";
 import { User } from "@/entities/User";
@@ -12,7 +13,7 @@ export async function PATCH(
 ) {
     try {
         // 1. Check session and role
-        const session = await getServerSession();
+        const session = await getServerSession() as AuthSession | null;
         if (!session) {
             return NextResponse.json(
                 { error: "Unauthorized" },
@@ -20,8 +21,7 @@ export async function PATCH(
             );
         }
 
-        const userRole = (session.user as any).role;
-        if (!["admin", "reception"].includes(userRole)) {
+        if (!["admin", "reception"].includes(session.user.role)) {
             return NextResponse.json(
                 { error: "Forbidden - insufficient permissions" },
                 { status: 403 }
@@ -43,7 +43,7 @@ export async function PATCH(
         }
 
         // 3. Reception permission check
-        if (!canManageUserRole(userRole, existingUser.role)) {
+        if (!canManageUserRole(session.user.role, existingUser.role)) {
             return NextResponse.json(
                 { error: "Cannot edit non-client users" },
                 { status: 403 }
@@ -73,7 +73,7 @@ export async function PATCH(
         const { email, name, role, phone, timezone, active } = body;
 
         // 7. Validate new role permission
-        if (role && !canManageUserRole(userRole, role)) {
+        if (role && !canManageUserRole(session.user.role, role)) {
             return NextResponse.json(
                 { error: "Reception can only assign client role" },
                 { status: 403 }
