@@ -1,5 +1,6 @@
 import { betterAuth } from "better-auth";
 import { admin } from "better-auth/plugins";
+import { createAuthMiddleware } from "better-auth/api";
 import { createPool } from "mysql2/promise";
 import bcrypt from "bcryptjs";
 import { databaseConfig, authConfig, appConfig } from "@/config";
@@ -112,6 +113,48 @@ export const auth = betterAuth({
             defaultRole: "client",
         }),
     ],
+
+    // Role-based redirect after successful login
+    hooks: {
+        after: createAuthMiddleware(async (ctx) => {
+            // Only handle sign-in related paths
+            const signInPaths = ["/sign-in/email", "/callback/google", "/sign-in/social"];
+            if (!signInPaths.some(path => ctx.path.startsWith(path))) {
+                return;
+            }
+
+            // Check if a new session was created (successful login)
+            const newSession = ctx.context.newSession;
+            if (!newSession) {
+                return;
+            }
+
+            // Check for explicit callbackUrl in query params (from protected routes)
+            const callbackUrl = ctx.query?.callbackUrl as string | undefined;
+            if (callbackUrl && callbackUrl !== "/client") {
+                // Security: Validate callbackUrl is a safe internal path (prevent open redirect)
+                const isSafeRedirect = callbackUrl.startsWith("/") && 
+                                       !callbackUrl.startsWith("//") && 
+                                       !callbackUrl.includes("://");
+                if (isSafeRedirect) {
+                    throw ctx.redirect(callbackUrl);
+                }
+                // Invalid callbackUrl ignored - fall through to role-based redirect
+            }
+
+            // Role-based redirect
+            const role = (newSession.user as any).role || "client";
+            const roleRedirects: Record<string, string> = {
+                admin: "/admin",
+                reception: "/admin",
+                therapist: "/therapist",
+                client: "/client",
+            };
+
+            const redirectTo = roleRedirects[role] || "/client";
+            throw ctx.redirect(redirectTo);
+        }),
+    },
 });
 
 export type Session = typeof auth.$Infer.Session;

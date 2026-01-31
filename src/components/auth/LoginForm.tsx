@@ -19,7 +19,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 export default function LoginForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const callbackUrl = searchParams.get("callbackUrl") || "/client";
+    const callbackUrl = searchParams.get("callbackUrl");
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -47,7 +47,13 @@ export default function LoginForm() {
                 return;
             }
 
-            router.push(callbackUrl);
+            // Server-side Better Auth hook handles redirect based on role
+            // This is a fallback in case the hook doesn't redirect
+            if (callbackUrl) {
+                router.push(callbackUrl);
+            } else {
+                router.push("/client"); // Fallback, should not reach here normally
+            }
             router.refresh();
         } catch (err) {
             setError("An unexpected error occurred. Please try again.");
@@ -132,7 +138,7 @@ export default function LoginForm() {
                     </div>
                 </div>
 
-                <GoogleButton callbackURL={callbackUrl} />
+                <GoogleButton callbackURL={callbackUrl ?? undefined} />
 
                 <p className="mt-6 text-center text-gray-600">
                     Don&apos;t have an account?{" "}
