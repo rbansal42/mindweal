@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { nanoid } from "nanoid";
 import { format } from "date-fns";
-import { AppDataSource } from "@/lib/db";
+import { getDataSource } from "@/lib/db";
 import { Booking } from "@/entities/Booking";
 import { Therapist } from "@/entities/Therapist";
 import { SessionType } from "@/entities/SessionType";
@@ -13,13 +13,6 @@ import { appConfig, bookingConfig } from "@/config";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { checkRateLimit, getRateLimitKey } from "@/lib/rate-limit";
-
-async function getDataSource() {
-    if (!AppDataSource.isInitialized) {
-        await AppDataSource.initialize();
-    }
-    return AppDataSource;
-}
 
 export async function POST(request: NextRequest) {
     try {

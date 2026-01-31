@@ -1,16 +1,16 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { auth } from "@/lib/auth";
+import type { AuthSession } from "@/types/auth";
 
 const f = createUploadthing();
 
 export const ourFileRouter = {
     therapistPhoto: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
         .middleware(async ({ req }) => {
-            const session = await auth.api.getSession({ headers: req.headers });
+            const session = await auth.api.getSession({ headers: req.headers }) as AuthSession | null;
             if (!session) throw new Error("Unauthorized");
 
-            const userRole = (session.user as any).role;
-            if (userRole !== "admin") throw new Error("Forbidden");
+            if (session.user.role !== "admin") throw new Error("Forbidden");
 
             return { userId: session.user.id };
         })
@@ -22,11 +22,10 @@ export const ourFileRouter = {
 
     imageUploader: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
         .middleware(async ({ req }) => {
-            const session = await auth.api.getSession({ headers: req.headers });
+            const session = await auth.api.getSession({ headers: req.headers }) as AuthSession | null;
             if (!session) throw new Error("Unauthorized");
 
-            const userRole = (session.user as any).role;
-            if (userRole !== "admin") throw new Error("Forbidden");
+            if (session.user.role !== "admin") throw new Error("Forbidden");
 
             return { userId: session.user.id };
         })

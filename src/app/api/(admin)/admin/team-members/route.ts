@@ -3,26 +3,13 @@ import { auth } from "@/lib/auth";
 import { AppDataSource } from "@/lib/db";
 import { TeamMember } from "@/entities/TeamMember";
 import { createTeamMemberSchema } from "@/lib/validation";
-import slugify from "slugify";
+import { generateUniqueSlug } from "@/lib/slug";
 
 async function getDataSource() {
     if (!AppDataSource.isInitialized) {
         await AppDataSource.initialize();
     }
     return AppDataSource;
-}
-
-async function generateUniqueSlug(name: string, repo: any): Promise<string> {
-    const baseSlug = slugify(name, { lower: true, strict: true });
-    let slug = baseSlug;
-    let counter = 1;
-
-    while (await repo.findOne({ where: { slug } })) {
-        slug = `${baseSlug}-${counter}`;
-        counter++;
-    }
-
-    return slug;
 }
 
 export async function GET(request: NextRequest) {

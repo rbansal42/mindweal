@@ -1,14 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { AppDataSource } from "@/lib/db";
+import { getDataSource } from "@/lib/db";
 import { Therapist } from "@/entities/Therapist";
 import { SessionType } from "@/entities/SessionType";
-
-async function getDataSource() {
-    if (!AppDataSource.isInitialized) {
-        await AppDataSource.initialize();
-    }
-    return AppDataSource;
-}
 
 export async function GET(
     request: NextRequest,

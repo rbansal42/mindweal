@@ -313,3 +313,20 @@ export const therapistSettingsSchema = z.object({
 });
 
 export type TherapistSettingsInput = z.infer<typeof therapistSettingsSchema>;
+
+// Workshop schemas
+export const createWorkshopSchema = z.object({
+    title: z.string().min(2, "Title must be at least 2 characters"),
+    description: z.string().min(10, "Description must be at least 10 characters"),
+    date: z.string().refine((val) => !isNaN(Date.parse(val)), "Invalid date"),
+    duration: z.string().min(1, "Duration is required"),
+    capacity: z.number().min(1, "Capacity must be at least 1").default(20),
+    coverImage: z.string().url().nullable().optional(),
+    status: z.enum(["draft", "published"]).default("draft"),
+    isActive: z.boolean().default(true),
+});
+
+export const updateWorkshopSchema = createWorkshopSchema.partial();
+
+export type CreateWorkshopInput = z.infer<typeof createWorkshopSchema>;
+export type UpdateWorkshopInput = z.infer<typeof updateWorkshopSchema>;
