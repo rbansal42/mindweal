@@ -4,16 +4,16 @@ import { getDataSource } from "@/lib/db";
 import { Workshop } from "@/entities/Workshop";
 import { createWorkshopSchema } from "@/lib/validation";
 import { generateUniqueSlug } from "@/lib/slug";
+import type { AuthSession } from "@/types/auth";
 
 export async function GET(request: NextRequest) {
     try {
-        const session = await auth.api.getSession({ headers: request.headers });
+        const session = await auth.api.getSession({ headers: request.headers }) as AuthSession | null;
         if (!session) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const userRole = (session.user as { role?: string }).role;
-        if (userRole !== "admin") {
+        if (session.user.role !== "admin") {
             return NextResponse.json({ error: "Forbidden" }, { status: 403 });
         }
 
@@ -43,13 +43,12 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
     try {
-        const session = await auth.api.getSession({ headers: request.headers });
+        const session = await auth.api.getSession({ headers: request.headers }) as AuthSession | null;
         if (!session) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const userRole = (session.user as { role?: string }).role;
-        if (userRole !== "admin") {
+        if (session.user.role !== "admin") {
             return NextResponse.json({ error: "Forbidden" }, { status: 403 });
         }
 

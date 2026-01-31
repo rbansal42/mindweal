@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getServerSession } from "@/lib/auth-middleware";
+import type { AuthSession } from "@/types/auth";
 import AdminSidebar from "./AdminSidebar";
 
 export default async function AdminLayout({
@@ -7,14 +8,14 @@ export default async function AdminLayout({
 }: {
     children: React.ReactNode;
 }) {
-    const session = await getServerSession();
+    const session = await getServerSession() as AuthSession | null;
 
     if (!session) {
         redirect("/auth/login?callbackUrl=/admin");
     }
 
     // Check if user is admin or reception
-    const userRole = (session.user as any).role;
+    const userRole = session.user.role;
     if (userRole !== "admin" && userRole !== "reception") {
         redirect("/client");
     }
