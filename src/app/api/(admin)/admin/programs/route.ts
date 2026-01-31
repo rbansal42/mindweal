@@ -1,6 +1,7 @@
 // frontend/src/app/api/admin/programs/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import type { AuthSession } from "@/types/auth";
 import { AppDataSource } from "@/lib/db";
 import { Program } from "@/entities/Program";
 import { createProgramSchema } from "@/lib/validation";
@@ -15,13 +16,12 @@ async function getDataSource() {
 
 export async function GET(request: NextRequest) {
     try {
-        const session = await auth.api.getSession({ headers: request.headers });
+        const session = await auth.api.getSession({ headers: request.headers }) as AuthSession | null;
         if (!session) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const userRole = (session.user as any).role;
-        if (userRole !== "admin") {
+        if (session.user.role !== "admin") {
             return NextResponse.json({ error: "Forbidden" }, { status: 403 });
         }
 

@@ -1,15 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { AppDataSource } from "@/lib/db";
+import { getDataSource } from "@/lib/db";
 import { Booking } from "@/entities/Booking";
 import { Therapist } from "@/entities/Therapist";
 import { auth } from "@/lib/auth";
-
-async function getDataSource() {
-    if (!AppDataSource.isInitialized) {
-        await AppDataSource.initialize();
-    }
-    return AppDataSource;
-}
 
 export async function PATCH(
     request: NextRequest,
