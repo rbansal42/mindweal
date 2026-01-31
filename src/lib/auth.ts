@@ -132,8 +132,14 @@ export const auth = betterAuth({
             // Check for explicit callbackUrl in query params (from protected routes)
             const callbackUrl = ctx.query?.callbackUrl as string | undefined;
             if (callbackUrl && callbackUrl !== "/client") {
-                // Respect explicit redirects from protected routes
-                throw ctx.redirect(callbackUrl);
+                // Security: Validate callbackUrl is a safe internal path (prevent open redirect)
+                const isSafeRedirect = callbackUrl.startsWith("/") && 
+                                       !callbackUrl.startsWith("//") && 
+                                       !callbackUrl.includes("://");
+                if (isSafeRedirect) {
+                    throw ctx.redirect(callbackUrl);
+                }
+                // Invalid callbackUrl ignored - fall through to role-based redirect
             }
 
             // Role-based redirect
