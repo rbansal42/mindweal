@@ -322,6 +322,16 @@ export async function DELETE(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        // Rate limiting
+        const rateLimitKey = getRateLimitKey(request, "booking-cancel");
+        const rateLimit = checkRateLimit(rateLimitKey, { maxRequests: 10, windowMs: 60000 });
+        if (rateLimit.limited) {
+            return NextResponse.json(
+                { error: "Too many requests" },
+                { status: 429, headers: { "Retry-After": String(rateLimit.retryAfter) } }
+            );
+        }
+
         const { id } = await params;
         const body = await request.json().catch(() => ({}));
 
