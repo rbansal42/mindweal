@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { signIn } from "@/lib/auth-client";
+import { signIn, getSession } from "@/lib/auth-client";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import GoogleButton from "./GoogleButton";
@@ -47,12 +47,21 @@ export default function LoginForm() {
                 return;
             }
 
-            // Server-side Better Auth hook handles redirect based on role
-            // This is a fallback in case the hook doesn't redirect
+            // Fetch session to get user role for redirect
+            const session = await getSession();
+            const role = (session?.data?.user as any)?.role || "client";
+
+            // Role-based redirect (respect callbackUrl if provided)
             if (callbackUrl) {
                 router.push(callbackUrl);
             } else {
-                router.push("/client"); // Fallback, should not reach here normally
+                const roleRedirects: Record<string, string> = {
+                    admin: "/admin",
+                    reception: "/admin",
+                    therapist: "/therapist",
+                    client: "/client",
+                };
+                router.push(roleRedirects[role] || "/client");
             }
             router.refresh();
         } catch (err) {
