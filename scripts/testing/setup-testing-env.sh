@@ -5,16 +5,25 @@
 ##############################################################################
 # This script automates the setup of a complete testing database
 #
-# Usage: bash ./setup-testing-env.sh
+# Usage: bash ./setup-testing-env.sh [OPTIONS]
 #
-# Environment variables (optional):
-#   DB_HOST       - Database host (default: localhost)
-#   DB_PORT       - Database port (default: 3306)
-#   DB_USER       - Database user (default: mindweal)
-#   DB_PASSWORD   - Database password (will prompt if not set)
-#   DB_NAME       - Database name (default: mindweal)
-#   USE_DOCKER    - Set to "1" to use docker exec instead of mysql client
-#   CONTAINER     - Docker container name (default: mindweal-mysql)
+# Options:
+#   -h, --host HOST        Database host (default: localhost)
+#   -P, --port PORT        Database port (default: 3306)
+#   -u, --user USER        Database user (default: mindweal)
+#   -p, --password PASS    Database password (will prompt if not set)
+#   -d, --database NAME    Database name (default: mindweal)
+#   -D, --docker           Use docker exec instead of mysql client
+#   -c, --container NAME   Docker container name (default: mindweal-mysql)
+#   --help                 Show this help message
+#
+# Environment variables are also supported (CLI args take precedence):
+#   DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME, USE_DOCKER, CONTAINER
+#
+# Examples:
+#   bash ./setup-testing-env.sh --docker
+#   bash ./setup-testing-env.sh --port 3307 --password mypass
+#   bash ./setup-testing-env.sh -D -c mindweal-mysql
 ##############################################################################
 
 set -e  # Exit on error
@@ -26,7 +35,79 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Configuration with defaults
+# Show help message
+show_help() {
+    echo "Mindweal Testing Database Setup Script"
+    echo ""
+    echo "Usage: $0 [OPTIONS]"
+    echo ""
+    echo "Options:"
+    echo "  -h, --host HOST        Database host (default: localhost)"
+    echo "  -P, --port PORT        Database port (default: 3306)"
+    echo "  -u, --user USER        Database user (default: mindweal)"
+    echo "  -p, --password PASS    Database password (will prompt if not set)"
+    echo "  -d, --database NAME    Database name (default: mindweal)"
+    echo "  -D, --docker           Use docker exec instead of mysql client"
+    echo "  -c, --container NAME   Docker container name (default: mindweal-mysql)"
+    echo "  --help                 Show this help message"
+    echo ""
+    echo "Examples:"
+    echo "  $0 --docker                    # Use Docker mode"
+    echo "  $0 --port 3307                 # Connect to port 3307"
+    echo "  $0 -D -p mypassword            # Docker mode with password"
+    echo "  $0 --host db.example.com -P 3306 -u admin"
+    echo ""
+    exit 0
+}
+
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -h|--host)
+            DB_HOST="$2"
+            shift 2
+            ;;
+        -P|--port)
+            DB_PORT="$2"
+            shift 2
+            ;;
+        -u|--user)
+            DB_USER="$2"
+            shift 2
+            ;;
+        -p|--password)
+            DB_PASSWORD="$2"
+            shift 2
+            ;;
+        -d|--database)
+            DB_NAME="$2"
+            shift 2
+            ;;
+        -D|--docker)
+            USE_DOCKER="1"
+            shift
+            ;;
+        -c|--container)
+            CONTAINER="$2"
+            shift 2
+            ;;
+        --help)
+            show_help
+            ;;
+        -*)
+            echo "Unknown option: $1"
+            echo "Use --help for usage information"
+            exit 1
+            ;;
+        *)
+            echo "Unknown argument: $1"
+            echo "Use --help for usage information"
+            exit 1
+            ;;
+    esac
+done
+
+# Configuration with defaults (CLI args override env vars)
 DB_HOST="${DB_HOST:-localhost}"
 DB_PORT="${DB_PORT:-3306}"
 DB_USER="${DB_USER:-mindweal}"
