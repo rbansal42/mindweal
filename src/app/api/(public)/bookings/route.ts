@@ -12,6 +12,7 @@ import { sendEmail } from "@/lib/email";
 import { appConfig, bookingConfig } from "@/config";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { checkRateLimit, getRateLimitKey } from "@/lib/rate-limit";
 
 async function getDataSource() {
     if (!AppDataSource.isInitialized) {
@@ -22,6 +23,17 @@ async function getDataSource() {
 
 export async function POST(request: NextRequest) {
     try {
+        // Rate limit: 10 requests per minute
+        const rateLimitKey = getRateLimitKey(request, "booking");
+        const rateLimit = checkRateLimit(rateLimitKey, { maxRequests: 10 });
+
+        if (rateLimit.limited) {
+            return NextResponse.json(
+                { error: "Too many requests. Please try again later." },
+                { status: 429, headers: { "Retry-After": String(rateLimit.retryAfter) } }
+            );
+        }
+
         const body = await request.json();
 
         // Validate input

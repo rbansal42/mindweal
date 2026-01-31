@@ -172,6 +172,139 @@ export class EntityName {
 - Return appropriate HTTP status codes (401, 403, 404, 500)
 - Validate input with zod schemas before processing
 
+---
+
+## Security Requirements
+
+### HTML Sanitization
+- **ALWAYS** sanitize user-generated HTML before rendering with `dangerouslySetInnerHTML`
+- Use `sanitizeHtml()` from `@/lib/sanitize` for any HTML content from database
+- Never trust content from database or user input without sanitization
+
+```typescript
+import { sanitizeHtml } from "@/lib/sanitize";
+
+// Always sanitize HTML content
+<div dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }} />
+```
+
+### API Route Security Checklist
+
+For every new API route, verify:
+- [ ] **Authentication**: Use `auth.api.getSession()` or `getServerSession()`
+- [ ] **Authorization**: Check user role matches required access level
+- [ ] **Validation**: Use Zod schemas from `@/lib/validation.ts` - never manual validation
+- [ ] **Rate Limiting**: Apply to public form endpoints using `@/lib/rate-limit.ts`
+- [ ] **Ownership**: Verify user owns the resource they're modifying
+
+### File Upload Validation
+When handling file uploads:
+- Validate file type against whitelist (don't trust `Content-Type` header alone)
+- Enforce maximum file size
+- Sanitize filenames to prevent path traversal
+- Use UploadThing for general uploads (already configured with auth)
+
+```typescript
+const ALLOWED_TYPES = ["application/pdf", "application/msword"];
+const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+
+if (!ALLOWED_TYPES.includes(file.type)) {
+    return NextResponse.json({ error: "Invalid file type" }, { status: 400 });
+}
+if (file.size > MAX_SIZE) {
+    return NextResponse.json({ error: "File too large" }, { status: 400 });
+}
+```
+
+---
+
+## API Routes Pattern (Updated)
+
+Use this pattern for all new API routes:
+
+```typescript
+import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
+import { getDataSource } from "@/lib/db";  // Use shared helper
+import { someSchema } from "@/lib/validation";
+import { checkRateLimit, getRateLimitKey } from "@/lib/rate-limit";
+import type { AuthSession } from "@/types/auth";
+
+export async function POST(request: NextRequest) {
+    try {
+        // 1. Rate limiting (for public routes)
+        const rateLimitKey = getRateLimitKey(request, "endpoint-name");
+        const rateLimit = checkRateLimit(rateLimitKey, { maxRequests: 10 });
+        if (rateLimit.limited) {
+            return NextResponse.json(
+                { error: "Too many requests" },
+                { status: 429, headers: { "Retry-After": String(rateLimit.retryAfter) } }
+            );
+        }
+
+        // 2. Auth check (typed session)
+        const session = await auth.api.getSession({ 
+            headers: request.headers 
+        }) as AuthSession | null;
+        if (!session) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
+        // 3. Role check (no more 'as any')
+        if (session.user.role !== "admin") {
+            return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+        }
+
+        // 4. Input validation with Zod
+        const body = await request.json();
+        const validated = someSchema.safeParse(body);
+        if (!validated.success) {
+            return NextResponse.json(
+                { error: "Validation failed", details: validated.error.flatten() },
+                { status: 400 }
+            );
+        }
+
+        // 5. Business logic
+        const ds = await getDataSource();
+        // ... repository operations
+        
+        return NextResponse.json({ success: true, data });
+    } catch (error) {
+        console.error("Error:", error);
+        return NextResponse.json({ error: "Failed" }, { status: 500 });
+    }
+}
+```
+
+### Key Changes from Old Pattern
+1. **Use `getDataSource()` from `@/lib/db`** - Don't define local helper functions
+2. **Use typed `AuthSession`** from `@/types/auth` - Avoid `(session.user as any).role`
+3. **Always use Zod schemas** - Define in `@/lib/validation.ts`, never inline validation
+4. **Apply rate limiting** to public endpoints
+
+---
+
+## React Component Patterns
+
+### List Rendering
+- **NEVER** use `key={index}` for lists - always use unique identifiers
+- Use `key={item.id}` or `key={uniqueValue.toString()}` 
+
+```typescript
+// BAD - causes issues with reordering/updates
+{items.map((item, index) => <Item key={index} />)}
+
+// GOOD - stable unique key
+{items.map((item) => <Item key={item.id} />)}
+{slots.map((slot) => <Slot key={new Date(slot.start).toISOString()} />)}
+```
+
+### Error Handling in Components
+- Don't use `alert()` for errors
+- Use toast notifications or inline error messages
+- Log errors with context: `console.error("Context:", error)`
+
 ## Brand Colors (No Purple!)
 
 - Primary Teal: `#00A99D` / Dark: `#008B82`

@@ -10,6 +10,7 @@ import { sendEmail } from "@/lib/email";
 import { appConfig } from "@/config";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { checkRateLimit, getRateLimitKey } from "@/lib/rate-limit";
 
 async function getDataSource() {
     if (!AppDataSource.isInitialized) {
@@ -24,7 +25,31 @@ export async function GET(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        // Rate limiting
+        const rateLimitKey = getRateLimitKey(request, "booking-lookup");
+        const rateLimit = checkRateLimit(rateLimitKey, { maxRequests: 20, windowMs: 60000 });
+        if (rateLimit.limited) {
+            return NextResponse.json(
+                { error: "Too many requests" },
+                { status: 429, headers: { "Retry-After": String(rateLimit.retryAfter) } }
+            );
+        }
+
         const { id } = await params;
+
+        // Check authentication or email param
+        const headersList = await headers();
+        const session = await auth.api.getSession({ headers: headersList });
+        
+        const url = new URL(request.url);
+        const emailParam = url.searchParams.get("email");
+
+        if (!session && !emailParam) {
+            return NextResponse.json(
+                { error: "Authentication required or provide email parameter" },
+                { status: 401 }
+            );
+        }
 
         const ds = await getDataSource();
         const bookingRepo = ds.getRepository(Booking);
@@ -42,6 +67,14 @@ export async function GET(
             return NextResponse.json(
                 { error: "Booking not found" },
                 { status: 404 }
+            );
+        }
+
+        // Verify ownership for unauthenticated requests
+        if (!session && emailParam !== booking.clientEmail) {
+            return NextResponse.json(
+                { error: "Email does not match booking" },
+                { status: 403 }
             );
         }
 
@@ -99,6 +132,16 @@ export async function PATCH(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        // Rate limiting
+        const rateLimitKey = getRateLimitKey(request, "booking-reschedule");
+        const rateLimit = checkRateLimit(rateLimitKey, { maxRequests: 10, windowMs: 60000 });
+        if (rateLimit.limited) {
+            return NextResponse.json(
+                { error: "Too many requests" },
+                { status: 429, headers: { "Retry-After": String(rateLimit.retryAfter) } }
+            );
+        }
+
         const { id } = await params;
         const body = await request.json();
 
@@ -111,6 +154,17 @@ export async function PATCH(
         }
 
         const data = validationResult.data;
+
+        // Check authentication or email in body
+        const headersList = await headers();
+        const session = await auth.api.getSession({ headers: headersList });
+
+        if (!session && !data.bookingEmail) {
+            return NextResponse.json(
+                { error: "Authentication required or provide bookingEmail" },
+                { status: 401 }
+            );
+        }
 
         const ds = await getDataSource();
         const bookingRepo = ds.getRepository(Booking);
@@ -132,6 +186,14 @@ export async function PATCH(
             return NextResponse.json(
                 { error: "Booking not found" },
                 { status: 404 }
+            );
+        }
+
+        // Verify ownership for unauthenticated requests
+        if (!session && data.bookingEmail !== booking.clientEmail) {
+            return NextResponse.json(
+                { error: "Email does not match booking" },
+                { status: 403 }
             );
         }
 
@@ -260,6 +322,16 @@ export async function DELETE(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        // Rate limiting
+        const rateLimitKey = getRateLimitKey(request, "booking-cancel");
+        const rateLimit = checkRateLimit(rateLimitKey, { maxRequests: 10, windowMs: 60000 });
+        if (rateLimit.limited) {
+            return NextResponse.json(
+                { error: "Too many requests" },
+                { status: 429, headers: { "Retry-After": String(rateLimit.retryAfter) } }
+            );
+        }
+
         const { id } = await params;
         const body = await request.json().catch(() => ({}));
 
@@ -267,6 +339,20 @@ export async function DELETE(
         const reason = validationResult.success
             ? validationResult.data.reason
             : "No reason provided";
+        const bookingEmail = validationResult.success
+            ? validationResult.data.bookingEmail
+            : undefined;
+
+        // Get current user first for auth check
+        const headersList = await headers();
+        const session = await auth.api.getSession({ headers: headersList });
+
+        if (!session && !bookingEmail) {
+            return NextResponse.json(
+                { error: "Authentication required or provide bookingEmail" },
+                { status: 401 }
+            );
+        }
 
         const ds = await getDataSource();
         const bookingRepo = ds.getRepository(Booking);
@@ -291,6 +377,14 @@ export async function DELETE(
             );
         }
 
+        // Verify ownership for unauthenticated requests
+        if (!session && bookingEmail !== booking.clientEmail) {
+            return NextResponse.json(
+                { error: "Email does not match booking" },
+                { status: 403 }
+            );
+        }
+
         if (booking.status === "cancelled") {
             return NextResponse.json(
                 { error: "Booking is already cancelled" },
@@ -306,10 +400,6 @@ export async function DELETE(
         const sessionType = await sessionTypeRepo.findOne({
             where: { id: booking.sessionTypeId || undefined },
         });
-
-        // Get current user
-        const headersList = await headers();
-        const session = await auth.api.getSession({ headers: headersList });
 
         // Update booking
         booking.status = "cancelled";

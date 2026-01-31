@@ -20,12 +20,14 @@ export const rescheduleBookingSchema = z.object({
     startDatetime: z.string().datetime(),
     endDatetime: z.string().datetime(),
     timezone: z.string().optional(),
+    bookingEmail: z.string().email().optional(), // For ownership verification
 });
 
 export type RescheduleBookingInput = z.infer<typeof rescheduleBookingSchema>;
 
 export const cancelBookingSchema = z.object({
     reason: z.string().min(1, "Please provide a reason for cancellation"),
+    bookingEmail: z.string().email().optional(), // For ownership verification
 });
 
 export type CancelBookingInput = z.infer<typeof cancelBookingSchema>;
@@ -74,27 +76,44 @@ export const availabilitySchema = z.object({
 
 export type AvailabilityInput = z.infer<typeof availabilitySchema>;
 
+export const availabilityInputSchema = z.object({
+    therapistId: z.string().uuid({ message: "Invalid therapist ID" }),
+    dayOfWeek: z.number().int().min(0).max(6),
+    startTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (HH:MM)"),
+    endTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (HH:MM)"),
+});
+
+export const updateAvailabilitySchema = availabilityInputSchema.omit({ therapistId: true });
+
+export type AvailabilityInputData = z.infer<typeof availabilityInputSchema>;
+export type UpdateAvailabilityData = z.infer<typeof updateAvailabilitySchema>;
+
 export const blockedDateSchema = z.object({
-    startDatetime: z.string().datetime(),
-    endDatetime: z.string().datetime(),
-    reason: z.string().optional(),
+    therapistId: z.string().uuid({ message: "Invalid therapist ID" }),
+    startDatetime: z.string().datetime({ message: "Invalid start date format" }),
+    endDatetime: z.string().datetime({ message: "Invalid end date format" }),
+    reason: z.string().max(200).optional().nullable(),
     isAllDay: z.boolean().default(false),
 });
 
 export type BlockedDateInput = z.infer<typeof blockedDateSchema>;
 
-// Session type schema
+// Session type schema (for therapist routes)
 export const sessionTypeSchema = z.object({
-    name: z.string().min(2, "Name must be at least 2 characters"),
-    duration: z.number().min(15, "Duration must be at least 15 minutes"),
+    therapistId: z.string().uuid("Invalid therapist ID"),
+    name: z.string().min(1, "Name is required").max(100, "Name must be at most 100 characters"),
+    description: z.string().max(500, "Description must be at most 500 characters").optional().nullable(),
+    duration: z.number().int("Duration must be a whole number").min(15, "Duration must be at least 15 minutes").max(480, "Duration must be at most 8 hours"),
+    price: z.number().min(0, "Price cannot be negative").nullable().optional(),
     meetingType: z.enum(["in_person", "video", "phone"]),
-    price: z.number().optional(),
-    description: z.string().optional(),
-    isActive: z.boolean().default(true),
+    isActive: z.boolean().optional(),
     color: z.string().default("#00A99D"),
 });
 
+export const updateSessionTypeSchema = sessionTypeSchema.omit({ therapistId: true }).partial();
+
 export type SessionTypeInput = z.infer<typeof sessionTypeSchema>;
+export type UpdateSessionTypeInput = z.infer<typeof updateSessionTypeSchema>;
 
 // Admin booking schema (can assign to any client/therapist)
 export const adminBookingSchema = z.object({
@@ -250,3 +269,47 @@ export const updateFAQSchema = createFAQSchema.partial();
 
 export type CreateFAQInput = z.infer<typeof createFAQSchema>;
 export type UpdateFAQInput = z.infer<typeof updateFAQSchema>;
+
+// Contact form schema
+export const contactFormSchema = z.object({
+    name: z.string().min(2, "Name must be at least 2 characters"),
+    email: z.string().email("Invalid email address"),
+    phone: z.string().optional(),
+    subject: z.string().optional(),
+    message: z.string().min(10, "Message must be at least 10 characters"),
+});
+
+export type ContactFormInput = z.infer<typeof contactFormSchema>;
+
+// Job application schema
+export const jobApplicationSchema = z.object({
+    name: z.string().min(2, "Name must be at least 2 characters"),
+    email: z.string().email("Invalid email address"),
+    phone: z.string().optional(),
+    position: z.string().optional(),
+    coverLetter: z.string().optional(),
+});
+
+export type JobApplicationInput = z.infer<typeof jobApplicationSchema>;
+
+// Admin create user schema
+export const createUserSchema = z.object({
+    email: z.string().email("Invalid email address"),
+    name: z.string().min(2, "Name must be at least 2 characters"),
+    role: z.enum(["client", "therapist", "admin", "reception"]),
+    phone: z.string().optional(),
+    timezone: z.string().default("Asia/Kolkata"),
+});
+
+export type CreateUserInput = z.infer<typeof createUserSchema>;
+
+// Therapist settings schema
+export const therapistSettingsSchema = z.object({
+    therapistId: z.string().uuid("Invalid therapist ID"),
+    defaultSessionDuration: z.number().min(15, "Duration must be at least 15 minutes").max(480, "Duration cannot exceed 8 hours").optional(),
+    bufferTime: z.number().min(0, "Buffer time cannot be negative").max(120, "Buffer time cannot exceed 2 hours").optional(),
+    advanceBookingDays: z.number().min(1, "Must allow at least 1 day advance booking").max(365, "Cannot exceed 1 year advance booking").optional(),
+    minBookingNotice: z.number().min(0, "Minimum notice cannot be negative").max(168, "Minimum notice cannot exceed 1 week").optional(),
+});
+
+export type TherapistSettingsInput = z.infer<typeof therapistSettingsSchema>;

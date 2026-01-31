@@ -1,30 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
-import { AppDataSource } from "@/lib/db";
+import { getDataSource } from "@/lib/db";
 import { Therapist } from "@/entities/Therapist";
 import { auth } from "@/lib/auth";
-
-async function getDataSource() {
-    if (!AppDataSource.isInitialized) {
-        await AppDataSource.initialize();
-    }
-    return AppDataSource;
-}
+import { therapistSettingsSchema } from "@/lib/validation";
+import type { AuthSession } from "@/types/auth";
 
 export async function PATCH(request: NextRequest) {
     try {
-        const session = await auth.api.getSession({ headers: request.headers });
+        const session = await auth.api.getSession({ headers: request.headers }) as AuthSession | null;
         if (!session) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
         const body = await request.json();
+        const validated = therapistSettingsSchema.safeParse(body);
+        if (!validated.success) {
+            return NextResponse.json(
+                { error: "Validation failed", details: validated.error.flatten() },
+                { status: 400 }
+            );
+        }
+
         const {
             therapistId,
             defaultSessionDuration,
             bufferTime,
             advanceBookingDays,
             minBookingNotice,
-        } = body;
+        } = validated.data;
 
         const ds = await getDataSource();
         const therapistRepo = ds.getRepository(Therapist);
@@ -41,8 +44,7 @@ export async function PATCH(request: NextRequest) {
         }
 
         // Verify user has access
-        const userRole = (session.user as any).role;
-        if (therapist.email !== session.user.email && userRole !== "admin") {
+        if (therapist.email !== session.user.email && session.user.role !== "admin") {
             return NextResponse.json({ error: "Forbidden" }, { status: 403 });
         }
 

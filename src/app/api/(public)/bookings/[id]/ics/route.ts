@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateBookingICS } from "@/lib/ics";
+import { checkRateLimit, getRateLimitKey } from "@/lib/rate-limit";
 
 // Dynamic import to avoid circular dependency issues at build time
 async function getBookingData(id: string) {
@@ -37,11 +38,32 @@ export async function GET(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        // Rate limiting
+        const rateLimitKey = getRateLimitKey(request, "ics-download");
+        const rateLimit = checkRateLimit(rateLimitKey, { maxRequests: 10, windowMs: 60000 });
+        if (rateLimit.limited) {
+            return NextResponse.json(
+                { error: "Too many requests" },
+                { status: 429, headers: { "Retry-After": String(rateLimit.retryAfter) } }
+            );
+        }
+
+        // Require email parameter for verification
+        const email = request.nextUrl.searchParams.get("email");
+        if (!email) {
+            return NextResponse.json({ error: "Email parameter required" }, { status: 400 });
+        }
+
         const { id } = await params;
         const data = await getBookingData(id);
 
         if (!data || !data.booking) {
             return NextResponse.json({ error: "Booking not found" }, { status: 404 });
+        }
+
+        // Verify email matches booking
+        if (data.booking.clientEmail.toLowerCase() !== email.toLowerCase()) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
         if (!data.therapist) {

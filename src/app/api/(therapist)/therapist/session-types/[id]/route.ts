@@ -3,6 +3,7 @@ import { AppDataSource } from "@/lib/db";
 import { SessionType } from "@/entities/SessionType";
 import { Therapist } from "@/entities/Therapist";
 import { auth } from "@/lib/auth";
+import { updateSessionTypeSchema } from "@/lib/validation";
 
 async function getDataSource() {
     if (!AppDataSource.isInitialized) {
@@ -23,6 +24,15 @@ export async function PATCH(
 
         const { id } = await params;
         const body = await request.json();
+
+        // Validate input
+        const validated = updateSessionTypeSchema.safeParse(body);
+        if (!validated.success) {
+            return NextResponse.json(
+                { error: "Validation failed", details: validated.error.flatten() },
+                { status: 400 }
+            );
+        }
 
         const ds = await getDataSource();
         const sessionTypeRepo = ds.getRepository(SessionType);
@@ -46,13 +56,14 @@ export async function PATCH(
             return NextResponse.json({ error: "Forbidden" }, { status: 403 });
         }
 
-        // Update fields
-        if (body.name !== undefined) sessionType.name = body.name;
-        if (body.duration !== undefined) sessionType.duration = body.duration;
-        if (body.meetingType !== undefined) sessionType.meetingType = body.meetingType;
-        if (body.price !== undefined) sessionType.price = body.price;
-        if (body.description !== undefined) sessionType.description = body.description;
-        if (body.isActive !== undefined) sessionType.isActive = body.isActive;
+        // Update fields from validated data
+        if (validated.data.name !== undefined) sessionType.name = validated.data.name;
+        if (validated.data.duration !== undefined) sessionType.duration = validated.data.duration;
+        if (validated.data.meetingType !== undefined) sessionType.meetingType = validated.data.meetingType;
+        if (validated.data.price !== undefined) sessionType.price = validated.data.price;
+        if (validated.data.description !== undefined) sessionType.description = validated.data.description;
+        if (validated.data.isActive !== undefined) sessionType.isActive = validated.data.isActive;
+        if (validated.data.color !== undefined) sessionType.color = validated.data.color;
 
         await sessionTypeRepo.save(sessionType);
 

@@ -5,6 +5,7 @@ import { Calendar } from "lucide-react";
 import { notFound } from "next/navigation";
 import { AppDataSource } from "@/lib/db";
 import { Workshop } from "@/entities/Workshop";
+import { sanitizeHtml } from "@/lib/sanitize";
 
 export const dynamic = "force-dynamic";
 
@@ -142,7 +143,7 @@ export default async function WorkshopDetailPage({ params }: { params: Promise<{
                             )}
                             <div
                                 className="prose prose-teal max-w-none prose-headings:text-gray-900 prose-p:text-gray-600 prose-li:text-gray-600"
-                                dangerouslySetInnerHTML={{ __html: workshop.description }}
+                                dangerouslySetInnerHTML={{ __html: sanitizeHtml(workshop.description) }}
                             />
                         </div>
 
