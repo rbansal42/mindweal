@@ -1,8 +1,13 @@
 import { DataSource } from "typeorm";
 import * as dotenv from "dotenv";
+import * as fs from "fs";
 
-// Load environment variables
-dotenv.config({ path: ".env.local" });
+// Load environment variables (try .env.local first, then .env)
+if (fs.existsSync(".env.local")) {
+    dotenv.config({ path: ".env.local" });
+} else {
+    dotenv.config({ path: ".env" });
+}
 
 // Database configuration
 const databaseConfig = {
