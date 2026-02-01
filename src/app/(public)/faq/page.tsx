@@ -1,9 +1,6 @@
 import { Metadata } from "next";
-import { AppDataSource } from "@/lib/db";
-import { FAQ } from "@/entities/FAQ";
+import { appConfig } from "@/config";
 import { FAQAccordion } from "./FAQAccordion";
-
-export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
     title: "Frequently Asked Questions | MindWeal by Pihu Suri",
@@ -19,15 +16,25 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 const CATEGORY_ORDER = ["therapy", "booking", "programs", "general"];
 
-async function getFAQs() {
-    if (!AppDataSource.isInitialized) {
-        await AppDataSource.initialize();
+type FAQ = {
+    id: string;
+    question: string;
+    answer: string;
+    category: "therapy" | "booking" | "programs" | "general";
+    displayOrder: number;
+};
+
+async function getFAQs(): Promise<FAQ[]> {
+    try {
+        const res = await fetch(`${appConfig.url}/api/faqs`, {
+            next: { revalidate: 300 } // 5 minutes
+        });
+        if (!res.ok) return [];
+        const data = await res.json();
+        return data.faqs || [];
+    } catch {
+        return [];
     }
-    const repo = AppDataSource.getRepository(FAQ);
-    return repo.find({
-        where: { isActive: true },
-        order: { category: "ASC", displayOrder: "ASC" },
-    });
 }
 
 export default async function FAQPage() {
