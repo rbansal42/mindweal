@@ -2,31 +2,35 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { Clock, Handshake } from "lucide-react";
-import { AppDataSource } from "@/lib/db";
-import { CommunityProgram } from "@/entities/CommunityProgram";
 import { sanitizeHtml } from "@/lib/sanitize";
-
-export const dynamic = "force-dynamic";
+import { appConfig } from "@/config";
 
 export const metadata: Metadata = {
     title: "Community",
     description: "Join our supportive community through various programs designed to connect, learn, and grow together.",
 };
 
-async function getDataSource() {
-    if (!AppDataSource.isInitialized) {
-        await AppDataSource.initialize();
-    }
-    return AppDataSource;
-}
+type CommunityProgram = {
+    id: string;
+    slug: string;
+    name: string;
+    description: string;
+    schedule: string;
+    coverImage: string | null;
+};
 
 async function getCommunityPrograms(): Promise<CommunityProgram[]> {
-    const ds = await getDataSource();
-    const communityProgramRepo = ds.getRepository(CommunityProgram);
-    return communityProgramRepo.find({
-        where: { status: "published", isActive: true },
-        order: { createdAt: "DESC" },
+    const res = await fetch(`${appConfig.url}/api/community-programs`, {
+        next: { revalidate: 300 },
     });
+
+    if (!res.ok) {
+        console.error("Failed to fetch community programs");
+        return [];
+    }
+
+    const data = await res.json();
+    return data.programs || [];
 }
 
 export default async function CommunityPage() {

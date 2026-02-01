@@ -1,22 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ChevronRight, Heart, TrendingUp, Users } from "lucide-react";
-import { AppDataSource } from "@/lib/db";
+import { getDataSource } from "@/lib/db";
 import { JobPosting } from "@/entities/JobPosting";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export const metadata: Metadata = {
     title: "Join Us",
     description: "Explore career opportunities at MindWeal. Join our team of dedicated mental health professionals.",
 };
-
-async function getDataSource() {
-    if (!AppDataSource.isInitialized) {
-        await AppDataSource.initialize();
-    }
-    return AppDataSource;
-}
 
 async function getJobPostings(): Promise<JobPosting[]> {
     const ds = await getDataSource();

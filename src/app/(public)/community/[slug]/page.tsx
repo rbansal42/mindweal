@@ -3,35 +3,29 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Users } from "lucide-react";
-import { AppDataSource } from "@/lib/db";
-import { CommunityProgram } from "@/entities/CommunityProgram";
 import { sanitizeHtml } from "@/lib/sanitize";
+import { appConfig } from "@/config";
 
-export const dynamic = "force-dynamic";
-
-async function getDataSource() {
-    if (!AppDataSource.isInitialized) {
-        await AppDataSource.initialize();
-    }
-    return AppDataSource;
-}
+type CommunityProgram = {
+    id: string;
+    slug: string;
+    name: string;
+    description: string;
+    schedule: string;
+    coverImage: string | null;
+};
 
 async function getCommunityProgram(slug: string): Promise<CommunityProgram | null> {
-    const ds = await getDataSource();
-    const communityProgramRepo = ds.getRepository(CommunityProgram);
-    return communityProgramRepo.findOne({
-        where: { slug, status: "published", isActive: true },
+    const res = await fetch(`${appConfig.url}/api/community-programs/${slug}`, {
+        next: { revalidate: 300 },
     });
-}
 
-async function getAllCommunityProgramSlugs(): Promise<{ slug: string }[]> {
-    const ds = await getDataSource();
-    const communityProgramRepo = ds.getRepository(CommunityProgram);
-    const programs = await communityProgramRepo.find({
-        where: { status: "published", isActive: true },
-        select: ["slug"],
-    });
-    return programs.map((p) => ({ slug: p.slug }));
+    if (!res.ok) {
+        return null;
+    }
+
+    const data = await res.json();
+    return data.program || null;
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -49,15 +43,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         title: program.name,
         description: plainDescription,
     };
-}
-
-export async function generateStaticParams() {
-    try {
-        return await getAllCommunityProgramSlugs();
-    } catch {
-        // Database not available during build - return empty array
-        return [];
-    }
 }
 
 export default async function CommunityProgramDetailPage({ params }: { params: Promise<{ slug: string }> }) {
