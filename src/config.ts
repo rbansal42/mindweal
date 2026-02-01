@@ -93,6 +93,7 @@ export const navigationConfig = {
                 { name: 'Workshops', href: '/services/workshops' },
             ]
         },
+        { name: 'Blog', href: '/blog' },
         { name: 'Community', href: '/community' },
         { name: 'Therapists', href: '/therapists' },
         { name: 'The Team', href: '/team' },
@@ -113,6 +114,7 @@ export const navigationConfig = {
             { name: 'Contact', href: '/contact' },
         ],
         resources: [
+            { name: 'Blog', href: '/blog' },
             { name: 'FAQ', href: '/faq' },
             { name: 'Emergency Helplines', href: '/resources/emergency-helplines' },
             { name: 'Grounding Techniques', href: '/resources/grounding-techniques' },
