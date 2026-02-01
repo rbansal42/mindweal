@@ -33,14 +33,23 @@ async function getFAQs() {
 export default async function FAQPage() {
     const faqs = await getFAQs();
 
+    // Convert TypeORM entities to plain objects for Client Component
+    const plainFaqs = faqs.map(faq => ({
+        id: faq.id,
+        question: faq.question,
+        answer: faq.answer,
+        category: faq.category,
+        displayOrder: faq.displayOrder,
+    }));
+
     // Group FAQs by category
     const groupedFAQs = CATEGORY_ORDER.reduce((acc, category) => {
-        const categoryFaqs = faqs.filter((faq) => faq.category === category);
+        const categoryFaqs = plainFaqs.filter((faq) => faq.category === category);
         if (categoryFaqs.length > 0) {
             acc[category] = categoryFaqs;
         }
         return acc;
-    }, {} as Record<string, typeof faqs>);
+    }, {} as Record<string, typeof plainFaqs>);
 
     const hasAnyFAQs = Object.keys(groupedFAQs).length > 0;
 

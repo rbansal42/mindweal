@@ -12,7 +12,7 @@ export async function GET() {
             order: { displayOrder: "ASC", createdAt: "ASC" },
         });
 
-        return NextResponse.json({ success: true, teamMembers });
+        return NextResponse.json({ success: true, data: teamMembers });
     } catch (error) {
         console.error("Error fetching team members:", error);
         return NextResponse.json({ error: "Failed to fetch team members" }, { status: 500 });
