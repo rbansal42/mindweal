@@ -11,7 +11,7 @@ export const appConfig = {
     url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
     title: process.env.NEXT_PUBLIC_SITE_TITLE || 'MindWeal - Mental Health Clinic',
     description: process.env.NEXT_PUBLIC_SITE_DESCRIPTION || 'Untangle - Heal - Thrive. Professional mental health services and therapy.',
-    tagline: 'Untangle - Heal - Thrive',
+    tagline: 'Untangle | Heal | Thrive',
     founder: 'By Pihu Suri',
 } as const;
 
@@ -24,14 +24,6 @@ export const databaseConfig = {
     user: process.env.DATABASE_USER || 'mindweal',
     password: process.env.DATABASE_PASSWORD || '',
     database: process.env.DATABASE_NAME || 'mindweal',
-} as const;
-
-// ===================
-// Strapi CMS Config
-// ===================
-export const strapiConfig = {
-    url: process.env.STRAPI_URL || 'http://localhost:1337',
-    apiToken: process.env.STRAPI_API_TOKEN || '',
 } as const;
 
 // ===================
@@ -52,11 +44,40 @@ export const emailConfig = {
 } as const;
 
 // ===================
-// Cal.com Config
+// Auth Config
 // ===================
-export const calcomConfig = {
-    teamUrl: process.env.CALCOM_TEAM_URL || 'https://cal.com/mindweal',
-    apiKey: process.env.CALCOM_API_KEY || '',
+export const authConfig = {
+    secret: process.env.BETTER_AUTH_SECRET || '',
+    // Use NEXT_PUBLIC_APP_URL for client-side auth (browser needs NEXT_PUBLIC_ prefix)
+    baseUrl: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+    google: {
+        clientId: process.env.GOOGLE_CLIENT_ID || '',
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+    },
+    session: {
+        expiresIn: 60 * 60 * 24 * 7, // 7 days
+        updateAge: 60 * 60 * 24, // 1 day
+    },
+} as const;
+
+// ===================
+// Google Calendar API Config (for Meet links)
+// ===================
+export const googleCalendarConfig = {
+    serviceAccountEmail: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || '',
+    privateKey: process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY || '',
+} as const;
+
+// ===================
+// Booking Config
+// ===================
+export const bookingConfig = {
+    defaultTimezone: 'Asia/Kolkata',
+    defaultSessionDuration: 60,
+    defaultBufferTime: 15,
+    defaultAdvanceBookingDays: 30,
+    defaultMinBookingNotice: 24,
+    reminderHoursBefore: [24, 1],
 } as const;
 
 // ===================
@@ -76,6 +97,7 @@ export const navigationConfig = {
         { name: 'Therapists', href: '/therapists' },
         { name: 'The Team', href: '/team' },
         { name: 'Join Us', href: '/join-us' },
+        { name: 'FAQ', href: '/faq' },
         { name: 'Contact', href: '/contact' },
     ],
     footerNav: {
@@ -91,6 +113,7 @@ export const navigationConfig = {
             { name: 'Contact', href: '/contact' },
         ],
         resources: [
+            { name: 'FAQ', href: '/faq' },
             { name: 'Emergency Helplines', href: '/resources/emergency-helplines' },
             { name: 'Grounding Techniques', href: '/resources/grounding-techniques' },
         ],
@@ -105,9 +128,8 @@ export const navigationConfig = {
 // Social Links
 // ===================
 export const socialLinks = {
-    instagram: 'https://instagram.com/mindweal',
-    linkedin: 'https://linkedin.com/company/mindweal',
-    twitter: 'https://twitter.com/mindweal',
-    email: 'hello@mindweal.in',
-    phone: '+91 XXXXXXXXXX',
+    instagram: 'https://www.instagram.com/mindweal_by_pihusuri',
+    linkedin: 'https://in.linkedin.com/company/mindweal-by-pihu-suri',
+    email: 'mindwealbypihusuri@gmail.com',
+    phone: '+91 9599618238',
 } as const;

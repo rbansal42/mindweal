@@ -89,7 +89,7 @@ export default function FeedbackRequest({
 
                         <Section style={reassuranceBox}>
                             <Text style={reassuranceText}>
-                                🔒 Your feedback is completely confidential and will only be
+                                Your feedback is completely confidential and will only be
                                 used to improve our services.
                             </Text>
                         </Section>

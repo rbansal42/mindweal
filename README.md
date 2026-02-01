@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mindweal by Pihu Suri
 
-## Getting Started
+Mental health clinic website with scheduling, authentication, and content management.
 
-First, run the development server:
+**Tagline:** Untangle - Heal - Thrive
+
+## Quick Start
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Start MySQL database
+docker-compose up -d
+
+# Install dependencies and run dev server
+bun install
+bun run dev      # http://localhost:4242
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Tech Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Framework**: Next.js 16, React 19, TypeScript, Tailwind CSS v4
+- **Database**: MySQL 8.0 (Docker), TypeORM
+- **Auth**: Better Auth (email/password, Google OAuth)
+- **Runtime**: Bun 1.3.6
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Structure
 
-## Learn More
+```
+mindweal/
+├── src/                # Application source
+│   ├── app/           # Pages and API routes
+│   ├── components/    # Reusable components
+│   ├── entities/      # TypeORM entities
+│   ├── lib/           # Utilities (auth, db, email)
+│   └── templates/     # Email templates
+├── migrations/        # TypeORM migrations
+├── scripts/           # Utility scripts
+├── docs/plans/        # Design documents
+├── init/              # Database init SQL
+└── docker-compose.yml # MySQL container
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Environment Setup
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Copy `.env.example` to `.env.local` and configure:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+cp .env.example .env.local
+```
 
-## Deploy on Vercel
+See `claude.md` for detailed documentation.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## License
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Private - Mindweal by Pihu Suri
