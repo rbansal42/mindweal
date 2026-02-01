@@ -166,6 +166,78 @@ export class EntityName {
 }
 ```
 
+### Database Migrations
+
+**CRITICAL: Always assume previous migrations have been run when writing new migrations.**
+
+When creating a new migration:
+
+1. **Never check if previous migrations' changes exist**
+   - TypeORM tracks which migrations have run in the `migrations` table
+   - Your migration should assume all previous migrations executed successfully
+   - Don't add conditional logic like "if column doesn't exist, then add it"
+
+2. **Write forward-only migrations**
+   - Add columns/tables that don't exist yet
+   - Modify columns that need updating
+   - Don't check for existence of columns from previous migrations
+
+3. **Make migrations idempotent ONLY for the current migration**
+   - If your migration might be run multiple times (e.g., during development)
+   - Check existence ONLY for columns/tables THIS migration creates
+   - Never check for schema from previous migrations
+
+4. **Migration structure**
+   ```typescript
+   import { MigrationInterface, QueryRunner } from "typeorm";
+   
+   export class CreateNewTable1234567890 implements MigrationInterface {
+     public async up(queryRunner: QueryRunner): Promise<void> {
+       // Create table
+       await queryRunner.createTable(new Table({ ... }));
+       
+       // Add indexes
+       await queryRunner.createIndex(...);
+       
+       // Add foreign keys
+       await queryRunner.createForeignKey(...);
+       
+       // Backfill data if needed
+       await queryRunner.query(`INSERT INTO ...`);
+     }
+     
+     public async down(queryRunner: QueryRunner): Promise<void> {
+       // Reverse all changes in opposite order
+       await queryRunner.dropTable("table_name");
+     }
+   }
+   ```
+
+5. **Testing migrations**
+   - Run `bun run migration:run` to test forward migration
+   - Run `bun run migration:revert` to test rollback
+   - Verify database state matches entity definitions
+   - Test on clean database AND database with existing data
+
+**Example - GOOD:**
+```typescript
+// This migration assumes all previous migrations ran successfully
+await queryRunner.query(`
+  ALTER TABLE \`bookings\`
+  ADD COLUMN \`newField\` varchar(255) NULL
+`);
+```
+
+**Example - BAD:**
+```typescript
+// DON'T check if columns from previous migrations exist
+const table = await queryRunner.getTable("bookings");
+const hasStartDatetime = table?.findColumnByName("startDatetime"); // ❌ From previous migration
+if (!hasStartDatetime) { // ❌ Shouldn't check this
+  // This should have been added by a previous migration
+}
+```
+
 ### Error Handling
 - Always wrap API logic in try/catch
 - Log errors with `console.error("Context:", error)`
