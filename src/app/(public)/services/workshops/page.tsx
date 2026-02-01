@@ -2,26 +2,25 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { Calendar } from "lucide-react";
-import { MoreThanOrEqual } from "typeorm";
-import { AppDataSource } from "@/lib/db";
-import { Workshop } from "@/entities/Workshop";
 import { sanitizeHtml } from "@/lib/sanitize";
 
-export const dynamic = "force-dynamic";
+type Workshop = {
+    id: string;
+    slug: string;
+    title: string;
+    description: string;
+    date: string;
+    duration: string;
+    capacity: number;
+    coverImage: string | null;
+};
 
 export const metadata: Metadata = {
     title: "Workshops",
     description: "Join our interactive workshops on stress management, mindfulness, communication skills, and more.",
 };
 
-async function getDataSource() {
-    if (!AppDataSource.isInitialized) {
-        await AppDataSource.initialize();
-    }
-    return AppDataSource;
-}
-
-function formatDate(date: Date): string {
+function formatDate(date: string): string {
     return new Intl.DateTimeFormat("en-US", {
         month: "long",
         day: "numeric",
@@ -33,19 +32,23 @@ function formatDate(date: Date): string {
 }
 
 async function getWorkshops(): Promise<Workshop[]> {
-    const ds = await getDataSource();
-    const workshopRepo = ds.getRepository(Workshop);
+    try {
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:4242";
+        const res = await fetch(`${baseUrl}/api/workshops`, {
+            next: { revalidate: 300 }, // 5 minutes
+        });
 
-    const workshops = await workshopRepo.find({
-        where: {
-            status: "published",
-            isActive: true,
-            date: MoreThanOrEqual(new Date()),
-        },
-        order: { date: "ASC" },
-    });
+        if (!res.ok) {
+            console.error("Failed to fetch workshops:", res.status);
+            return [];
+        }
 
-    return workshops;
+        const data = await res.json();
+        return data.workshops || [];
+    } catch (error) {
+        console.error("Error fetching workshops:", error);
+        return [];
+    }
 }
 
 export default async function WorkshopsPage() {
