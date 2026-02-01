@@ -343,3 +343,26 @@ export const updateClientProfileSchema = z.object({
 });
 
 export type UpdateClientProfileInput = z.infer<typeof updateClientProfileSchema>;
+
+// Blog Post Validation
+export const createBlogPostSchema = z.object({
+    title: z.string().min(1, "Title is required").max(255, "Title too long"),
+    slug: z.string().min(1).max(255).optional(),
+    category: z.enum(["wellness-tips", "practice-news", "professional-insights", "resources"]),
+    content: z.string().min(1, "Content is required"),
+    excerpt: z.string().max(500, "Excerpt too long").optional().nullable(),
+    coverImage: z.string().url("Invalid image URL").optional().nullable(),
+    tags: z.array(z.string().max(30, "Tag too long")).max(10, "Maximum 10 tags").optional().nullable(),
+    authorId: z.string().uuid().optional().nullable(),
+    authorName: z.string().max(255).optional().nullable(),
+    metaTitle: z.string().max(60, "Meta title should be under 60 characters").optional().nullable(),
+    metaDescription: z.string().max(160, "Meta description should be under 160 characters").optional().nullable(),
+    isFeatured: z.boolean().default(false),
+    featuredOrder: z.number().int().positive().optional().nullable(),
+    status: z.enum(["draft", "published"]).default("draft"),
+});
+
+export const updateBlogPostSchema = createBlogPostSchema.partial();
+
+export type CreateBlogPostInput = z.infer<typeof createBlogPostSchema>;
+export type UpdateBlogPostInput = z.infer<typeof updateBlogPostSchema>;
