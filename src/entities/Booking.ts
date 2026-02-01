@@ -37,7 +37,6 @@ export class Booking {
     @ManyToOne(() => SessionType)
     @JoinColumn({ name: "sessionTypeId" })
     sessionType?: SessionType;
-
     @Column({ type: "varchar", length: 255 })
     clientName!: string;
 
