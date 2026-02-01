@@ -37,6 +37,7 @@ const navItems = [
     { href: "/admin/calendar", icon: Calendar, label: "Calendar", roles: ["admin", "reception"] },
     { href: "/admin/bookings", icon: List, label: "Bookings", roles: ["admin", "reception"] },
     { href: "/admin/bookings/new", icon: Plus, label: "New Booking", roles: ["admin", "reception"] },
+    { href: "/admin/clients", icon: Users, label: "Clients", roles: ["admin", "reception", "therapist"] },
     { href: "/admin/therapists", icon: Users, label: "Therapists", roles: ["admin"] },
     { href: "/admin/team-members", icon: UserCircle, label: "Team", roles: ["admin"] },
     { href: "/admin/programs", icon: BookOpen, label: "Programs", roles: ["admin"] },
