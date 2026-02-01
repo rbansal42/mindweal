@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { ChevronDown, Menu, X } from 'lucide-react';
 import { navigationConfig, appConfig } from '@/config';
 
 type NavItem = {
@@ -38,23 +39,11 @@ export default function Header() {
                             >
                                 <Link
                                     href={item.href}
-                                    className="text-gray-600 hover:text-[var(--primary-teal)] font-medium transition-colors py-2"
+                                    className="text-gray-600 hover:text-[var(--primary-teal)] font-medium transition-colors py-2 flex items-center"
                                 >
                                     {item.name}
                                     {item.children && (
-                                        <svg
-                                            className="inline-block ml-1 w-4 h-4"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M19 9l-7 7-7-7"
-                                            />
-                                        </svg>
+                                        <ChevronDown className="ml-1 w-4 h-4" />
                                     )}
                                 </Link>
 
@@ -89,28 +78,11 @@ export default function Header() {
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
                         aria-label="Toggle menu"
                     >
-                        <svg
-                            className="w-6 h-6 text-gray-600"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            {isMenuOpen ? (
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M6 18L18 6M6 6l12 12"
-                                />
-                            ) : (
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M4 6h16M4 12h16M4 18h16"
-                                />
-                            )}
-                        </svg>
+                        {isMenuOpen ? (
+                            <X className="w-6 h-6 text-gray-600" />
+                        ) : (
+                            <Menu className="w-6 h-6 text-gray-600" />
+                        )}
                     </button>
                 </nav>
 

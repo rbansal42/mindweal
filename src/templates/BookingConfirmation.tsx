@@ -149,7 +149,7 @@ const logo = {
 };
 
 const tagline = {
-    color: "#6B4C9A",
+    color: "#4A9E6B",
     fontSize: "14px",
     margin: "8px 0 0",
 };
