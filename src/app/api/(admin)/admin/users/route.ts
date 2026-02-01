@@ -7,6 +7,46 @@ import { getDataSource } from "@/lib/db";
 import { User } from "@/entities/User";
 import { createUserSchema } from "@/lib/validation";
 import crypto from "crypto";
+import { Not } from "typeorm";
+
+export async function GET(request: NextRequest) {
+    try {
+        // 1. Auth check
+        const session = await getServerSession() as AuthSession | null;
+        if (!session) {
+            return NextResponse.json(
+                { error: "Unauthorized" },
+                { status: 401 }
+            );
+        }
+
+        // 2. Role check
+        if (!["admin", "reception"].includes(session.user.role)) {
+            return NextResponse.json(
+                { error: "Forbidden - insufficient permissions" },
+                { status: 403 }
+            );
+        }
+
+        // 3. Get all users except clients
+        const ds = await getDataSource();
+        const users = await ds.getRepository(User).find({
+            where: { role: Not("client") },
+            order: { createdAt: "DESC" }
+        });
+
+        return NextResponse.json({
+            success: true,
+            data: users
+        });
+    } catch (error) {
+        console.error("Get users error:", error);
+        return NextResponse.json(
+            { error: "Internal server error" },
+            { status: 500 }
+        );
+    }
+}
 
 export async function POST(request: NextRequest) {
     try {
