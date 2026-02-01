@@ -18,6 +18,7 @@ import {
     TeamMember,
     FAQ,
     ClientProfile,
+    BlogPost,
 } from "@/entities";
 
 const dataSourceOptions: DataSourceOptions = {
@@ -47,6 +48,7 @@ const dataSourceOptions: DataSourceOptions = {
         TeamMember,
         FAQ,
         ClientProfile,
+        BlogPost,
     ],
     // Note: migrations are loaded only via CLI (data-source.ts), not at runtime
 };
