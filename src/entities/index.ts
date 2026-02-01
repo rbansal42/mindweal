@@ -14,3 +14,4 @@ export { CommunityProgram } from "./CommunityProgram";
 export { JobPosting } from "./JobPosting";
 export { TeamMember } from "./TeamMember";
 export { FAQ, type FAQCategory } from "./FAQ";
+export { ClientProfile } from "./ClientProfile";
