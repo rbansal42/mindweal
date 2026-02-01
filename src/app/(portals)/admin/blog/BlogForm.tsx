@@ -36,6 +36,7 @@ export default function BlogForm({ initialData, mode }: BlogFormProps) {
     const [content, setContent] = useState(initialData?.content || "");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [teamMembers, setTeamMembers] = useState<any[]>([]);
+    const [error, setError] = useState<string | null>(null);
     const [status, setStatus] = useState<"draft" | "published">(initialData?.status || "draft");
     const [isActive, setIsActive] = useState(initialData?.isActive ?? true);
     const [coverImage, setCoverImage] = useState<string | null>(initialData?.coverImage || null);
@@ -112,7 +113,7 @@ export default function BlogForm({ initialData, mode }: BlogFormProps) {
             const result = await res.json();
 
             if (!res.ok) {
-                alert(result.error || "Failed to save blog post");
+                setError(result.error || "Failed to save blog post");
                 return;
             }
 
@@ -120,7 +121,7 @@ export default function BlogForm({ initialData, mode }: BlogFormProps) {
             router.refresh();
         } catch (error) {
             console.error("Error saving blog post:", error);
-            alert("Failed to save blog post");
+            setError("Failed to save blog post. Please try again.");
         } finally {
             setIsSubmitting(false);
         }
@@ -141,6 +142,12 @@ export default function BlogForm({ initialData, mode }: BlogFormProps) {
             isSubmitting={isSubmitting}
             submitLabel={mode === "create" ? "Create Post" : "Update Post"}
         >
+            {error && (
+                <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mb-4">
+                    {error}
+                </div>
+            )}
+
             <div className="card p-6 space-y-6">
                 {/* Title */}
                 <div>

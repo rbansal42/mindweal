@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { Calendar, User, Tag } from "lucide-react";
-import { AppDataSource } from "@/lib/db";
+import { getDataSource } from "@/lib/db";
 import { BlogPost } from "@/entities/BlogPost";
 import { sanitizeHtml } from "@/lib/sanitize";
 
@@ -12,13 +12,6 @@ export const metadata: Metadata = {
     title: "Blog",
     description: "Explore our blog for wellness tips, practice news, professional insights, and mental health resources.",
 };
-
-async function getDataSource() {
-    if (!AppDataSource.isInitialized) {
-        await AppDataSource.initialize();
-    }
-    return AppDataSource;
-}
 
 type SerializedBlogPost = {
     id: string;

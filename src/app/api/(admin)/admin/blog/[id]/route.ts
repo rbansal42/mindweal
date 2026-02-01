@@ -77,11 +77,22 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
             return NextResponse.json({ error: "Blog post not found" }, { status: 404 });
         }
 
+        // Check slug uniqueness if slug is being updated
+        if (validated.data.slug && validated.data.slug !== post.slug) {
+            const existingPost = await repo.findOne({ where: { slug: validated.data.slug } });
+            if (existingPost) {
+                return NextResponse.json(
+                    { error: "Slug already exists", details: { slug: ["This slug is already in use"] } },
+                    { status: 409 }
+                );
+            }
+        }
+
         // Apply validated data to post
         Object.assign(post, validated.data);
 
         // Set publishedAt if transitioning to published for first time
-        if (validated.data.status === "published" && !post.publishedAt) {
+        if (post.status === "published" && !post.publishedAt) {
             post.publishedAt = new Date();
         }
 
