@@ -330,3 +330,16 @@ export const updateWorkshopSchema = createWorkshopSchema.partial();
 
 export type CreateWorkshopInput = z.infer<typeof createWorkshopSchema>;
 export type UpdateWorkshopInput = z.infer<typeof updateWorkshopSchema>;
+
+// Client Profile validation
+export const updateClientProfileSchema = z.object({
+  emergencyContactName: z.string().min(1).max(100).nullable(),
+  emergencyContactPhone: z
+    .string()
+    .regex(/^\+?[0-9\s\-()]+$/, "Invalid phone number format")
+    .nullable(),
+  emergencyContactRelationship: z.string().max(50).nullable(),
+  consentFormSigned: z.boolean(),
+});
+
+export type UpdateClientProfileInput = z.infer<typeof updateClientProfileSchema>;
