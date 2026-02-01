@@ -11,13 +11,13 @@ import {
     LogOut,
     Menu,
     X,
-    Plus,
     Settings,
     FileText,
     HelpCircle,
     Briefcase,
     BookOpen,
     Heart,
+    Newspaper,
 } from "lucide-react";
 import { useState } from "react";
 import { signOut } from "@/lib/auth-client";
@@ -36,10 +36,10 @@ const navItems = [
     { href: "/admin", icon: Home, label: "Dashboard", roles: ["admin", "reception"] },
     { href: "/admin/calendar", icon: Calendar, label: "Calendar", roles: ["admin", "reception"] },
     { href: "/admin/bookings", icon: List, label: "Bookings", roles: ["admin", "reception"] },
-    { href: "/admin/bookings/new", icon: Plus, label: "New Booking", roles: ["admin", "reception"] },
     { href: "/admin/clients", icon: Users, label: "Clients", roles: ["admin", "reception", "therapist"] },
     { href: "/admin/therapists", icon: Users, label: "Therapists", roles: ["admin"] },
     { href: "/admin/team-members", icon: UserCircle, label: "Team", roles: ["admin"] },
+    { href: "/admin/blog", icon: Newspaper, label: "Blog", roles: ["admin"] },
     { href: "/admin/programs", icon: BookOpen, label: "Programs", roles: ["admin"] },
     { href: "/admin/workshops", icon: Calendar, label: "Workshops", roles: ["admin"] },
     { href: "/admin/community-programs", icon: Heart, label: "Community", roles: ["admin"] },
