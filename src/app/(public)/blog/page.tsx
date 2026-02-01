@@ -2,11 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { Calendar, User, Tag } from "lucide-react";
-import { getDataSource } from "@/lib/db";
-import { BlogPost } from "@/entities/BlogPost";
 import { sanitizeHtml } from "@/lib/sanitize";
-
-export const dynamic = "force-dynamic";
+import { appConfig } from "@/config";
 
 export const metadata: Metadata = {
     title: "Blog",
@@ -28,51 +25,20 @@ type SerializedBlogPost = {
     createdAt: string;
 };
 
-function serializeBlogPost(post: BlogPost): SerializedBlogPost {
-    return {
-        id: post.id,
-        slug: post.slug,
-        title: post.title,
-        excerpt: post.excerpt,
-        content: post.content,
-        coverImage: post.coverImage,
-        category: post.category,
-        tags: post.tags,
-        isFeatured: post.isFeatured,
-        authorName: post.authorName,
-        publishedAt: post.publishedAt ? post.publishedAt.toISOString() : null,
-        createdAt: post.createdAt.toISOString(),
-    };
-}
-
 async function getBlogPosts() {
-    const ds = await getDataSource();
-    const blogRepo = ds.getRepository(BlogPost);
-
-    const [featured, recent] = await Promise.all([
-        blogRepo.find({
-            where: {
-                status: "published",
-                isActive: true,
-                isFeatured: true,
-            },
-            order: { featuredOrder: "ASC", publishedAt: "DESC" },
-            take: 3,
-        }),
-        blogRepo.find({
-            where: {
-                status: "published",
-                isActive: true,
-            },
-            order: { publishedAt: "DESC" },
-            take: 12,
-        }),
-    ]);
-
-    return {
-        featured: featured.map(serializeBlogPost),
-        recent: recent.map(serializeBlogPost),
-    };
+    try {
+        const res = await fetch(`${appConfig.url}/api/blog`, {
+            next: { revalidate: 60 },
+        });
+        if (!res.ok) return { featured: [], recent: [] };
+        const data = await res.json();
+        return {
+            featured: data.featured || [],
+            recent: data.recent || [],
+        };
+    } catch {
+        return { featured: [], recent: [] };
+    }
 }
 
 function formatDate(dateString: string | null): string {
@@ -129,7 +95,7 @@ export default async function BlogPage() {
                     <div className="container-custom">
                         <h2 className="text-3xl font-bold mb-8">Featured Posts</h2>
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {featured.map((post) => (
+                            {featured.map((post: SerializedBlogPost) => (
                                 <Link
                                     key={post.id}
                                     href={`/blog/${post.slug}`}
@@ -198,7 +164,7 @@ export default async function BlogPage() {
                         </div>
                     ) : (
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {recent.map((post) => (
+                            {recent.map((post: SerializedBlogPost) => (
                                 <Link
                                     key={post.id}
                                     href={`/blog/${post.slug}`}
@@ -237,7 +203,7 @@ export default async function BlogPage() {
                                         {post.tags && post.tags.length > 0 && (
                                             <div className="flex items-center gap-2 mb-3 flex-wrap">
                                                 <Tag className="w-3 h-3 text-gray-400" />
-                                                {post.tags.slice(0, 2).map((tag, i) => (
+                                                {post.tags.slice(0, 2).map((tag: string, i: number) => (
                                                     <span
                                                         key={i}
                                                         className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded"

@@ -3,54 +3,74 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Calendar, User, ArrowLeft } from "lucide-react";
-import { Not } from "typeorm";
-import { getDataSource } from "@/lib/db";
-import { BlogPost } from "@/entities/BlogPost";
 import { sanitizeHtml } from "@/lib/sanitize";
-
-export const dynamic = "force-dynamic";
+import { appConfig } from "@/config";
 
 interface PageProps {
     params: Promise<{ slug: string }>;
 }
 
-async function getBlogPost(slug: string) {
-    const ds = await getDataSource();
-    const repo = ds.getRepository(BlogPost);
-
-    const post = await repo.findOne({
-        where: { slug, status: "published", isActive: true },
-        relations: ["author"],
-    });
-
-    return post;
+interface BlogPostData {
+    id: string;
+    title: string;
+    slug: string;
+    excerpt: string | null;
+    content: string;
+    coverImage: string | null;
+    category: string;
+    tags: string[];
+    status: string;
+    metaTitle: string | null;
+    metaDescription: string | null;
+    publishedAt: string | null;
+    createdAt: string;
+    updatedAt: string;
+    author: {
+        id: string;
+        name: string;
+        photoUrl: string | null;
+    } | null;
+    authorName: string | null;
 }
 
-async function getRelatedPosts(category: BlogPost["category"], excludeId: string) {
-    const ds = await getDataSource();
-    const repo = ds.getRepository(BlogPost);
+interface RelatedPostData {
+    id: string;
+    title: string;
+    slug: string;
+    excerpt: string | null;
+    coverImage: string | null;
+    category: string;
+}
 
-    return repo.find({
-        where: {
-            category,
-            status: "published",
-            isActive: true,
-            id: Not(excludeId),
-        },
-        order: { publishedAt: "DESC" },
-        take: 3,
-    });
+interface BlogDataResponse {
+    post: BlogPostData;
+    related: RelatedPostData[];
+}
+
+async function getBlogData(slug: string): Promise<BlogDataResponse | null> {
+    try {
+        const res = await fetch(`${appConfig.url}/api/blog/${slug}`, {
+            next: { revalidate: 60 }
+        });
+        if (!res.ok) return null;
+        const data = await res.json();
+        return data;
+    } catch {
+        return null;
+    }
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const { slug } = await params;
-    const post = await getBlogPost(slug);
+    const data = await getBlogData(slug);
 
-    if (!post) {
+    if (!data || !data.post) {
         return {
             title: "Post Not Found | MindWeal by Pihu Suri",
         };
     }
+
+    const { post } = data;
 
     const stripHtml = (html: string, maxLength: number) => {
         const text = html.replace(/<[^>]*>/g, "");
@@ -87,22 +107,13 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 export default async function BlogPostPage({ params }: PageProps) {
     const { slug } = await params;
-    const post = await getBlogPost(slug);
+    const data = await getBlogData(slug);
 
-    if (!post) {
+    if (!data || !data.post) {
         notFound();
     }
 
-    const relatedPosts = await getRelatedPosts(post.category, post.id);
-
-    const plainRelated = relatedPosts.map((p) => ({
-        id: p.id,
-        title: p.title,
-        slug: p.slug,
-        excerpt: p.excerpt,
-        coverImage: p.coverImage,
-        category: p.category,
-    }));
+    const { post, related } = data;
 
     return (
         <>
@@ -204,22 +215,22 @@ export default async function BlogPostPage({ params }: PageProps) {
             </article>
 
             {/* Related Posts */}
-            {plainRelated.length > 0 && (
+            {related.length > 0 && (
                 <section className="section section-alt">
                     <div className="container-custom">
                         <h2 className="text-2xl font-bold mb-8">Related Posts</h2>
                         <div className="grid md:grid-cols-3 gap-8">
-                            {plainRelated.map((related) => (
+                            {related.map((relatedPost: RelatedPostData) => (
                                 <Link
-                                    key={related.id}
-                                    href={`/blog/${related.slug}`}
+                                    key={relatedPost.id}
+                                    href={`/blog/${relatedPost.slug}`}
                                     className="card group hover:shadow-lg transition-shadow"
                                 >
-                                    {related.coverImage ? (
+                                    {relatedPost.coverImage ? (
                                         <div className="aspect-video overflow-hidden">
                                             <Image
-                                                src={related.coverImage}
-                                                alt={related.title}
+                                                src={relatedPost.coverImage}
+                                                alt={relatedPost.title}
                                                 width={400}
                                                 height={225}
                                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform"
@@ -231,17 +242,17 @@ export default async function BlogPostPage({ params }: PageProps) {
                                     <div className="p-6">
                                         <span
                                             className={`inline-block px-3 py-1 text-xs font-medium rounded-full ${
-                                                CATEGORY_COLORS[related.category]
+                                                CATEGORY_COLORS[relatedPost.category]
                                             }`}
                                         >
-                                            {CATEGORY_LABELS[related.category]}
+                                            {CATEGORY_LABELS[relatedPost.category]}
                                         </span>
                                         <h3 className="text-lg font-semibold mt-3 group-hover:text-[var(--primary-teal)] transition-colors">
-                                            {related.title}
+                                            {relatedPost.title}
                                         </h3>
-                                        {related.excerpt && (
+                                        {relatedPost.excerpt && (
                                             <p className="text-gray-600 mt-2 text-sm line-clamp-2">
-                                                {related.excerpt}
+                                                {relatedPost.excerpt}
                                             </p>
                                         )}
                                     </div>
