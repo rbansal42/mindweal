@@ -4,7 +4,11 @@ import {
     Column,
     CreateDateColumn,
     UpdateDateColumn,
+    ManyToOne,
+    JoinColumn,
 } from "typeorm";
+import { Therapist } from "./Therapist";
+import { SessionType } from "./SessionType";
 
 export type BookingStatus = "pending" | "confirmed" | "cancelled" | "completed" | "no_show";
 export type BookingMeetingType = "in_person" | "video" | "phone";
@@ -20,11 +24,19 @@ export class Booking {
     @Column({ type: "varchar", length: 36 })
     therapistId!: string;
 
+    @ManyToOne(() => Therapist)
+    @JoinColumn({ name: "therapistId" })
+    therapist!: Therapist;
+
     @Column({ type: "varchar", length: 36, nullable: true })
     clientId!: string | null;
 
     @Column({ type: "varchar", length: 36, nullable: true })
     sessionTypeId!: string | null;
+
+    @ManyToOne(() => SessionType)
+    @JoinColumn({ name: "sessionTypeId" })
+    sessionType?: SessionType;
 
     @Column({ type: "varchar", length: 255 })
     clientName!: string;

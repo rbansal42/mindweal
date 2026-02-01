@@ -4,7 +4,10 @@ import {
     Column,
     CreateDateColumn,
     UpdateDateColumn,
+    OneToOne,
+    JoinColumn,
 } from "typeorm";
+import { ClientProfile } from "./ClientProfile";
 
 export type UserRole = "client" | "therapist" | "admin" | "reception";
 
@@ -36,6 +39,10 @@ export class User {
 
     @Column({ type: "varchar", length: 36, nullable: true })
     therapistId!: string | null;
+
+    @OneToOne(() => ClientProfile, (profile) => profile.userId)
+    @JoinColumn({ name: "id", referencedColumnName: "userId" })
+    clientProfile?: ClientProfile;
 
     @CreateDateColumn()
     createdAt!: Date;
