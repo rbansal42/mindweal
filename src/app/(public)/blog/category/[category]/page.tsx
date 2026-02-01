@@ -3,10 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { Calendar, User, ArrowLeft } from "lucide-react";
-import { getDataSource } from "@/lib/db";
-import { BlogPost } from "@/entities/BlogPost";
-
-export const dynamic = "force-dynamic";
+import { appConfig } from "@/config";
 
 interface PageProps {
     params: Promise<{ category: string }>;
@@ -33,19 +30,17 @@ const CATEGORY_COLORS: Record<string, string> = {
     "resources": "bg-blue-100 text-blue-800",
 };
 
-async function getCategoryPosts(category: string) {
-    const ds = await getDataSource();
-    const repo = ds.getRepository(BlogPost);
-
-    return repo.find({
-        where: { 
-            category: category as "wellness-tips" | "practice-news" | "professional-insights" | "resources", 
-            status: "published", 
-            isActive: true 
-        },
-        relations: ["author"],
-        order: { publishedAt: "DESC" },
-    });
+async function getBlogPostsByCategory(category: string) {
+    try {
+        const res = await fetch(`${appConfig.url}/api/blog/category/${category}`, {
+            next: { revalidate: 60 }
+        });
+        if (!res.ok) return [];
+        const data = await res.json();
+        return data.posts || [];
+    } catch {
+        return [];
+    }
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -69,18 +64,7 @@ export default async function CategoryPage({ params }: PageProps) {
         notFound();
     }
 
-    const posts = await getCategoryPosts(category);
-
-    const plainPosts = posts.map((post) => ({
-        id: post.id,
-        title: post.title,
-        slug: post.slug,
-        excerpt: post.excerpt,
-        coverImage: post.coverImage,
-        category: post.category,
-        publishedAt: post.publishedAt?.toISOString(),
-        authorName: post.author?.name || post.authorName,
-    }));
+    const posts = await getBlogPostsByCategory(category);
 
     return (
         <>
@@ -103,13 +87,13 @@ export default async function CategoryPage({ params }: PageProps) {
 
             <section className="section bg-white">
                 <div className="container-custom">
-                    {plainPosts.length === 0 ? (
+                    {posts.length === 0 ? (
                         <div className="text-center py-12 text-gray-500">
                             No posts in this category yet.
                         </div>
                     ) : (
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {plainPosts.map((post) => (
+                            {posts.map((post: any) => (
                                 <Link
                                     key={post.id}
                                     href={`/blog/${post.slug}`}
