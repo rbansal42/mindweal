@@ -3,20 +3,20 @@ import Link from "next/link";
 import Image from "next/image";
 import { Calendar } from "lucide-react";
 import { notFound } from "next/navigation";
-import { AppDataSource } from "@/lib/db";
-import { Workshop } from "@/entities/Workshop";
 import { sanitizeHtml } from "@/lib/sanitize";
 
-export const dynamic = "force-dynamic";
+type Workshop = {
+    id: string;
+    slug: string;
+    title: string;
+    description: string;
+    date: string;
+    duration: string;
+    capacity: number;
+    coverImage?: string;
+};
 
-async function getDataSource() {
-    if (!AppDataSource.isInitialized) {
-        await AppDataSource.initialize();
-    }
-    return AppDataSource;
-}
-
-function formatDate(date: Date): string {
+function formatDate(date: string | Date): string {
     return new Intl.DateTimeFormat("en-US", {
         weekday: "long",
         month: "long",
@@ -25,7 +25,7 @@ function formatDate(date: Date): string {
     }).format(new Date(date));
 }
 
-function formatTime(date: Date): string {
+function formatTime(date: string | Date): string {
     return new Intl.DateTimeFormat("en-US", {
         hour: "numeric",
         minute: "2-digit",
@@ -34,18 +34,14 @@ function formatTime(date: Date): string {
 }
 
 async function getWorkshop(slug: string): Promise<Workshop | null> {
-    const ds = await getDataSource();
-    const workshopRepo = ds.getRepository(Workshop);
-
-    const workshop = await workshopRepo.findOne({
-        where: {
-            slug,
-            status: "published",
-            isActive: true,
-        },
+    const res = await fetch(`http://localhost:4242/api/workshops/${slug}`, {
+        next: { revalidate: 300 },
     });
 
-    return workshop;
+    if (!res.ok) return null;
+
+    const data = await res.json();
+    return data.workshop;
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -63,25 +59,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         title: workshop.title,
         description: plainDescription,
     };
-}
-
-export async function generateStaticParams() {
-    try {
-        const ds = await getDataSource();
-        const workshopRepo = ds.getRepository(Workshop);
-
-        const workshops = await workshopRepo.find({
-            where: { status: "published", isActive: true },
-            select: ["slug"],
-        });
-
-        return workshops.map((workshop) => ({
-            slug: workshop.slug,
-        }));
-    } catch {
-        // Database not available during build - return empty array
-        return [];
-    }
 }
 
 export default async function WorkshopDetailPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -106,7 +83,7 @@ export default async function WorkshopDetailPage({ params }: { params: Promise<{
                         <div className="flex flex-wrap gap-3 mb-4">
                             <span className="inline-flex items-center gap-2 px-3 py-1 bg-[var(--secondary-green)]/10 text-[var(--secondary-green)] text-sm rounded-full font-medium">
                                 <Calendar className="w-4 h-4" />
-                                {formatDate(workshop.date)}
+                                {formatDate(new Date(workshop.date))}
                             </span>
                             <span className="px-3 py-1 bg-gray-100 text-gray-600 text-sm rounded-full">
                                 {workshop.duration}
@@ -155,12 +132,12 @@ export default async function WorkshopDetailPage({ params }: { params: Promise<{
                                 <div className="space-y-4 text-sm">
                                     <div>
                                         <p className="text-gray-500">Date</p>
-                                        <p className="font-medium">{formatDate(workshop.date)}</p>
+                                        <p className="font-medium">{formatDate(new Date(workshop.date))}</p>
                                     </div>
 
                                     <div>
                                         <p className="text-gray-500">Time</p>
-                                        <p className="font-medium">{formatTime(workshop.date)}</p>
+                                        <p className="font-medium">{formatTime(new Date(workshop.date))}</p>
                                     </div>
 
                                     <div>

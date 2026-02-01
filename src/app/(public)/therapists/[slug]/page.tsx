@@ -2,19 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { In } from "typeorm";
-import { AppDataSource } from "@/lib/db";
+import { getDataSource } from "@/lib/db";
 import { Therapist } from "@/entities/Therapist";
 import { SessionType } from "@/entities/SessionType";
 import { Specialization } from "@/entities/Specialization";
 
-export const dynamic = "force-dynamic";
-
-async function getDataSource() {
-    if (!AppDataSource.isInitialized) {
-        await AppDataSource.initialize();
-    }
-    return AppDataSource;
-}
+export const revalidate = 60;
 
 async function getTherapistWithSessions(slug: string) {
     const ds = await getDataSource();

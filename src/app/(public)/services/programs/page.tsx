@@ -2,31 +2,36 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { ChevronRight } from "lucide-react";
-import { AppDataSource } from "@/lib/db";
-import { Program } from "@/entities/Program";
+import { appConfig } from "@/config";
 import { sanitizeHtml } from "@/lib/sanitize";
-
-export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
     title: "Programs",
     description: "Explore our therapeutic programs designed to help you develop lasting coping strategies and achieve your mental health goals.",
 };
 
-async function getDataSource() {
-    if (!AppDataSource.isInitialized) {
-        await AppDataSource.initialize();
-    }
-    return AppDataSource;
-}
+type ProgramData = {
+    id: string;
+    slug: string;
+    title: string;
+    description: string;
+    category: string;
+    coverImage: string | null;
+    duration: string;
+    benefits: string[] | null;
+};
 
-async function getPrograms(): Promise<Program[]> {
-    const ds = await getDataSource();
-    const programRepo = ds.getRepository(Program);
-    return programRepo.find({
-        where: { status: "published", isActive: true },
-        order: { createdAt: "DESC" },
-    });
+async function getPrograms(): Promise<ProgramData[]> {
+    try {
+        const res = await fetch(`${appConfig.url}/api/programs`, {
+            next: { revalidate: 300 } // 5 minutes
+        });
+        if (!res.ok) return [];
+        const data = await res.json();
+        return data.programs || [];
+    } catch {
+        return [];
+    }
 }
 
 export default async function ProgramsPage() {

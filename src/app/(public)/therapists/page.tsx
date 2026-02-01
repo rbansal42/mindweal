@@ -1,23 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { In } from "typeorm";
-import { AppDataSource } from "@/lib/db";
+import { getDataSource } from "@/lib/db";
 import { Therapist } from "@/entities/Therapist";
 import { Specialization } from "@/entities/Specialization";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export const metadata: Metadata = {
     title: "Our Therapists",
     description: "Meet our experienced therapists and book a session that fits your schedule.",
 };
-
-async function getDataSource() {
-    if (!AppDataSource.isInitialized) {
-        await AppDataSource.initialize();
-    }
-    return AppDataSource;
-}
 
 type TherapistWithSpecializations = Therapist & { specializations: Specialization[] };
 

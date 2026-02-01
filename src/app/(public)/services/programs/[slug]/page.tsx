@@ -2,35 +2,31 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { AppDataSource } from "@/lib/db";
-import { Program } from "@/entities/Program";
 import { sanitizeHtml } from "@/lib/sanitize";
+import { appConfig } from "@/config";
 
-export const dynamic = "force-dynamic";
-
-async function getDataSource() {
-    if (!AppDataSource.isInitialized) {
-        await AppDataSource.initialize();
-    }
-    return AppDataSource;
-}
+type Program = {
+    id: string;
+    slug: string;
+    title: string;
+    description: string;
+    category: string;
+    duration: string;
+    coverImage: string | null;
+    benefits: string[] | null;
+};
 
 async function getProgram(slug: string): Promise<Program | null> {
-    const ds = await getDataSource();
-    const programRepo = ds.getRepository(Program);
-    return programRepo.findOne({
-        where: { slug, status: "published", isActive: true },
-    });
-}
-
-async function getAllProgramSlugs(): Promise<{ slug: string }[]> {
-    const ds = await getDataSource();
-    const programRepo = ds.getRepository(Program);
-    const programs = await programRepo.find({
-        where: { status: "published", isActive: true },
-        select: ["slug"],
-    });
-    return programs.map((program) => ({ slug: program.slug }));
+    try {
+        const res = await fetch(`${appConfig.url}/api/programs/${slug}`, {
+            next: { revalidate: 300 }
+        });
+        if (!res.ok) return null;
+        const data = await res.json();
+        return data.program || null;
+    } catch {
+        return null;
+    }
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -48,15 +44,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         title: program.title,
         description: plainDescription,
     };
-}
-
-export async function generateStaticParams() {
-    try {
-        return await getAllProgramSlugs();
-    } catch {
-        // Database not available during build - return empty array
-        return [];
-    }
 }
 
 export default async function ProgramDetailPage({ params }: { params: Promise<{ slug: string }> }) {
