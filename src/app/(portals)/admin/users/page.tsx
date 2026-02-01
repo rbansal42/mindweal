@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { format } from "date-fns";
 import { UserCircle, Plus } from "lucide-react";
 import Link from "next/link";
+import { Not } from "typeorm";
 import { AppDataSource } from "@/lib/db";
 import { User } from "@/entities/User";
 import { getServerSession } from "@/lib/auth-middleware";
@@ -26,6 +27,7 @@ async function getUsers() {
     const userRepo = ds.getRepository(User);
 
     return userRepo.find({
+        where: { role: Not("client") },
         order: { createdAt: "DESC" },
     });
 }
@@ -62,7 +64,6 @@ export default async function UsersPage() {
     // Stats
     const stats = {
         total: users.length,
-        clients: users.filter((u) => u.role === "client").length,
         therapists: users.filter((u) => u.role === "therapist").length,
         admins: users.filter((u) => u.role === "admin").length,
         reception: users.filter((u) => u.role === "reception").length,
@@ -85,7 +86,7 @@ export default async function UsersPage() {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-6 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                 <div className="portal-card p-3">
                     <p className="text-gray-500 text-xs">Total</p>
                     <p className="text-xl font-bold text-gray-900">{stats.total}</p>
@@ -93,10 +94,6 @@ export default async function UsersPage() {
                 <div className="portal-card p-3">
                     <p className="text-green-600 text-xs">Active</p>
                     <p className="text-xl font-bold text-green-700">{stats.active}</p>
-                </div>
-                <div className="bg-blue-50 rounded-lg p-3">
-                    <p className="text-blue-600 text-xs">Clients</p>
-                    <p className="text-xl font-bold text-blue-700">{stats.clients}</p>
                 </div>
                 <div className="bg-green-50 rounded-lg p-3">
                     <p className="text-green-600 text-xs">Therapists</p>
